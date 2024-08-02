@@ -7,6 +7,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
+    ListItem: typeof import('./components/ListItem.vue')['default']
+    MainSection: typeof import('./components/MainSection.vue')['default']
+    PostItem: typeof import('./components/PostItem.vue')['default']
+    RightPanel: typeof import('./components/RightPanel.vue')['default']
+    ScrollArea: typeof import('./components/ScrollArea.vue')['default']
+    SelectArea: typeof import('./components/SelectArea.vue')['default']
   }
 }

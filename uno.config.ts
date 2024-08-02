@@ -1,10 +1,14 @@
-// uno.config.ts
-import { defineConfig, presetUno } from 'unocss'
-import presetIcons from '@unocss/preset-icons'
+import * as fs from 'node:fs'
+import { defineConfig } from 'unocss'
+import { rokuPreset } from '@roku-ui/preset'
+
+const file = fs.readFileSync('node_modules/@roku-ui/vue/dist/index.js', 'utf-8')
 
 export default defineConfig({
   presets: [
-    presetIcons(),
-    presetUno(),
+    rokuPreset(),
   ],
+  content: {
+    inline: [file],
+  },
 })
