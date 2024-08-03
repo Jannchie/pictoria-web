@@ -11,7 +11,7 @@ interface InputDatum {
 }
 export type RightPanelDatum = Post | ImageDatum | InputDatum
 export const rightPanelData = ref<RightPanelDatum[]>([])
-export const waterfallItemWidth = ref(400)
+export const waterfallItemWidth = useStorage('pictoria.waterfallItemWidth', 400)
 export const selectedPostId = ref<Set<number | undefined>>(new Set())
 export const selectingPostId = ref<Set<number | undefined>>(new Set())
 export const unselectedPostId = ref<Set<number | undefined>>(new Set())

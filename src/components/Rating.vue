@@ -28,7 +28,7 @@ const defaultColor = '#EA580C'
 
 type IconType = string | { active: string, normal: string } | (string | { active: string, normal: string })[] | undefined
 const iconData = computed(() => {
-  return unifyInput(props.icons, props.count, defaultIcon, defaultActionIcon)
+  return unifyInput(props.icons, count.value, defaultIcon, defaultActionIcon)
 })
 function unifyInput(
   input: IconType,

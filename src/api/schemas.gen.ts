@@ -106,6 +106,18 @@ export const $Post = {
   title: 'Post',
 } as const
 
+export const $PostCountResponse = {
+  properties: {
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+  },
+  type: 'object',
+  required: ['count'],
+  title: 'PostCountResponse',
+} as const
+
 export const $PostHasTagPublic = {
   properties: {
     is_auto: {
@@ -193,6 +205,22 @@ export const $PostPublic = {
   title: 'PostPublic',
 } as const
 
+export const $RatingCountResponse = {
+  properties: {
+    rating: {
+      type: 'integer',
+      title: 'Rating',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+  },
+  type: 'object',
+  required: ['rating', 'count'],
+  title: 'RatingCountResponse',
+} as const
+
 export const $RatingUpdate = {
   properties: {
     rating: {
@@ -205,6 +233,22 @@ export const $RatingUpdate = {
   type: 'object',
   required: ['rating'],
   title: 'RatingUpdate',
+} as const
+
+export const $ScoreCountResponse = {
+  properties: {
+    score: {
+      type: 'integer',
+      title: 'Score',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+  },
+  type: 'object',
+  required: ['score', 'count'],
+  title: 'ScoreCountResponse',
 } as const
 
 export const $ScoreUpdate = {

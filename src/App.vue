@@ -2,9 +2,17 @@
 import { createClient } from '@hey-api/client-fetch'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import Slider from './components/Slider.vue'
+import { useMutation, useQuery, useQueryClient } from 'vue-query'
 import { baseUrl, waterfallItemWidth } from './shared'
+import { v1GetPostsCount } from './api'
 
+const { data: allCount } = useQuery(
+  ['post-count'],
+  async () => {
+    const resp = await v1GetPostsCount({ baseUrl })
+    return resp.data.count
+  },
+)
 createClient({ baseUrl })
 </script>
 
@@ -19,6 +27,11 @@ createClient({ baseUrl })
       >
         <div class="flex flex-col gap-1 text-sm select-none">
           <ListItem
+            icon="i-tabler-photo"
+            title="All"
+            :extra-info="allCount"
+          />
+          <ListItem
             icon="i-tabler-clock"
             title="Recently"
             extra-info="12,522"
@@ -31,16 +44,18 @@ createClient({ baseUrl })
         </div>
       </Pane>
       <Pane class="flex-grow px-1">
-        <header class="flex justify-center h-24px items-center">
-          <Slider
-            v-model="waterfallItemWidth"
-            class="max-w-40"
-            size="sm"
-            :min="50"
-            :max="800"
-            :min-width="0"
-            :tick-num="0"
-          />
+        <header class="flex flex-col justify-center h-52px items-center">
+          <div class="flex justify-center w-32">
+            <Slider
+              v-model="waterfallItemWidth"
+              size="sm"
+              :min="50"
+              :max="800"
+              :min-width="0"
+              :tick-num="0"
+            />
+          </div>
+          <FilterRow />
         </header>
         <Suspense>
           <MainSection />

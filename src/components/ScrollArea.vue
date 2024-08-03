@@ -29,17 +29,29 @@ const height = computed(() => {
   return parentBounds.height.value - parentPaddingY - parentMarginY
 })
 const scrollDomRef = ref<HTMLElement | null>()
+
 const clientHeight = useClientHeight(() => scrollDomRef.value)
-const { x, y } = useScroll(() => scrollDomRef.value)
-const scrollableLength = computed(() => {
-  return (scrollDomRef.value?.scrollHeight ?? 0) - (clientHeight.value ?? 0)
+const scrollHeight = ref(0)
+// 为了检查滚动区域长度的变化，姑且使用 Mutation Observer
+useMutationObserver(scrollDomRef, () => {
+  if (scrollDomRef.value) {
+    scrollHeight.value = scrollDomRef.value.scrollHeight
+  }
+}, {
+  subtree: true,
+  attributes: true,
 })
+const scrollableLength = computed(() => {
+  return (scrollHeight.value ?? 0) - (clientHeight.value ?? 0)
+})
+
+const { x, y } = useScroll(() => scrollDomRef.value)
 const barProgress = computed(() => y.value / scrollableLength.value || 0)
 const barHeight = computed(() => {
   if (!scrollDomRef.value) {
     return 0
   }
-  return clientHeight.value / scrollDomRef.value.scrollHeight * clientHeight.value
+  return clientHeight.value / scrollHeight.value * clientHeight.value
 })
 const scrollableHeight = computed(() => {
   return clientHeight.value - barHeight.value

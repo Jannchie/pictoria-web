@@ -2,7 +2,7 @@
 defineProps<{
   title: string
   icon?: string
-  extraInfo?: string
+  extraInfo?: any
 }>()
 </script>
 

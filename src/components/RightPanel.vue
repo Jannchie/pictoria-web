@@ -44,6 +44,18 @@ async function onAutoTag() {
 function timestampToTime(timestamp: number) {
   return new Date(timestamp * 1000).toLocaleString()
 }
+async function onSelectScore(post_id: number, score: number = 0) {
+  await v1UpdatePostScore({
+    baseUrl,
+    path: {
+      post_id,
+    },
+    body: {
+      score,
+    },
+  })
+  queryClient.invalidateQueries(['count', 'score'])
+}
 </script>
 
 <template>
@@ -94,15 +106,7 @@ function timestampToTime(timestamp: number) {
             <Rating
               :model-value="datum.score"
               :count="5"
-              @select="async (d) => await v1UpdatePostScore({
-                baseUrl,
-                path: {
-                  post_id: datum.id,
-                },
-                body: {
-                  score: d,
-                },
-              })"
+              @select="(d) => onSelectScore(datum.id, d)"
             />
           </div>
           <div v-if="datum.size">

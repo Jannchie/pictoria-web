@@ -27,6 +27,10 @@ export interface Post {
   id?: number
 }
 
+export interface PostCountResponse {
+  count: number
+}
+
 export interface PostHasTagPublic {
   is_auto: boolean
   tag_info: TagPublic
@@ -50,8 +54,18 @@ export interface PostPublic {
   tags?: Array<PostHasTagPublic>
 }
 
+export interface RatingCountResponse {
+  rating: number
+  count: number
+}
+
 export interface RatingUpdate {
   rating: number
+}
+
+export interface ScoreCountResponse {
+  score: number
+  count: number
 }
 
 export interface ScoreUpdate {
@@ -80,6 +94,18 @@ export interface V1GetPostsData {
 export type V1GetPostsResponse = Array<Post>
 
 export type V1GetPostsError = HTTPValidationError
+
+export type V1GetPostsCountResponse = unknown
+
+export type V1GetPostsCountError = unknown
+
+export type V1CountGroupByRatingResponse = Array<RatingCountResponse>
+
+export type V1CountGroupByRatingError = unknown
+
+export type V1CountGroupByScoreResponse = Array<ScoreCountResponse>
+
+export type V1CountGroupByScoreError = unknown
 
 export interface V1UpdatePostScoreData {
   body: ScoreUpdate
@@ -216,10 +242,6 @@ export type V1CmdAutoTagsResponse = unknown
 
 export type V1CmdAutoTagsError = HTTPValidationError
 
-export type V1GetPostsCountResponse = unknown
-
-export type V1GetPostsCountError = unknown
-
 export interface $OpenApiTs {
   '/v1/posts': {
     get: {
@@ -233,6 +255,36 @@ export interface $OpenApiTs {
          * Validation Error
          */
         422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/posts/count': {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
+      }
+    }
+  }
+  '/v1/posts/count/rating': {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<RatingCountResponse>
+      }
+    }
+  }
+  '/v1/posts/count/score': {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<ScoreCountResponse>
       }
     }
   }
@@ -427,16 +479,6 @@ export interface $OpenApiTs {
          * Validation Error
          */
         422: HTTPValidationError
-      }
-    }
-  }
-  '/v1/posts/count': {
-    get: {
-      res: {
-        /**
-         * Successful Response
-         */
-        200: unknown
       }
     }
   }
