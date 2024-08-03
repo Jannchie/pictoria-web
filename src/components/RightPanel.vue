@@ -74,6 +74,8 @@ function timestampToTime(timestamp: number) {
               :model-value="datum.rating"
               highlight-selected-only
               :count="4"
+              :colors="['green', 'yellow', 'orange', 'red']"
+              :icons="['i-tabler-seeding', 'i-tabler-mood-heart', 'i-tabler-eye-off', 'i-tabler-eyeglass-off']"
               @select="async (d) => v1UpdatePostRating({
                 baseUrl,
                 path: {

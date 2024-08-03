@@ -3,7 +3,8 @@ import { computed, ref } from 'vue'
 
 const props = defineProps<{
   count?: number
-  icon?: string | string[]
+  icons?: IconType
+  colors?: string[]
   highlightSelectedOnly?: boolean
   unselectable?: boolean
 }>()
@@ -23,52 +24,147 @@ const unselectable = computed(() => {
 const hoverIndex = ref(-1)
 const defaultIcon = 'i-tabler-star'
 const defaultActionIcon = 'i-tabler-star-filled'
+const defaultColor = '#EA580C'
 
-function getIcon(index: number) {
-  return index < model.value ? defaultActionIcon : defaultIcon
-}
-
-const icons = computed(() => {
-  if (!props.icon) {
-    return Array.from({ length: count.value }).map((_, index) => getIcon(index))
-  }
-  if (typeof props.icon === 'string') {
-    return Array(count.value).map(_ => props.icon)
-  }
-  return Array.from({ length: count.value }).map((_, index) => props.icon[index] ?? defaultIcon)
+type IconType = string | { active: string, normal: string } | (string | { active: string, normal: string })[] | undefined
+const iconData = computed(() => {
+  return unifyInput(props.icons, props.count, defaultIcon, defaultActionIcon)
 })
+function unifyInput(
+  input: IconType,
+  n: number,
+  defaultNormalIcon: string,
+  defaultActiveIcon: string,
+): { active: string, normal: string }[] {
+  // Helper function to convert a string to { active, normal } object using default values
+  function toActiveNormal(value: string | { active: string, normal: string } | undefined): { active: string, normal: string } {
+    if (typeof value === 'string') {
+      return { active: value, normal: value }
+    }
+    else if (value === undefined) {
+      return { active: defaultActiveIcon, normal: defaultNormalIcon }
+    }
+    else {
+      return {
+        active: value.active || defaultActiveIcon,
+        normal: value.normal || defaultNormalIcon,
+      }
+    }
+  }
 
+  // If input is undefined, use default values for all elements
+  if (input === undefined) {
+    return Array(n).fill({ active: defaultActiveIcon, normal: defaultNormalIcon })
+  }
+
+  // Determine the base object to use for filling the array
+  let baseObject: { active: string, normal: string }
+
+  if (typeof input === 'string') {
+    baseObject = { active: input, normal: input }
+  }
+  else if (Array.isArray(input)) {
+    const normalizedArray = input.map(item => toActiveNormal(item))
+    if (normalizedArray.length === 1) {
+      // If the array only contains one element, use it to fill all elements
+      baseObject = normalizedArray[0]
+      return Array(n).fill(baseObject)
+    }
+    else {
+      // If the array contains multiple elements, ensure it has exactly `n` elements
+      return normalizedArray
+        .slice(0, n) // Use existing elements up to n
+        .concat( // Fill remaining with default values
+          Array(Math.max(0, n - normalizedArray.length)).fill({ active: defaultActiveIcon, normal: defaultNormalIcon }),
+        )
+    }
+  }
+  else {
+    baseObject = {
+      active: input.active || defaultActiveIcon,
+      normal: input.normal || defaultNormalIcon,
+    }
+  }
+
+  // Create an array with `n` elements, all being `baseObject`
+  return Array(n).fill(baseObject)
+}
 const activeCls = 'text-orange-6'
 const inactiveCls = 'text-surface-on-low'
 const hoverCls = 'text-orange-6'
 function getCls(idx: number) {
+  const normalIcon = iconData.value[idx].normal
+  const activeIcon = iconData.value[idx].active
   if (highlightSelectedOnly.value) {
     if (hoverIndex.value !== -1) {
       if (hoverIndex.value === idx + 1) {
-        return [hoverCls, defaultActionIcon]
+        return [hoverCls, activeIcon]
       }
-      return [inactiveCls, defaultIcon]
+      return [inactiveCls, normalIcon]
     }
     else {
       if (model.value === idx + 1) {
-        return [activeCls, defaultActionIcon]
+        return [activeCls, activeIcon]
       }
-      return [inactiveCls, defaultIcon]
+      return [inactiveCls, normalIcon]
     }
   }
   if (hoverIndex.value !== -1) {
     if (hoverIndex.value > idx) {
-      return [hoverCls, defaultActionIcon]
+      return [hoverCls, activeIcon]
     }
     else {
-      return [inactiveCls, defaultIcon]
+      return [inactiveCls, normalIcon]
     }
   }
   else {
     if (model.value >= idx + 1) {
-      return [activeCls, defaultActionIcon]
+      return [activeCls, activeIcon]
     }
-    return [inactiveCls, defaultIcon]
+    return [inactiveCls, normalIcon]
+  }
+}
+const colors = computed(() => {
+  const resp = Array.from({ length: count.value }).map(() => defaultColor)
+  if (!props.colors) {
+    return resp
+  }
+  props.colors.forEach((d, i) => {
+    if (d) {
+      resp[i] = d
+    }
+  })
+  return resp
+})
+function getStyle(idx: number) {
+  const activeColor = colors.value[idx]
+  if (highlightSelectedOnly.value) {
+    if (hoverIndex.value !== -1) {
+      if (hoverIndex.value === idx + 1) {
+        return { color: activeColor }
+      }
+      return { color: '#666F' }
+    }
+    else {
+      if (model.value === idx + 1) {
+        return { color: activeColor }
+      }
+      return { color: '#666F' }
+    }
+  }
+  if (hoverIndex.value !== -1) {
+    if (hoverIndex.value > idx) {
+      return { color: activeColor }
+    }
+    else {
+      return { color: '#666F' }
+    }
+  }
+  else {
+    if (model.value >= idx + 1) {
+      return { color: activeColor }
+    }
+    return { color: '#666F' }
   }
 }
 function onPointerDown(i: number) {
@@ -86,9 +182,10 @@ function onPointerDown(i: number) {
 <template>
   <div class="flex gap-1 cursor-pointer">
     <i
-      v-for="ico, i in icons"
+      v-for="_, i in count"
       :key="i"
       :class="getCls(i)"
+      :style="getStyle(i)"
       @mouseover="hoverIndex = i + 1"
       @mouseleave="hoverIndex = -1"
       @pointerdown="onPointerDown(i)"
