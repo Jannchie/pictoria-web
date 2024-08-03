@@ -64,9 +64,6 @@ const boundings = computed(() => {
 })
 
 const clientWidth = useClientWidth(wrapperDom)
-const wrapperWidth = computed(() => {
-  return unref(props.wrapperWidth) ?? 0
-})
 const paddingInner = computed(() => {
   return (clientWidth.value - contentWidth.value) / 2
 })
@@ -175,6 +172,7 @@ defineExpose({
   },
   wrapperDom,
   contentDom,
+  layoutData,
 })
 const wrapperIs = computed(() => props.is ?? 'div')
 </script>

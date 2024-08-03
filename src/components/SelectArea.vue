@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { useElementBounding, useEventListener, useMouse, useMousePressed } from '@vueuse/core'
+import { useElementBounding, useEventListener, useMouse } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
   target?: HTMLElement
 }>()
-
 const emit = defineEmits<{
   selectStart: []
-  selectChange: [SelectArea]
-  selectEnd: [SelectArea]
-
+  selectChange: [Area, { shift: boolean, ctrl: boolean }]
+  selectEnd: [Area, { shift: boolean, ctrl: boolean }]
 }>()
-interface SelectArea {
+const { shift, control: ctrl } = useMagicKeys()
+export interface Area {
   left: number
   top: number
   right: number
   bottom: number
 }
+
 const target = computed(() => props.target ?? document.documentElement)
 const mouse = useMouse()
 const startPoint = ref({ x: 0, y: 0 })
@@ -51,7 +51,7 @@ useEventListener(window, 'pointerup', () => {
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  })
+  }, { shift: shift.value, ctrl: ctrl.value })
 })
 
 useEventListener(target, 'pointermove', (e) => {
@@ -69,7 +69,7 @@ useEventListener(target, 'pointermove', (e) => {
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  })
+  }, { shift: shift.value, ctrl: ctrl.value })
 })
 const parent = computed(() => {
   if (!target.value) {
@@ -90,7 +90,7 @@ useEventListener(parent, 'scroll', () => {
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  })
+  }, { shift: shift.value, ctrl: ctrl.value })
 })
 
 useEventListener(window, 'dragend', () => {

@@ -12,3 +12,6 @@ interface InputDatum {
 export type RightPanelDatum = Post | ImageDatum | InputDatum
 export const rightPanelData = ref<RightPanelDatum[]>([])
 export const waterfallItemWidth = ref(400)
+export const selectedPostId = ref<Set<string | undefined>>(new Set())
+export const selectingPostId = ref<Set<string | undefined>>(new Set())
+export const unselectedPostId = ref<Set<string | undefined>>(new Set())
