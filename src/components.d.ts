@@ -11,6 +11,7 @@ declare module 'vue' {
     ListItem: typeof import('./components/ListItem.vue')['default']
     MainSection: typeof import('./components/MainSection.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
+    Rating: typeof import('./components/Rating.vue')['default']
     RightPanel: typeof import('./components/RightPanel.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']

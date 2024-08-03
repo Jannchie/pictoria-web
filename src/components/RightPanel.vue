@@ -5,7 +5,8 @@ import { Btn } from '@roku-ui/vue'
 import { useMutation, useQuery, useQueryClient } from 'vue-query'
 import { baseUrl, selectedPostId } from '../shared'
 import type { PostPublic } from '../api'
-import { v1CmdAutoTags, v1GetPost } from '../api'
+import { v1CmdAutoTags, v1GetPost, v1UpdatePostRating, v1UpdatePostScore } from '../api'
+import Rating from './Rating.vue'
 
 const id = computed<number>(() => selectedPostId.value.values().next().value)
 function isPost(datum: any): datum is PostPublic {
@@ -69,13 +70,38 @@ function timestampToTime(timestamp: number) {
         >
           <div>Rating</div>
           <div>
-            {{ datum.rating }}
+            <Rating
+              :model-value="datum.rating"
+              highlight-selected-only
+              :count="4"
+              @select="async (d) => v1UpdatePostRating({
+                baseUrl,
+                path: {
+                  post_id: datum.id,
+                },
+                body: {
+                  rating: d,
+                },
+              })"
+            />
           </div>
           <div>
             Score
           </div>
           <div>
-            {{ datum.score }}
+            <Rating
+              :model-value="datum.score"
+              :count="5"
+              @select="async (d) => await v1UpdatePostScore({
+                baseUrl,
+                path: {
+                  post_id: datum.id,
+                },
+                body: {
+                  score: d,
+                },
+              })"
+            />
           </div>
           <div v-if="datum.size">
             Size

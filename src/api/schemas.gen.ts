@@ -193,6 +193,34 @@ export const $PostPublic = {
   title: 'PostPublic',
 } as const
 
+export const $RatingUpdate = {
+  properties: {
+    rating: {
+      type: 'integer',
+      maximum: 5,
+      minimum: 0,
+      title: 'Rating',
+    },
+  },
+  type: 'object',
+  required: ['rating'],
+  title: 'RatingUpdate',
+} as const
+
+export const $ScoreUpdate = {
+  properties: {
+    score: {
+      type: 'integer',
+      maximum: 5,
+      minimum: 0,
+      title: 'Score',
+    },
+  },
+  type: 'object',
+  required: ['score'],
+  title: 'ScoreUpdate',
+} as const
+
 export const $TagPublic = {
   properties: {
     count: {

@@ -50,6 +50,14 @@ export interface PostPublic {
   tags?: Array<PostHasTagPublic>
 }
 
+export interface RatingUpdate {
+  rating: number
+}
+
+export interface ScoreUpdate {
+  score: number
+}
+
 export interface TagPublic {
   count?: number
   name: string
@@ -72,6 +80,28 @@ export interface V1GetPostsData {
 export type V1GetPostsResponse = Array<Post>
 
 export type V1GetPostsError = HTTPValidationError
+
+export interface V1UpdatePostScoreData {
+  body: ScoreUpdate
+  path: {
+    post_id: number
+  }
+}
+
+export type V1UpdatePostScoreResponse = unknown
+
+export type V1UpdatePostScoreError = HTTPValidationError
+
+export interface V1UpdatePostRatingData {
+  body: RatingUpdate
+  path: {
+    post_id: number
+  }
+}
+
+export type V1UpdatePostRatingResponse = unknown
+
+export type V1UpdatePostRatingError = HTTPValidationError
 
 export interface V1GetPostData {
   path: {
@@ -199,6 +229,36 @@ export interface $OpenApiTs {
          * Successful Response
          */
         200: Array<Post>
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/posts/{post_id}/score': {
+    put: {
+      req: V1UpdatePostScoreData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/posts/{post_id}/rating': {
+    put: {
+      req: V1UpdatePostRatingData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
         /**
          * Validation Error
          */

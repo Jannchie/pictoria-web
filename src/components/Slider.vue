@@ -38,7 +38,7 @@ function minMaxStepToOptions(min: number, max: number, step: number) {
 }
 
 function getTicks(tickNum: number, options: any[]) {
-  const ticks = []
+  const ticks: any[] = []
   if (tickNum === 0) {
     return ticks
   }

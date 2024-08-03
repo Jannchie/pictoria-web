@@ -27,7 +27,7 @@ const layoutData = computed(() => {
 function onSelectChange(selectArea: Area, { shift, ctrl }: { shift: boolean, ctrl: boolean }) {
   // layoutData 是 x,y,width,height 的数组，selectArea 是 left,rihht,top,bottom 的对象。
   // 通过计算两者的交集，得到选中的元素 index
-  const currentSelectingId: Set<string | undefined> = new Set()
+  const currentSelectingId: Set<number | undefined> = new Set()
 
   layoutData.value?.forEach((element, index) => {
     const elementLeft = element.x
