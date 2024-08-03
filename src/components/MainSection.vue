@@ -71,12 +71,23 @@ function onSelectEnd() {
   selectingPostId.value = new Set()
   unselectingPostId.value = new Set()
 }
+
+function onSelectStart({ ctrl, shift }: {
+  ctrl: boolean
+  shift: boolean
+}) {
+  // 如果没有按住 ctrl 或 shift，则清空已选中的元素
+  if (!ctrl && !shift) {
+    selectedPostId.value = new Set()
+  }
+}
 </script>
 
 <template>
   <section class="relative h-[calc(100vh-24px-24px)]">
     <SelectArea
       :target="waterfallContentDom"
+      @select-start="onSelectStart"
       @select-change="onSelectChange"
       @select-end="onSelectEnd"
     />

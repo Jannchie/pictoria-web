@@ -8,8 +8,7 @@ const props = defineProps<{
 
 }>()
 const post = computed(() => props.post)
-function onPointerDown(e: PointerEvent) {
-  e.stopPropagation()
+function onPointerUp(e: PointerEvent) {
   // 如果不是右键，则不执行
   if (e.button !== 0) {
     return
@@ -36,6 +35,13 @@ function onPointerDown(e: PointerEvent) {
 const selected = computed(() => {
   return (selectedPostId.value.has(post.value.id) || selectingPostId.value.has(post.value.id)) && !unselectedPostId.value.has(post.value.id)
 })
+function onDragStart(e: DragEvent) {
+  // 如果不是右键，则不执行
+  if (e.button !== 0) {
+    return
+  }
+  selectedPostId.value = new Set([post.value.id])
+}
 </script>
 
 <template>
@@ -47,12 +53,13 @@ const selected = computed(() => {
       :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
       class="post-image rounded w-inherit select-all"
       draggable="true"
-      @pointerdown="onPointerDown"
+      @dragstart="onDragStart"
+      @pointerdown.stop="onPointerUp"
     >
     <div class="text-xs text-zinc-4 flex flex-col w-full text-center">
       <div class=" w-full truncate text-xs">
         <div class="filename-wrapper inline-block px-1 rounded">
-          {{ post.file_path }}
+          {{ `${post.file_path}.${post.extension}` }}
         </div>
       </div>
       <div class="w-full truncate font-bold font-mono text-11px">

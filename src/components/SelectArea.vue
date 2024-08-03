@@ -6,7 +6,7 @@ const props = defineProps<{
   target?: HTMLElement
 }>()
 const emit = defineEmits<{
-  selectStart: []
+  selectStart: [{ shift: boolean, ctrl: boolean }]
   selectChange: [Area, { shift: boolean, ctrl: boolean }]
   selectEnd: [Area, { shift: boolean, ctrl: boolean }]
 }>()
@@ -41,7 +41,7 @@ useEventListener(target, 'pointerdown', (e) => {
     y: offsetY,
   }
   dragging.value = true
-  emit('selectStart')
+  emit('selectStart', { shift: shift.value, ctrl: ctrl.value })
 })
 // 捕获任意元素的 mouseup 事件
 useEventListener(window, 'pointerup', () => {
