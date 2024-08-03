@@ -13,7 +13,66 @@ const { data: allCount } = useQuery(
     return (resp.data as any).count
   },
 )
-createClient({ baseUrl })
+
+const dropArea = document.body as HTMLElement
+console.log(dropArea)
+dropArea.addEventListener('dragover', (event: DragEvent) => {
+  event.preventDefault()
+  dropArea.classList.add('dragover')
+})
+
+dropArea.addEventListener('dragleave', (event: DragEvent) => {
+  dropArea.classList.remove('dragover')
+})
+
+dropArea.addEventListener('drop', async (event: DragEvent) => {
+  event.preventDefault()
+  dropArea.classList.remove('dragover')
+
+  const items = event.dataTransfer?.items
+  if (items) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i].webkitGetAsEntry()
+      if (item) {
+        traverseFileTree(item)
+      }
+    }
+  }
+})
+
+function traverseFileTree(item: any, path: string = '') {
+  if (item.isFile) {
+    item.file((file: File) => {
+      uploadFile(file, path + file.name)
+    })
+  }
+  else if (item.isDirectory) {
+    const dirReader = item.createReader()
+    dirReader.readEntries((entries: any[]) => {
+      for (const entry of entries) {
+        traverseFileTree(entry, `${path + item.name}/`)
+      }
+    })
+  }
+}
+
+function uploadFile(file: File, relativePath: string) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('path', relativePath)
+
+  fetch('http://localhost:8000/upload', {
+    method: 'POST',
+    body: formData,
+  })
+    .then(response => response.json())
+    .then((data) => {
+      console.log(data)
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+}
 </script>
 
 <template>
