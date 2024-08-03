@@ -44,11 +44,6 @@ export const $HTTPValidationError = {
 
 export const $Post = {
   properties: {
-    id: {
-      type: 'string',
-      format: 'uuid',
-      title: 'Id',
-    },
     file_path: {
       type: 'string',
       title: 'File Path',
@@ -101,10 +96,118 @@ export const $Post = {
       type: 'integer',
       title: 'Size',
     },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
   },
   type: 'object',
   required: ['file_path', 'extension'],
   title: 'Post',
+} as const
+
+export const $PostHasTagPublic = {
+  properties: {
+    is_auto: {
+      type: 'boolean',
+      title: 'Is Auto',
+    },
+    tag_info: {
+      $ref: '#/components/schemas/TagPublic',
+    },
+  },
+  type: 'object',
+  required: ['is_auto', 'tag_info'],
+  title: 'PostHasTagPublic',
+} as const
+
+export const $PostPublic = {
+  properties: {
+    file_path: {
+      type: 'string',
+      title: 'File Path',
+    },
+    extension: {
+      type: 'string',
+      title: 'Extension',
+    },
+    width: {
+      type: 'integer',
+      title: 'Width',
+    },
+    height: {
+      type: 'integer',
+      title: 'Height',
+    },
+    aspect_ratio: {
+      type: 'number',
+      title: 'Aspect Ratio',
+    },
+    score: {
+      type: 'integer',
+      title: 'Score',
+    },
+    rating: {
+      type: 'integer',
+      title: 'Rating',
+    },
+    description: {
+      type: 'string',
+      title: 'Description',
+    },
+    updated_at: {
+      type: 'integer',
+      title: 'Updated At',
+    },
+    created_at: {
+      type: 'integer',
+      title: 'Created At',
+    },
+    meta: {
+      type: 'string',
+      title: 'Meta',
+    },
+    md5: {
+      type: 'string',
+      title: 'Md5',
+    },
+    size: {
+      type: 'integer',
+      title: 'Size',
+    },
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    tags: {
+      items: {
+        $ref: '#/components/schemas/PostHasTagPublic',
+      },
+      type: 'array',
+      title: 'Tags',
+      default: [],
+    },
+  },
+  type: 'object',
+  required: ['file_path', 'extension', 'id'],
+  title: 'PostPublic',
+} as const
+
+export const $TagPublic = {
+  properties: {
+    count: {
+      type: 'integer',
+      title: 'Count',
+      default: 0,
+    },
+    name: {
+      type: 'string',
+      title: 'Name',
+    },
+  },
+  type: 'object',
+  required: ['name'],
+  title: 'TagPublic',
 } as const
 
 export const $ValidationError = {

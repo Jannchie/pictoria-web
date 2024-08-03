@@ -1,14 +1,45 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { filesize } from 'filesize'
-import { baseUrl, rightPanelData } from '../shared'
-import type { Post } from '../api'
+import { Btn } from '@roku-ui/vue'
+import { useMutation, useQuery, useQueryClient } from 'vue-query'
+import { baseUrl, selectedPostId } from '../shared'
+import type { PostPublic } from '../api'
+import { v1CmdAutoTags, v1GetPost } from '../api'
 
-const data = computed(() => rightPanelData.value)
-function isPost(datum: any): datum is Post {
+const id = computed<number>(() => selectedPostId.value.values().next().value)
+function isPost(datum: any): datum is PostPublic {
   return 'file_path' in datum
 }
 
+const queryClient = useQueryClient()
+const { data: postData } = useQuery(
+  ['post', id],
+  async () => {
+    const resp = await v1GetPost({ baseUrl, path: { post_id: id.value } })
+    return resp.data
+  },
+)
+const data = computed(() => {
+  if (postData.value) {
+    return [postData.value]
+  }
+  else {
+    return []
+  }
+})
+
+const mutation = useMutation(
+  () => v1CmdAutoTags({ baseUrl, path: { post_id: id.value } }),
+  {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['post', id])
+    },
+  },
+)
+async function onAutoTag() {
+  mutation.mutate()
+}
 function timestampToTime(timestamp: number) {
   return new Date(timestamp * 1000).toLocaleString()
 }
@@ -74,6 +105,37 @@ function timestampToTime(timestamp: number) {
           <div v-if="datum.created_at">
             {{ timestampToTime(datum.created_at) }}
           </div>
+        </div>
+      </div>
+      <div>
+        <div
+          v-if="datum.tags"
+          class="py-2 text-zinc-4 font-black"
+        >
+          Tags
+        </div>
+
+        <div class="flex gap-2 flex-wrap">
+          <div
+            v-for="tag, t of datum.tags"
+            :key="t"
+            class="bg-surface-high px-1 py-0.5 rounded"
+          >
+            {{ tag.tag_info.name }}
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="py-2 text-zinc-4 font-black">
+          Command
+        </div>
+        <div>
+          <Btn
+            size="sm"
+            @pointerdown="onAutoTag"
+          >
+            Auto Tag
+          </Btn>
         </div>
       </div>
     </div>

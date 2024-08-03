@@ -11,7 +11,6 @@ export interface HTTPValidationError {
 }
 
 export interface Post {
-  id?: string
   file_path: string
   extension: string
   width?: number
@@ -25,6 +24,35 @@ export interface Post {
   meta?: string
   md5?: string
   size?: number
+  id?: number
+}
+
+export interface PostHasTagPublic {
+  is_auto: boolean
+  tag_info: TagPublic
+}
+
+export interface PostPublic {
+  file_path: string
+  extension: string
+  width?: number
+  height?: number
+  aspect_ratio?: number
+  score?: number
+  rating?: number
+  description?: string
+  updated_at?: number
+  created_at?: number
+  meta?: string
+  md5?: string
+  size?: number
+  id: number
+  tags?: Array<PostHasTagPublic>
+}
+
+export interface TagPublic {
+  count?: number
+  name: string
 }
 
 export interface ValidationError {
@@ -51,7 +79,7 @@ export interface V1GetPostData {
   }
 }
 
-export type V1GetPostResponse = Post
+export type V1GetPostResponse = PostPublic
 
 export type V1GetPostError = HTTPValidationError
 
@@ -185,7 +213,7 @@ export interface $OpenApiTs {
         /**
          * Successful Response
          */
-        200: Post
+        200: PostPublic
         /**
          * Validation Error
          */
