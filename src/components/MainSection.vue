@@ -25,25 +25,23 @@ const cols = computed(() => Math.floor((waterfallWrapperBounds.width.value + 20 
   <section class="relative h-[calc(100vh-24px-24px)]">
     <SelectArea
       :target="waterfallContentDom"
-      class="w-full h-full"
+    />
+    <LazyWaterfall
+      :is="ScrollArea"
+      ref="waterfallRef"
+      class="waterfall-wrapper select-none"
+      :items="items"
+      :item-width="waterfallItemWidth"
+      :cols="cols"
+      :gap="20"
+      :padding-x="8"
+      :y-gap="36"
     >
-      <LazyWaterfall
-        :is="ScrollArea"
-        ref="waterfallRef"
-        class="waterfall-wrapper select-none"
-        :items="items"
-        :item-width="waterfallItemWidth"
-        :cols="cols"
-        :gap="20"
-        :padding-x="8"
-        :y-gap="36"
-      >
-        <PostItem
-          v-for="post in posts"
-          :key="post.id"
-          :post="post"
-        />
-      </LazyWaterfall>
-    </SelectArea>
+      <PostItem
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+      />
+    </LazyWaterfall>
   </section>
 </template>

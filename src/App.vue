@@ -5,9 +5,6 @@ import 'splitpanes/dist/splitpanes.css'
 import Slider from './components/Slider.vue'
 import { baseUrl, waterfallItemWidth } from './shared'
 
-watchEffect(() => {
-  console.log(waterfallItemWidth.value)
-})
 createClient({ baseUrl })
 </script>
 
@@ -33,7 +30,7 @@ createClient({ baseUrl })
           />
         </div>
       </Pane>
-      <Pane class="flex-grow">
+      <Pane class="flex-grow px-1">
         <header class="flex justify-center h-24px items-center">
           <Slider
             v-model="waterfallItemWidth"

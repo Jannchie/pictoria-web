@@ -20,8 +20,6 @@ interface SelectArea {
 }
 const target = computed(() => props.target ?? document.documentElement)
 const mouse = useMouse()
-const { pressed } = useMousePressed()
-const selectAreaRef = ref<HTMLElement | null>(null)
 const startPoint = ref({ x: 0, y: 0 })
 const endPoint = ref({ x: 0, y: 0 })
 const dragging = ref(false)
@@ -98,27 +96,19 @@ useEventListener(parent, 'scroll', () => {
 useEventListener(window, 'dragend', () => {
   dragging.value = false
 })
-
-defineExpose({
-  selectAreaRef,
-})
 </script>
 
 <template>
-  <div ref="selectAreaRef">
-    {{ mouse.x }}, {{ mouse.y }}, {{ pressed }}
-    <Teleport :to="target">
-      <div
-        v-if="dragging"
-        class="absolute h-1 bg-primary-8/25 border-primary-8/75 z-10000"
-        :style="{
-          left: `${Math.min(startPoint.x, endPoint.x)}px`,
-          top: `${Math.min(startPoint.y, endPoint.y)}px`,
-          width: `${Math.abs(startPoint.x - endPoint.x)}px`,
-          height: `${Math.abs(startPoint.y - endPoint.y)}px`,
-        }"
-      />
-    </Teleport>
-    <slot />
-  </div>
+  <Teleport :to="target">
+    <div
+      v-if="dragging"
+      class="absolute h-1 bg-primary-8/25 border-primary-8/75 z-10000"
+      :style="{
+        left: `${Math.min(startPoint.x, endPoint.x)}px`,
+        top: `${Math.min(startPoint.y, endPoint.y)}px`,
+        width: `${Math.abs(startPoint.x - endPoint.x)}px`,
+        height: `${Math.abs(startPoint.y - endPoint.y)}px`,
+      }"
+    />
+  </Teleport>
 </template>

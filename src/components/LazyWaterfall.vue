@@ -2,7 +2,7 @@
 import { useScroll } from '@vueuse/core'
 import type { ComputedRef, MaybeRef } from 'vue'
 import { computed, ref, unref, useSlots } from 'vue'
-import { useClientHeight } from '../composables/useClientHeight'
+import { useClientHeight, useClientWidth } from '../composables/useClientHeight'
 
 const props = defineProps<{
   gap?: MaybeRef<number>
@@ -63,6 +63,13 @@ const boundings = computed(() => {
   })
 })
 
+const clientWidth = useClientWidth(wrapperDom)
+const wrapperWidth = computed(() => {
+  return unref(props.wrapperWidth) ?? 0
+})
+const paddingInner = computed(() => {
+  return (clientWidth.value - contentWidth.value) / 2
+})
 function calculateWaterfallLayout(itemsRef: ComputedRef<{ width: number, height: number }[]>, columnCount: MaybeRef<number>, gap: MaybeRef<number>, paddingX: MaybeRef<number>) {
   const items = unref(itemsRef)
   const columnHeights = Array.from<number>({ length: unref(columnCount) }).fill(0) // 初始化列高度数组
@@ -77,7 +84,7 @@ function calculateWaterfallLayout(itemsRef: ComputedRef<{ width: number, height:
   for (let i = 0; i < items.length; i++) {
     const item = items[i]
     const columnIndex = columnHeights.indexOf(Math.min(...columnHeights)) // 找到最短的列
-    const x = columnIndex * (itemWidth.value + unref(gap)) + unref(paddingX) + offset
+    const x = columnIndex * (itemWidth.value + unref(gap)) + unref(paddingX) + offset + unref(paddingInner)
     const y = columnHeights[columnIndex] // 计算 y 坐标
     itemPositions.push({ x, y, width: item.width, height: item.height })
     // 更新列的高度
@@ -184,8 +191,7 @@ const wrapperIs = computed(() => props.is ?? 'div')
       ref="contentDom"
       :style="{
         height: `${contentHeight}px`,
-        width: `${contentWidth}px`,
-        margin: '0 auto',
+        width: `${clientWidth}px`,
         position: 'relative',
       }"
     >
