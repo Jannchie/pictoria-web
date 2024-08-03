@@ -20,8 +20,8 @@ const getPostResp = useQuery(
 
 const posts = computed<Post[]>(() => getPostResp.data.value?.data ?? [])
 const items = computed(() => posts.value.map(post => ({
-  width: post.width ?? 0,
-  height: post.height ?? 0,
+  width: post.width ?? 1,
+  height: post.height ?? 1,
 })))
 
 const waterfallRef = ref<InstanceType<typeof LazyWaterfall> | null>(null)
