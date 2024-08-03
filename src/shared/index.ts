@@ -11,3 +11,4 @@ interface InputDatum {
 }
 export type RightPanelDatum = Post | ImageDatum | InputDatum
 export const rightPanelData = ref<RightPanelDatum[]>([])
+export const waterfallItemWidth = ref(400)

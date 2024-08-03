@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Post } from '../api'
 import { v1GetPosts } from '../api'
-import { baseUrl } from '../shared'
+import { baseUrl, waterfallItemWidth } from '../shared'
 import LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 
@@ -16,6 +16,9 @@ const items = computed(() => posts.value.map(post => ({
 
 const waterfallRef = ref<InstanceType<typeof LazyWaterfall> | null>(null)
 const waterfallContentDom = computed(() => waterfallRef.value?.contentDom)
+const waterfallWrapperDom = computed(() => waterfallRef.value?.wrapperDom)
+const waterfallWrapperBounds = useElementBounding(waterfallWrapperDom)
+const cols = computed(() => Math.floor((waterfallWrapperBounds.width.value + 20 - 8 * 2) / (waterfallItemWidth.value + 20)))
 </script>
 
 <template>
@@ -29,6 +32,8 @@ const waterfallContentDom = computed(() => waterfallRef.value?.contentDom)
         ref="waterfallRef"
         class="waterfall-wrapper select-none"
         :items="items"
+        :item-width="waterfallItemWidth"
+        :cols="cols"
         :gap="20"
         :padding-x="8"
         :y-gap="36"

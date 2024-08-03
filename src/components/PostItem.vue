@@ -23,11 +23,11 @@ function onPointerDown() {
       draggable="true"
       @pointerdown="onPointerDown"
     >
-    <div class="text-xs text-zinc-4 flex flex-col items-center">
-      <div>
+    <div class="text-xs text-zinc-4 flex flex-col w-full text-center">
+      <div class="w-full truncate text-xs">
         {{ post.file_path }}
       </div>
-      <div>
+      <div class="w-full truncate font-bold font-mono text-11px">
         {{ post.width }} x {{ post.height }}
       </div>
     </div>

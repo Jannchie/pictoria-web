@@ -8,7 +8,7 @@ const props = defineProps<{
   gap?: MaybeRef<number>
   wrapperWidth?: MaybeRef<number>
   itemWidth?: MaybeRef<number>
-  rowCount?: MaybeRef<number>
+  cols?: MaybeRef<number>
   paddingX?: MaybeRef<number>
   items: MaybeRef<{ width: number, height: number }[]>
   is?: MaybeRef<any>
@@ -18,10 +18,12 @@ const props = defineProps<{
 const rangeExpand = computed(() => unref(props.rangeExpand) ?? 0)
 const slots = useSlots()
 const gap = computed(() => unref(props.gap) ?? 16)
-const rowCount = computed(() => unref(props.rowCount) ?? 3)
 const paddingX = computed(() => unref(props.paddingX) ?? 0)
 const yGap = computed(() => unref(props.yGap) ?? 0)
 const wrapper = ref<any>()
+const cols = computed(() => {
+  return unref(props.cols) ?? 3
+})
 const wrapperDom = computed<HTMLElement>(() => {
   if (wrapper.value && wrapper.value.$el) {
     return wrapper.value.$el
@@ -35,7 +37,7 @@ function isArray<T>(val: any): val is T[] {
 
 const contentWidth = computed(() => {
   if (props.itemWidth) {
-    return unref(props.itemWidth) * rowCount.value + gap.value * (rowCount.value - 1) + paddingX.value * 2
+    return unref(props.itemWidth) * cols.value + gap.value * (cols.value - 1) + paddingX.value * 2
   }
   if (props.wrapperWidth) {
     return unref(props.wrapperWidth)
@@ -47,7 +49,7 @@ const itemWidth = computed(() => {
   if (props.itemWidth) {
     return unref(props.itemWidth)
   }
-  return (contentWidth.value - paddingX.value * 2 - gap.value * (rowCount.value - 1)) / rowCount.value
+  return (contentWidth.value - paddingX.value * 2 - gap.value * (cols.value - 1)) / cols.value
 })
 
 const boundings = computed(() => {
@@ -85,7 +87,7 @@ function calculateWaterfallLayout(itemsRef: ComputedRef<{ width: number, height:
 }
 
 const layoutData = computed(() => {
-  return calculateWaterfallLayout(boundings, rowCount, gap, paddingX)
+  return calculateWaterfallLayout(boundings, cols, gap, paddingX)
 })
 
 const contentHeight = computed(() => {

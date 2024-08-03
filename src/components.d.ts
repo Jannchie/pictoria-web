@@ -14,5 +14,6 @@ declare module 'vue' {
     RightPanel: typeof import('./components/RightPanel.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']
+    Slider: typeof import('./components/Slider.vue')['default']
   }
 }

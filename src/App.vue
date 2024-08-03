@@ -2,8 +2,12 @@
 import { createClient } from '@hey-api/client-fetch'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import { baseUrl } from './shared'
+import Slider from './components/Slider.vue'
+import { baseUrl, waterfallItemWidth } from './shared'
 
+watchEffect(() => {
+  console.log(waterfallItemWidth.value)
+})
 createClient({ baseUrl })
 </script>
 
@@ -30,7 +34,17 @@ createClient({ baseUrl })
         </div>
       </Pane>
       <Pane class="flex-grow">
-        <header>Header</header>
+        <header class="flex justify-center h-24px items-center">
+          <Slider
+            v-model="waterfallItemWidth"
+            class="max-w-40"
+            size="sm"
+            :min="50"
+            :max="800"
+            :min-width="0"
+            :tick-num="0"
+          />
+        </header>
         <Suspense>
           <MainSection />
         </Suspense>

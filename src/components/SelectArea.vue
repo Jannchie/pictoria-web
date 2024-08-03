@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useElementBounding, useEventListener, useMouse, useMousePressed, usePointer } from '@vueuse/core'
+import { useElementBounding, useEventListener, useMouse, useMousePressed } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
