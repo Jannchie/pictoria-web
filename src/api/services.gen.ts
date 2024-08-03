@@ -9,7 +9,7 @@ export const client = createClient(createConfig())
  * V1 Get Posts
  */
 export function v1GetPosts(options?: Options<V1GetPostsData>) {
-  return (options?.client ?? client).get<V1GetPostsResponse, V1GetPostsError>({
+  return (options?.client ?? client).post<V1GetPostsResponse, V1GetPostsError>({
     ...options,
     url: '/v1/posts',
   })

@@ -23,8 +23,8 @@ const mouse = useMouse()
 const startPoint = ref({ x: 0, y: 0 })
 const endPoint = ref({ x: 0, y: 0 })
 const dragging = ref(false)
-const targetBounds = useElementBounding(target)
 useEventListener(target, 'pointerdown', (e) => {
+  const targetBounds = useElementBounding(target)
   // if not left click, return
   if (e.button !== 0) {
     return
@@ -55,6 +55,7 @@ useEventListener(window, 'pointerup', () => {
 })
 
 useEventListener(target, 'pointermove', (e) => {
+  const targetBounds = useElementBounding(target)
   const offsetX = e.pageX - targetBounds.left.value
   const offsetY = e.pageY - targetBounds.top.value
   if (!dragging.value) {
@@ -81,6 +82,7 @@ useEventListener(parent, 'scroll', () => {
   if (!dragging.value) {
     return
   }
+  const targetBounds = useElementBounding(target)
   endPoint.value = {
     x: mouse.x.value - targetBounds.left.value,
     y: mouse.y.value - targetBounds.top.value,

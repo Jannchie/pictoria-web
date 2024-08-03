@@ -2,7 +2,7 @@
 import { createClient } from '@hey-api/client-fetch'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import { useMutation, useQuery, useQueryClient } from 'vue-query'
+import { useQuery } from 'vue-query'
 import { baseUrl, waterfallItemWidth } from './shared'
 import { v1GetPostsCount } from './api'
 
@@ -10,7 +10,7 @@ const { data: allCount } = useQuery(
   ['post-count'],
   async () => {
     const resp = await v1GetPostsCount({ baseUrl })
-    return resp.data.count
+    return (resp.data as any).count
   },
 )
 createClient({ baseUrl })
@@ -18,7 +18,7 @@ createClient({ baseUrl })
 
 <template>
   <div class="flex w-100vw h-100vh flex-col overflow-hidden select-none">
-    <Splitpanes class="flex flex-grow">
+    <Splitpanes>
       <Pane
         :min-size="8"
         :size="12"
@@ -43,7 +43,7 @@ createClient({ baseUrl })
           />
         </div>
       </Pane>
-      <Pane class="flex-grow px-1">
+      <Pane>
         <header class="flex flex-col justify-center h-52px items-center">
           <div class="flex justify-center w-32">
             <Slider
@@ -57,9 +57,7 @@ createClient({ baseUrl })
           </div>
           <FilterRow />
         </header>
-        <Suspense>
-          <MainSection />
-        </Suspense>
+        <MainSection v-if="true" />
       </Pane>
       <Pane
         :min-size="8"
@@ -77,3 +75,11 @@ createClient({ baseUrl })
     </div>
   </div>
 </template>
+
+<style>
+.splitpanes__splitter:hover:before {opacity: 1;}
+.splitpanes--vertical > .splitpanes__splitter:before {left: -2px;right: -2px;height: 100%;}
+.splitpanes--vertical .splitpanes__pane {
+    transition: none;
+}
+</style>

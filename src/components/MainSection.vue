@@ -1,15 +1,24 @@
 <script setup lang="ts">
+import { useQuery } from 'vue-query'
 import type { Post } from '../api'
 import { v1GetPosts } from '../api'
-import { baseUrl, selectedPostId, selectingPostId, unselectedPostId as unselectingPostId, waterfallItemWidth } from '../shared'
-import LazyWaterfall from './LazyWaterfall.vue'
+import { baseUrl, postFilter, selectedPostId, selectingPostId, unselectedPostId as unselectingPostId, waterfallItemWidth } from '../shared'
+import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
 
-const resp = await v1GetPosts({
-  baseUrl,
-})
-const posts = computed<Post[]>(() => resp.data ?? [])
+const getPostResp = useQuery(
+  ['posts', postFilter],
+  async () => {
+    const resp = await v1GetPosts({
+      baseUrl,
+      body: postFilter.value,
+    })
+    return resp
+  },
+)
+
+const posts = computed<Post[]>(() => getPostResp.data.value?.data ?? [])
 const items = computed(() => posts.value.map(post => ({
   width: post.width ?? 0,
   height: post.height ?? 0,
@@ -84,7 +93,9 @@ function onSelectStart({ ctrl, shift }: {
 </script>
 
 <template>
-  <section class="relative h-[calc(100vh-52px-24px)]">
+  <section
+    class="relative h-[calc(100vh-52px-24px)]"
+  >
     <SelectArea
       :target="waterfallContentDom"
       @select-start="onSelectStart"

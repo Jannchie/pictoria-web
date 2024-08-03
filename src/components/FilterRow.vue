@@ -1,17 +1,24 @@
 <script setup lang="ts">
-import { Btn, Overlay } from '@roku-ui/vue'
+import { Btn } from '@roku-ui/vue'
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { useQuery } from 'vue-query'
 import { v1CountGroupByScore } from '../api'
-import { baseUrl } from '../shared'
+import { baseUrl, postFilter } from '../shared'
 
 const showMenu = ref(false)
 const menuRef = ref<HTMLElement | null>(null)
 onClickOutside(menuRef, () => {
   showMenu.value = false
 })
-const scoreFilterData = ref<number[]>([])
+const scoreFilterData = computed({
+  get() {
+    return postFilter.value.score
+  },
+  set(val: number[]) {
+    postFilter.value.score = val
+  },
+})
 function hasScore(score: number) {
   return scoreFilterData.value.includes(score)
 }
@@ -68,7 +75,7 @@ const scoreCountList = computed(() => {
             @pointerdown="onPointerDown(score)"
           >
             <Checkbox
-              class="flex-shrink-0"
+              class="flex-shrink-0 pointer-events-none"
               :value="hasScore(score)"
             />
             <div class="flex gap-1 flex-grow">

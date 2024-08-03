@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Post } from '../api'
-import { baseUrl, rightPanelData, selectedPostId, selectingPostId, unselectedPostId } from '../shared'
+import { baseUrl, selectedPostId, selectingPostId, unselectedPostId } from '../shared'
 
 const props = defineProps<{
   post: Post
@@ -30,7 +30,6 @@ function onPointerUp(e: PointerEvent) {
       }
     }
   }
-  rightPanelData.value = [post.value]
 }
 const selected = computed(() => {
   return (selectedPostId.value.has(post.value.id) || selectingPostId.value.has(post.value.id)) && !unselectedPostId.value.has(post.value.id)

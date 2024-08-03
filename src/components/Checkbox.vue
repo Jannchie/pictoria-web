@@ -4,7 +4,7 @@ const props = defineProps<{
   value?: boolean
 }>()
 
-const model = defineModel<boolean | undefined>({ default: undefined })
+const model = defineModel<boolean | undefined>('value', { default: undefined })
 const value = computed(() => {
   return model.value ?? props.value ?? false
 })
