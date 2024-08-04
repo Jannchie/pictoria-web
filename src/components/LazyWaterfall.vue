@@ -190,6 +190,7 @@ const wrapperIs = computed(() => props.is ?? 'div')
       :style="{
         height: `${contentHeight}px`,
         width: `${clientWidth}px`,
+        minHeight: '100%',
         position: 'relative',
       }"
     >
