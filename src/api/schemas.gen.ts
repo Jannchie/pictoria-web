@@ -349,6 +349,21 @@ export const $TagPublic = {
   title: 'TagPublic',
 } as const
 
+export const $TagResponse = {
+  properties: {
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+    tag_info: {
+      $ref: '#/components/schemas/TagPublic',
+    },
+  },
+  type: 'object',
+  required: ['count', 'tag_info'],
+  title: 'TagResponse',
+} as const
+
 export const $ValidationError = {
   properties: {
     loc: {

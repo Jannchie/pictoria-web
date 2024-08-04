@@ -94,6 +94,11 @@ export interface TagPublic {
   name: string
 }
 
+export interface TagResponse {
+  count: number
+  tag_info: TagPublic
+}
+
 export interface ValidationError {
   loc: Array<(string | number)>
   msg: string
@@ -117,9 +122,7 @@ export type V1GetPostsCountResponse = CountResponse
 export type V1GetPostsCountError = unknown
 
 export interface V1CountGroupByRatingData {
-  query?: {
-    path?: string
-  }
+  body: PostFilter
 }
 
 export type V1CountGroupByRatingResponse = Array<RatingCountResponse>
@@ -127,9 +130,7 @@ export type V1CountGroupByRatingResponse = Array<RatingCountResponse>
 export type V1CountGroupByRatingError = HTTPValidationError
 
 export interface V1CountGroupByScoreData {
-  query?: {
-    path?: string
-  }
+  body: PostFilter
 }
 
 export type V1CountGroupByScoreResponse = Array<ScoreCountResponse>
@@ -188,7 +189,7 @@ export type V1GetThumbnailResponse = unknown
 
 export type V1GetThumbnailError = HTTPValidationError
 
-export type V1GetTagsResponse = unknown
+export type V1GetTagsResponse = Array<TagResponse>
 
 export type V1GetTagsError = unknown
 
@@ -318,7 +319,7 @@ export interface $OpenApiTs {
     }
   }
   '/v1/posts/count/rating': {
-    get: {
+    post: {
       req: V1CountGroupByRatingData
       res: {
         /**
@@ -333,7 +334,7 @@ export interface $OpenApiTs {
     }
   }
   '/v1/posts/count/score': {
-    get: {
+    post: {
       req: V1CountGroupByScoreData
       res: {
         /**
@@ -428,7 +429,7 @@ export interface $OpenApiTs {
         /**
          * Successful Response
          */
-        200: unknown
+        200: Array<TagResponse>
       }
     }
   }

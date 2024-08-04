@@ -28,8 +28,8 @@ export function v1GetPostsCount(options?: Options) {
 /**
  * V1 Count Group By Rating
  */
-export function v1CountGroupByRating(options?: Options<V1CountGroupByRatingData>) {
-  return (options?.client ?? client).get<V1CountGroupByRatingResponse, V1CountGroupByRatingError>({
+export function v1CountGroupByRating(options: Options<V1CountGroupByRatingData>) {
+  return (options?.client ?? client).post<V1CountGroupByRatingResponse, V1CountGroupByRatingError>({
     ...options,
     url: '/v1/posts/count/rating',
   })
@@ -38,8 +38,8 @@ export function v1CountGroupByRating(options?: Options<V1CountGroupByRatingData>
 /**
  * V1 Count Group By Score
  */
-export function v1CountGroupByScore(options?: Options<V1CountGroupByScoreData>) {
-  return (options?.client ?? client).get<V1CountGroupByScoreResponse, V1CountGroupByScoreError>({
+export function v1CountGroupByScore(options: Options<V1CountGroupByScoreData>) {
+  return (options?.client ?? client).post<V1CountGroupByScoreResponse, V1CountGroupByScoreError>({
     ...options,
     url: '/v1/posts/count/score',
   })

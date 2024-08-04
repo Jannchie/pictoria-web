@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Checkbox: typeof import('./components/Checkbox.vue')['default']
+    copy: typeof import('./components/RatingFilter.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
@@ -16,6 +17,7 @@ declare module 'vue' {
     Menu: typeof import('./components/Menu.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
     Rating: typeof import('./components/Rating.vue')['default']
+    RatingFilter: typeof import('./components/RatingFilter.vue')['default']
     RightPanel: typeof import('./components/RightPanel.vue')['default']
     ScoreFilter: typeof import('./components/ScoreFilter.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']

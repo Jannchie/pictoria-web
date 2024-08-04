@@ -2,38 +2,38 @@
 import { Btn } from '@roku-ui/vue'
 import { computed, ref } from 'vue'
 import { useQuery } from 'vue-query'
-import { v1CountGroupByScore } from '../api'
+import { v1CountGroupByRating } from '../api'
 import { baseUrl, postFilter } from '../shared'
 
 const showMenu = ref(false)
 
-const scoreFilterData = computed({
+const ratingFilterData = computed({
   get() {
-    return postFilter.value.score
+    return postFilter.value.rating
   },
   set(val: number[]) {
-    postFilter.value.score = val
+    postFilter.value.rating = val
   },
 })
-function hasScore(score: number) {
-  return scoreFilterData.value.includes(score)
+function hasRating(rating: number) {
+  return ratingFilterData.value.includes(rating)
 }
-function onPointerDown(score: number) {
-  if (hasScore(score)) {
-    scoreFilterData.value = scoreFilterData.value.filter(s => s !== score)
+function onPointerDown(rating: number) {
+  if (hasRating(rating)) {
+    ratingFilterData.value = ratingFilterData.value.filter(s => s !== rating)
   }
   else {
-    scoreFilterData.value = [...scoreFilterData.value, score]
+    ratingFilterData.value = [...ratingFilterData.value, rating]
   }
 }
-const filterWidthoutScore = computed(() => {
+const filterWithoutRating = computed(() => {
   return {
     ...postFilter.value,
-    score: [],
+    rating: [],
   }
 })
-const scoreCountMutation = useQuery(['count', 'score', filterWidthoutScore], async () => {
-  const resp = await v1CountGroupByScore({
+const scoreCountMutation = useQuery(['count', 'rating', filterWithoutRating], async () => {
+  const resp = await v1CountGroupByRating({
     baseUrl,
     body: {
       ...postFilter.value,
@@ -42,23 +42,39 @@ const scoreCountMutation = useQuery(['count', 'score', filterWidthoutScore], asy
   return resp.data
 })
 const scoreCountList = computed(() => {
-  const resp = [0, 0, 0, 0, 0, 0]
+  const resp = [0, 0, 0, 0, 0]
   const data = scoreCountMutation.data
   data.value?.forEach((d) => {
-    resp[Number(d.score)] = d.count
+    resp[Number(d.rating)] = d.count
   })
   return resp
 })
 
 const btnText = computed(() => {
-  const score = scoreFilterData.value
+  const score = ratingFilterData.value
   if (score.length === 0) {
-    return 'Score'
+    return 'Rating'
   }
   else {
-    return score.map(s => s === 0 ? 'Not Scored Yet' : `${s} Star`).join(', ')
+    return score.map(s => getRatingName(s)).join(', ')
   }
 })
+function getRatingName(rating: number) {
+  switch (rating) {
+    case 0:
+      return 'Not Rating Yet'
+    case 1:
+      return 'General'
+    case 2:
+      return 'Sensitive'
+    case 3:
+      return 'Questionable'
+    case 4:
+      return 'Explicit'
+    default:
+      return 'Unknown'
+  }
+}
 </script>
 
 <template>
@@ -80,32 +96,28 @@ const btnText = computed(() => {
         class="z-10 border-surface-border-base bg-surface-low p-1 min-w-52 absolute mt-2 border rounded"
       >
         <div
-          v-for="score in [5, 4, 3, 2, 1, 0]"
-          :key="score"
+          v-for="rating in [1, 2, 3, 4, 0]"
+          :key="rating"
           class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
-          @pointerdown="onPointerDown(score)"
+          @pointerdown="onPointerDown(rating)"
         >
           <Checkbox
             class="flex-shrink-0 pointer-events-none"
-            :value="hasScore(score)"
+            :value="hasRating(rating)"
           />
           <div class="flex gap-1 flex-grow h-16px">
-            <template v-if="score === 0">
+            <template v-if="rating === 0">
               Not Scored Yet
             </template>
             <template v-else>
-              <i
-                v-for="i in score"
-                :key="i"
-                class="i-tabler-star-filled"
-              />
+              {{ getRatingName(rating) }}
             </template>
           </div>
           <div
-            v-if="scoreCountList[score]"
+            v-if="scoreCountList[rating]"
             class="flex-shrink-0"
           >
-            {{ scoreCountList[score] }}
+            {{ scoreCountList[rating] }}
           </div>
         </div>
       </div>

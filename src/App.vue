@@ -47,12 +47,19 @@ function traverseFileTree(item: any, path: string = '') {
 }
 
 async function onUploadFile(file: File, relativePath: string) {
-  await v1UploadFile({
-    baseUrl,
-    body: {
-      file,
-      path: relativePath,
-    },
+  // await v1UploadFile({
+  //   baseUrl,
+  //   body: {
+  //     file,
+  //     path: relativePath,
+  //   },
+  // })
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('path', relativePath)
+  await fetch('http://localhost:8000/v1/upload', {
+    method: 'POST',
+    body: formData,
   })
 }
 
