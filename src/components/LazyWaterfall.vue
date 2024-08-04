@@ -10,6 +10,7 @@ const props = defineProps<{
   itemWidth?: MaybeRef<number>
   cols?: MaybeRef<number>
   paddingX?: MaybeRef<number>
+  paddingY?: MaybeRef<number>
   items: MaybeRef<{ width: number, height: number }[]>
   is?: MaybeRef<any>
   yGap?: MaybeRef<number>
@@ -19,6 +20,7 @@ const rangeExpand = computed(() => unref(props.rangeExpand) ?? 0)
 const slots = useSlots()
 const gap = computed(() => unref(props.gap) ?? 16)
 const paddingX = computed(() => unref(props.paddingX) ?? 0)
+const paddingY = computed(() => unref(props.paddingY) ?? 0)
 const yGap = computed(() => unref(props.yGap) ?? 0)
 const wrapper = ref<any>()
 const cols = computed(() => {
@@ -82,7 +84,7 @@ function calculateWaterfallLayout(itemsRef: ComputedRef<{ width: number, height:
     const item = items[i]
     const columnIndex = columnHeights.indexOf(Math.min(...columnHeights)) // 找到最短的列
     const x = columnIndex * (itemWidth.value + unref(gap)) + unref(paddingX) + offset + unref(paddingInner)
-    const y = columnHeights[columnIndex] // 计算 y 坐标
+    const y = columnHeights[columnIndex] + unref(paddingY)
     itemPositions.push({ x, y, width: item.width, height: item.height })
     // 更新列的高度
     columnHeights[columnIndex] += item.height + unref(gap)
@@ -98,7 +100,7 @@ const contentHeight = computed(() => {
   if (!isArray(layoutData.value)) {
     return 0
   }
-  return Math.max(...layoutData.value.map(it => it.y + it.height))
+  return Math.max(...layoutData.value.map(it => it.y + it.height)) + paddingY.value * 2
 })
 
 const allSlots = computed(() => {
