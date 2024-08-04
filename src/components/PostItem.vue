@@ -16,7 +16,12 @@ function onPointerUp(e: PointerEvent) {
   }
 
   if (selectedPostId.value.has(post.value.id)) {
-    selectedPostId.value.delete(post.value.id)
+    if (!e.ctrlKey) {
+      selectedPostId.value = new Set([post.value.id])
+    }
+    else {
+      selectedPostId.value = new Set([...selectedPostId.value].filter(p => p !== post.value.id))
+    }
   }
   else {
     if (!e.ctrlKey) {
@@ -133,10 +138,10 @@ function getIconByExtension(extension: string) {
 
 <style lang="css" scoped>
 .selected .post-content {
-  outline: 2px solid rgb(var(--r-color-primary-container)) !important;
+  outline: 4px solid rgb(var(--r-color-primary-container)) !important;
 }
 .selected .filename-wrapper {
   background-color: rgb(var(--r-color-primary-container)) !important;
-  color: rgb(var(--r-color-surface-on)) !important;
+  color: white !important;
 }
 </style>
