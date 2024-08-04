@@ -98,7 +98,7 @@ function getIconByExtension(extension: string) {
     <img
       v-if="post.width && post.height"
       :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-      class="post-image rounded w-inherit select-all"
+      class="post-content rounded w-inherit select-all"
       draggable="true"
       @dragstart="onDragStart"
       @pointerdown.stop="onPointerUp"
@@ -106,7 +106,7 @@ function getIconByExtension(extension: string) {
     <AspectRatio
       v-else
       :ratio="1"
-      class="w-full h-full"
+      class="post-content w-full h-full rounded-xl bg-surface-high"
     >
       <div class="p-12">
         <i
@@ -132,7 +132,7 @@ function getIconByExtension(extension: string) {
 </template>
 
 <style lang="css" scoped>
-.selected .post-image {
+.selected .post-content {
   outline: 2px solid rgb(var(--r-color-primary-container)) !important;
 }
 .selected .filename-wrapper {
