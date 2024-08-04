@@ -122,7 +122,7 @@ function getIconByExtension(extension: string) {
     </AspectRatio>
     <div class="text-xs text-zinc-4 flex flex-col w-full text-center">
       <div class=" w-full truncate text-xs">
-        <div class="filename-wrapper inline-block px-1 rounded">
+        <div class="filename-wrapper inline px-1 rounded">
           {{ `${post.file_path}.${post.extension}` }}
         </div>
       </div>
