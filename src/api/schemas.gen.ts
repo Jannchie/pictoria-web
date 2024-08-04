@@ -332,6 +332,26 @@ export const $ScoreUpdate = {
   title: 'ScoreUpdate',
 } as const
 
+export const $TagGroup = {
+  properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    name: {
+      type: 'string',
+      title: 'Name',
+    },
+    color: {
+      type: 'string',
+      title: 'Color',
+    },
+  },
+  type: 'object',
+  required: ['name'],
+  title: 'TagGroup',
+} as const
+
 export const $TagPublic = {
   properties: {
     count: {
@@ -342,6 +362,10 @@ export const $TagPublic = {
     name: {
       type: 'string',
       title: 'Name',
+    },
+    group_id: {
+      type: 'integer',
+      title: 'Group Id',
     },
   },
   type: 'object',

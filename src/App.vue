@@ -3,7 +3,7 @@ import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { useQuery } from 'vue-query'
 import { baseUrl, waterfallItemWidth } from './shared'
-import { v1GetFolders, v1UploadFile } from './api'
+import { v1GetFolders } from './api'
 
 const dropArea = document.body as HTMLElement
 dropArea.addEventListener('dragover', (event: DragEvent) => {

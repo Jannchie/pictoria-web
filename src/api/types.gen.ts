@@ -89,9 +89,16 @@ export interface ScoreUpdate {
   score: number
 }
 
+export interface TagGroup {
+  id?: number
+  name: string
+  color?: string
+}
+
 export interface TagPublic {
   count?: number
   name: string
+  group_id?: number
 }
 
 export interface TagResponse {
@@ -257,6 +264,10 @@ export interface V1RemoveTagFromPostData {
 export type V1RemoveTagFromPostResponse = unknown
 
 export type V1RemoveTagFromPostError = HTTPValidationError
+
+export type V1GetTagGroupsResponse = Array<TagGroup>
+
+export type V1GetTagGroupsError = unknown
 
 export type V1CmdProcessPostsResponse = unknown
 
@@ -514,6 +525,16 @@ export interface $OpenApiTs {
          * Validation Error
          */
         422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/tag-groups': {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<TagGroup>
       }
     }
   }

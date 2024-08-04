@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { useQuery } from 'vue-query'
 import type { Post } from '../api'
 
-import { v1GetPosts } from '../api'
+import { v1GetPosts, v1GetTagGroups } from '../api'
 
 export const baseUrl = 'http://localhost:8000'
 interface ImageDatum {
@@ -43,4 +43,14 @@ export function usePosts() {
   )
 
   return computed<Post[]>(() => getPostResp.data.value?.data ?? [])
+}
+
+export function useTagGroup() {
+  const tagGroupResp = useQuery(['tag-groups'], async () => {
+    const resp = await v1GetTagGroups({ baseUrl })
+    return resp.data
+  }, {
+    staleTime: Infinity,
+  })
+  return computed(() => tagGroupResp.data.value ?? [])
 }

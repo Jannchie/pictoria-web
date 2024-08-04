@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
 import { useMutation, useQuery, useQueryClient } from 'vue-query'
-import { baseUrl, selectedPostId } from '../shared'
+import { baseUrl, selectedPostId, useTagGroup } from '../shared'
 import type { PostPublic } from '../api'
 import { v1CmdAutoTags, v1GetPost, v1UpdatePostRating, v1UpdatePostScore } from '../api'
 import Rating from './Rating.vue'
@@ -29,7 +29,10 @@ const data = computed(() => {
     return []
   }
 })
-
+function getGroupColor(group_id?: number) {
+  const tagGroup = useTagGroup()
+  return tagGroup.value.find(g => g.id === group_id)?.color
+}
 const mutation = useMutation(
   () => v1CmdAutoTags({ baseUrl, path: { post_id: id.value } }),
   {
@@ -152,6 +155,9 @@ async function onSelectScore(post_id: number, score: number = 0) {
             v-for="tag, t of datum.tags"
             :key="t"
             class="bg-surface-high px-1 py-0.5 rounded"
+            :style="{
+              backgroundColor: getGroupColor(tag.tag_info.group_id),
+            }"
           >
             {{ tag.tag_info.name }}
           </div>
