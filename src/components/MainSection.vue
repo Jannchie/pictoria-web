@@ -1,24 +1,10 @@
 <script setup lang="ts">
-import { useQuery } from 'vue-query'
-import type { Post } from '../api'
-import { v1GetPosts } from '../api'
-import { baseUrl, postFilter, selectedPostId, selectingPostId, unselectedPostId as unselectingPostId, waterfallItemWidth } from '../shared'
+import { selectedPostId, selectingPostId, unselectedPostId as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
 
-const getPostResp = useQuery(
-  ['posts', postFilter],
-  async () => {
-    const resp = await v1GetPosts({
-      baseUrl,
-      body: postFilter.value,
-    })
-    return resp
-  },
-)
-
-const posts = computed<Post[]>(() => getPostResp.data.value?.data ?? [])
+const posts = usePosts()
 const items = computed(() => posts.value.map(post => ({
   width: post.width ?? 1,
   height: post.height ?? 1,

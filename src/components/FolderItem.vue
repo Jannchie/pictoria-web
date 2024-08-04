@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DirectorySummary } from '../api'
-import { currentPath, postFilter } from '../shared'
+import { postFilter } from '../shared'
 
 defineProps<{
   folder: DirectorySummary

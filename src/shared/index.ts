@@ -1,5 +1,8 @@
 import { ref } from 'vue'
+import { useQuery } from 'vue-query'
 import type { Post } from '../api'
+
+import { v1GetPosts } from '../api'
 
 export const baseUrl = 'http://localhost:8000'
 interface ImageDatum {
@@ -26,3 +29,18 @@ export const selectedPostId = ref<Set<number | undefined>>(new Set())
 export const selectingPostId = ref<Set<number | undefined>>(new Set())
 export const unselectedPostId = ref<Set<number | undefined>>(new Set())
 export const currentPath = ref<string | symbol>('')
+
+export function usePosts() {
+  const getPostResp = useQuery(
+    ['posts', postFilter],
+    async () => {
+      const resp = await v1GetPosts({
+        baseUrl,
+        body: postFilter.value,
+      })
+      return resp
+    },
+  )
+
+  return computed<Post[]>(() => getPostResp.data.value?.data ?? [])
+}
