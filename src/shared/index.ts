@@ -13,6 +13,7 @@ interface WaterfallItem {
   rating: number[]
   score: number[]
   tags: string[]
+  folder?: string
 }
 export type RightPanelDatum = Post | ImageDatum | InputDatum
 export const postFilter = ref<WaterfallItem>({
@@ -24,3 +25,4 @@ export const waterfallItemWidth = useStorage('pictoria.waterfallItemWidth', 400)
 export const selectedPostId = ref<Set<number | undefined>>(new Set())
 export const selectingPostId = ref<Set<number | undefined>>(new Set())
 export const unselectedPostId = ref<Set<number | undefined>>(new Set())
+export const currentPath = ref<string | symbol>('')

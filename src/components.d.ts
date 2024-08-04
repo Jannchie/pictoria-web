@@ -9,15 +9,17 @@ declare module 'vue' {
   export interface GlobalComponents {
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
+    FolderItem: typeof import('./components/FolderItem.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']
     MainSection: typeof import('./components/MainSection.vue')['default']
-    Paper: typeof import('./components/Paper.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
     Rating: typeof import('./components/Rating.vue')['default']
     RightPanel: typeof import('./components/RightPanel.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']
     Slider: typeof import('./components/Slider.vue')['default']
+    SpecialPath: typeof import('./components/SpecialPathList.vue')['default']
+    SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
   }
 }

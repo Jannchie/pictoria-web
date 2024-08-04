@@ -1,27 +1,17 @@
 <script setup lang="ts">
-import { createClient } from '@hey-api/client-fetch'
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { useQuery } from 'vue-query'
 import { baseUrl, waterfallItemWidth } from './shared'
-import { v1GetPostsCount } from './api'
-
-const { data: allCount } = useQuery(
-  ['post-count'],
-  async () => {
-    const resp = await v1GetPostsCount({ baseUrl })
-    return (resp.data as any).count
-  },
-)
+import { v1GetFolders, v1UploadFile } from './api'
 
 const dropArea = document.body as HTMLElement
-console.log(dropArea)
 dropArea.addEventListener('dragover', (event: DragEvent) => {
   event.preventDefault()
   dropArea.classList.add('dragover')
 })
 
-dropArea.addEventListener('dragleave', (event: DragEvent) => {
+dropArea.addEventListener('dragleave', (_: DragEvent) => {
   dropArea.classList.remove('dragover')
 })
 
@@ -43,7 +33,7 @@ dropArea.addEventListener('drop', async (event: DragEvent) => {
 function traverseFileTree(item: any, path: string = '') {
   if (item.isFile) {
     item.file((file: File) => {
-      uploadFile(file, path + file.name)
+      onUploadFile(file, path + file.name)
     })
   }
   else if (item.isDirectory) {
@@ -56,23 +46,23 @@ function traverseFileTree(item: any, path: string = '') {
   }
 }
 
-function uploadFile(file: File, relativePath: string) {
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('path', relativePath)
-
-  fetch('http://localhost:8000/upload', {
-    method: 'POST',
-    body: formData,
+async function onUploadFile(file: File, relativePath: string) {
+  await v1UploadFile({
+    baseUrl,
+    body: {
+      file,
+      path: relativePath,
+    },
   })
-    .then(response => response.json())
-    .then((data) => {
-      console.log(data)
-    })
-    .catch((error) => {
-      console.error(error)
-    })
 }
+
+const folders = useQuery(
+  ['folders'],
+  async () => {
+    const resp = await v1GetFolders({ baseUrl })
+    return resp.data
+  },
+)
 </script>
 
 <template>
@@ -84,21 +74,14 @@ function uploadFile(file: File, relativePath: string) {
         :max-size="36"
         class="border-r border-surface-border-high p-2"
       >
-        <div class="flex flex-col gap-1 text-sm select-none">
-          <ListItem
-            icon="i-tabler-photo"
-            title="All"
-            :extra-info="allCount"
-          />
-          <ListItem
-            icon="i-tabler-clock"
-            title="Recently"
-            extra-info="12,522"
-          />
-          <ListItem
-            icon="i-tabler-arrows-cross"
-            title="Random"
-            extra-info="152,612"
+        <div class="flex justify-center items-center h-36px text-xl font-black">
+          Pictoria
+        </div>
+        <SpecialPathList v-if="false" />
+        <div v-if="folders.data.value">
+          <FolderItem
+            :folder="folders.data.value"
+            :depth="0"
           />
         </div>
       </Pane>
@@ -128,9 +111,9 @@ function uploadFile(file: File, relativePath: string) {
       </Pane>
     </Splitpanes>
     <div
-      class="bg-surface-low text-surface-on-low "
+      class="bg-surface-low text-surface-on-low h-24px border-t border-surface-border-high"
     >
-      bottom
+      <!-- bottom -->
     </div>
   </div>
 </template>

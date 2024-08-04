@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import path from 'node:path'
 import { Btn } from '@roku-ui/vue'
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
@@ -31,9 +32,12 @@ function onPointerDown(score: number) {
   }
 }
 
-const scoreCountMutation = useQuery(['count', 'score'], async () => {
+const scoreCountMutation = useQuery(['count', 'score', postFilter], async () => {
   const resp = await v1CountGroupByScore({
     baseUrl,
+    query: {
+      path: postFilter.value.folder,
+    },
   })
   return resp.data
 })
@@ -48,7 +52,7 @@ const scoreCountList = computed(() => {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full border-b border-surface-border-high pb-1 px-1">
     <div class="relative">
       <Btn
         size="sm"
