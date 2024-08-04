@@ -180,15 +180,19 @@ function onPointerDown(i: number) {
 </script>
 
 <template>
-  <div class="flex gap-1 cursor-pointer">
-    <i
+  <div class="flex cursor-pointer">
+    <div
       v-for="_, i in count"
       :key="i"
-      :class="getCls(i)"
-      :style="getStyle(i)"
+      class="pr-1"
       @mouseover="hoverIndex = i + 1"
       @mouseleave="hoverIndex = -1"
       @pointerdown="onPointerDown(i)"
-    />
+    >
+      <i
+        :class="getCls(i)"
+        :style="getStyle(i)"
+      />
+    </div>
   </div>
 </template>
