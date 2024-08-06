@@ -5,8 +5,6 @@ import { useQuery } from 'vue-query'
 import { v1CountGroupByRating } from '../api'
 import { baseUrl, postFilter } from '../shared'
 
-const showMenu = ref(false)
-
 const ratingFilterData = computed({
   get() {
     return postFilter.value.rating
@@ -79,48 +77,46 @@ function getRatingName(rating: number) {
 
 <template>
   <div class="relative">
-    <Menu v-model="showMenu">
-      <template #trigger>
-        <Btn
-          size="sm"
-          class=""
-          @click="showMenu = !showMenu"
-        >
-          <i class="i-tabler-star" />
-          <span>
-            {{ btnText }}
-          </span>
-        </Btn>
-      </template>
-      <div
-        class="z-10 border-surface-border-base bg-surface-low p-1 min-w-52 absolute mt-2 border rounded"
+    <Popover position="bottom-start">
+      <Btn
+        size="sm"
       >
+        <i class="i-tabler-star" />
+        <span>
+          {{ btnText }}
+        </span>
+      </Btn>
+      <template #content>
         <div
-          v-for="rating in [1, 2, 3, 4, 0]"
-          :key="rating"
-          class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
-          @pointerdown="onPointerDown(rating)"
+          class="border-surface-border-base bg-surface-low p-1 min-w-52 border rounded"
         >
-          <Checkbox
-            class="flex-shrink-0 pointer-events-none"
-            :value="hasRating(rating)"
-          />
-          <div class="flex gap-1 flex-grow h-16px">
-            <template v-if="rating === 0">
-              Not Scored Yet
-            </template>
-            <template v-else>
-              {{ getRatingName(rating) }}
-            </template>
-          </div>
           <div
-            v-if="scoreCountList[rating]"
-            class="flex-shrink-0"
+            v-for="rating in [1, 2, 3, 4, 0]"
+            :key="rating"
+            class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
+            @pointerdown="onPointerDown(rating)"
           >
-            {{ scoreCountList[rating] }}
+            <Checkbox
+              class="flex-shrink-0 pointer-events-none"
+              :value="hasRating(rating)"
+            />
+            <div class="flex gap-1 flex-grow h-16px">
+              <template v-if="rating === 0">
+                Not Scored Yet
+              </template>
+              <template v-else>
+                {{ getRatingName(rating) }}
+              </template>
+            </div>
+            <div
+              v-if="scoreCountList[rating]"
+              class="flex-shrink-0"
+            >
+              {{ scoreCountList[rating] }}
+            </div>
           </div>
         </div>
-      </div>
-    </Menu>
+      </template>
+    </Popover>
   </div>
 </template>

@@ -9,12 +9,10 @@ const props = defineProps<{
 
 }>()
 const post = computed(() => props.post)
-function onPointerUp(e: PointerEvent) {
-  // 如果不是右键，则不执行
+function onPointerDown(e: PointerEvent) {
   if (e.button !== 0) {
     return
   }
-
   if (selectedPostId.value.has(post.value.id)) {
     if (!e.ctrlKey) {
       selectedPostId.value = new Set([post.value.id])
@@ -40,13 +38,6 @@ function onPointerUp(e: PointerEvent) {
 const selected = computed(() => {
   return (selectedPostId.value.has(post.value.id) || selectingPostId.value.has(post.value.id)) && !unselectedPostId.value.has(post.value.id)
 })
-function onDragStart(e: DragEvent) {
-  // 如果不是右键，则不执行
-  if (e.button !== 0) {
-    return
-  }
-  selectedPostId.value = new Set([post.value.id])
-}
 
 function getIconByExtension(extension: string) {
   switch (extension) {
@@ -105,8 +96,7 @@ function getIconByExtension(extension: string) {
       :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
       class="post-content rounded w-inherit select-all"
       draggable="true"
-      @dragstart="onDragStart"
-      @pointerdown.stop="onPointerUp"
+      @pointerdown="onPointerDown"
     >
     <AspectRatio
       v-else

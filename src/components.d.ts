@@ -7,14 +7,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
-    copy: typeof import('./components/RatingFilter.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']
     MainSection: typeof import('./components/MainSection.vue')['default']
     Menu: typeof import('./components/Menu.vue')['default']
+    Popover: typeof import('./components/Popover.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
     Rating: typeof import('./components/Rating.vue')['default']
     RatingFilter: typeof import('./components/RatingFilter.vue')['default']
@@ -23,7 +24,7 @@ declare module 'vue' {
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']
     Slider: typeof import('./components/Slider.vue')['default']
-    SpecialPath: typeof import('./components/SpecialPathList.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
+    TagSelector: typeof import('./components/TagSelector.vue')['default']
   }
 }

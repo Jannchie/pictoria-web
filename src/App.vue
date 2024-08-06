@@ -94,7 +94,7 @@ const folders = useQuery(
       </Pane>
       <Pane>
         <header class="flex flex-col justify-center h-52px items-center">
-          <div class="flex justify-center w-32">
+          <div class="flex justify-center items-center w-32 flex-grow">
             <Slider
               v-model="waterfallItemWidth"
               size="sm"
@@ -130,5 +130,6 @@ const folders = useQuery(
 .splitpanes--vertical > .splitpanes__splitter:before {left: -2px;right: -2px;height: 100%;}
 .splitpanes--vertical .splitpanes__pane {
     transition: none;
+    overflow: unset;
 }
 </style>

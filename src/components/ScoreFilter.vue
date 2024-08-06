@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { Btn } from '@roku-ui/vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useQuery } from 'vue-query'
 import { v1CountGroupByScore } from '../api'
 import { baseUrl, postFilter } from '../shared'
-
-const showMenu = ref(false)
 
 const scoreFilterData = computed({
   get() {
@@ -63,52 +61,50 @@ const btnText = computed(() => {
 
 <template>
   <div class="relative">
-    <Menu v-model="showMenu">
-      <template #trigger>
-        <Btn
-          size="sm"
-          class=""
-          @click="showMenu = !showMenu"
-        >
-          <i class="i-tabler-star" />
-          <span>
-            {{ btnText }}
-          </span>
-        </Btn>
-      </template>
-      <div
-        class="z-10 border-surface-border-base bg-surface-low p-1 min-w-52 absolute mt-2 border rounded"
+    <Popover position="bottom-start">
+      <Btn
+        size="sm"
       >
+        <i class="i-tabler-star" />
+        <span>
+          {{ btnText }}
+        </span>
+      </Btn>
+      <template #content>
         <div
-          v-for="score in [5, 4, 3, 2, 1, 0]"
-          :key="score"
-          class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
-          @pointerdown="onPointerDown(score)"
+          class="border-surface-border-base bg-surface-low p-1 min-w-52 border rounded"
         >
-          <Checkbox
-            class="flex-shrink-0 pointer-events-none"
-            :value="hasScore(score)"
-          />
-          <div class="flex gap-1 flex-grow h-16px">
-            <template v-if="score === 0">
-              Not Scored Yet
-            </template>
-            <template v-else>
-              <i
-                v-for="i in score"
-                :key="i"
-                class="i-tabler-star-filled"
-              />
-            </template>
-          </div>
           <div
-            v-if="scoreCountList[score]"
-            class="flex-shrink-0"
+            v-for="score in [5, 4, 3, 2, 1, 0]"
+            :key="score"
+            class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
+            @pointerdown="onPointerDown(score)"
           >
-            {{ scoreCountList[score] }}
+            <Checkbox
+              class="flex-shrink-0 pointer-events-none"
+              :value="hasScore(score)"
+            />
+            <div class="flex gap-1 flex-grow h-16px">
+              <template v-if="score === 0">
+                Not Scored Yet
+              </template>
+              <template v-else>
+                <i
+                  v-for="i in score"
+                  :key="i"
+                  class="i-tabler-star-filled"
+                />
+              </template>
+            </div>
+            <div
+              v-if="scoreCountList[score]"
+              class="flex-shrink-0"
+            >
+              {{ scoreCountList[score] }}
+            </div>
           </div>
         </div>
-      </div>
-    </Menu>
+      </template>
+    </Popover>
   </div>
 </template>

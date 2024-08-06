@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.52.0",
-    "@iconify/json": "^2.2.233",
+    "@iconify/json": "^2.2.234",
     "@jannchie/eslint-config": "^3.2.1",
     "@roku-ui/preset": "^0.10.0",
     "@types/node": "^22.1.0",

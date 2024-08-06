@@ -2,11 +2,12 @@
 import { computed } from 'vue'
 import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
-import { useMutation, useQuery, useQueryClient } from 'vue-query'
+import { useQuery, useQueryClient } from 'vue-query'
 import { baseUrl, selectedPostId, useTagGroup } from '../shared'
 import type { PostPublic } from '../api'
-import { v1CmdAutoTags, v1GetPost, v1UpdatePostRating, v1UpdatePostScore } from '../api'
+import { v1GetPost, v1UpdatePostRating, v1UpdatePostScore } from '../api'
 import Rating from './Rating.vue'
+import AutoGenerateTagBtn from './AutoGenerateTagBtn.vue'
 
 const id = computed<number>(() => selectedPostId.value.values().next().value)
 function isPost(datum: any): datum is PostPublic {
@@ -29,21 +30,11 @@ const data = computed(() => {
     return []
   }
 })
+const tagGroup = useTagGroup()
 function getGroupColor(group_id?: number) {
-  const tagGroup = useTagGroup()
   return tagGroup.value.find(g => g.id === group_id)?.color
 }
-const mutation = useMutation(
-  () => v1CmdAutoTags({ baseUrl, path: { post_id: id.value } }),
-  {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['post', id])
-    },
-  },
-)
-async function onAutoTag() {
-  mutation.mutate()
-}
+
 function timestampToTime(timestamp: number) {
   return new Date(timestamp * 1000).toLocaleString()
 }
@@ -142,25 +133,51 @@ async function onSelectScore(post_id: number, score: number = 0) {
           </div>
         </div>
       </div>
-      <div>
+      <div class="flex flex-col gap-1">
         <div
-          v-if="datum.tags"
           class="py-2 text-zinc-4 font-black"
         >
           Tags
         </div>
-
-        <div class="flex gap-2 flex-wrap">
-          <div
-            v-for="tag, t of datum.tags"
-            :key="t"
-            class="bg-surface-high px-1 py-0.5 rounded"
-            :style="{
-              backgroundColor: getGroupColor(tag.tag_info.group_id),
-            }"
+        <div
+          v-if="datum.tags && datum.tags.length"
+          class="flex gap-2 flex-wrap"
+        >
+          <Popover
+            v-for="tag of datum.tags"
+            :key="tag.tag_info.name"
+            position="left-start"
           >
-            {{ tag.tag_info.name }}
+            <div
+              class="bg-surface-high px-1 py-0.5 rounded cursor-pointer"
+              :style="{
+                backgroundColor: getGroupColor(tag.tag_info.group_id),
+              }"
+            >
+              {{ tag.tag_info.name }}
+            </div>
+            <template #content>
+              <TagSelector :post-id="datum.id" />
+            </template>
+          </Popover>
+        </div>
+        <div
+          v-else
+          class="h-14 flex flex-col items-center justify-center text-surface-on-low"
+        >
+          <div class="flex flex-col items-center">
+            <i class="i-tabler-bookmark-off" />
+            <div>
+              No Tags
+            </div>
           </div>
+          <Btn
+            size="sm"
+            class="w-full flex items-c"
+          >
+            <i class="i-tabler-bookmark-plus" />
+            Add Tag
+          </Btn>
         </div>
       </div>
       <div>
@@ -168,12 +185,7 @@ async function onSelectScore(post_id: number, score: number = 0) {
           Command
         </div>
         <div>
-          <Btn
-            size="sm"
-            @pointerdown="onAutoTag"
-          >
-            Auto Tag
-          </Btn>
+          <AutoGenerateTagBtn :post-id="id" />
         </div>
       </div>
     </div>
