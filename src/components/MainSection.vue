@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { selectedPostId, selectingPostId, unselectedPostId as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
+import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
@@ -43,27 +43,27 @@ function onSelectChange(selectArea: Area, { shift, ctrl }: { shift: boolean, ctr
     }
   })
   if (shift) {
-    selectingPostId.value = new Set([...selectingPostId.value, ...currentSelectingId])
+    selectingPostIdSet.value = new Set([...selectingPostIdSet.value, ...currentSelectingId])
   }
   else if (ctrl) {
     // 如果原来已经选中了，则取消选中，否则添加选中
     currentSelectingId.forEach((postId) => {
-      if (selectedPostId.value.has(postId)) {
+      if (selectedPostIdSet.value.has(postId)) {
         unselectingPostId.value.add(postId)
       }
       else {
-        selectingPostId.value.add(postId)
+        selectingPostIdSet.value.add(postId)
       }
     })
   }
   else {
-    selectedPostId.value = currentSelectingId
+    selectedPostIdSet.value = currentSelectingId
   }
 }
 function onSelectEnd() {
   // 将 selecting 和 unselected 应用到 selected，然后清空 selecting 和 unselected
-  selectedPostId.value = new Set([...selectedPostId.value, ...selectingPostId.value].filter(id => !unselectingPostId.value.has(id)))
-  selectingPostId.value = new Set()
+  selectedPostIdSet.value = new Set([...selectedPostIdSet.value, ...selectingPostIdSet.value].filter(id => !unselectingPostId.value.has(id)))
+  selectingPostIdSet.value = new Set()
   unselectingPostId.value = new Set()
 }
 
@@ -73,7 +73,7 @@ function onSelectStart({ ctrl, shift }: {
 }) {
   // 如果没有按住 ctrl 或 shift，则清空已选中的元素
   if (!ctrl && !shift) {
-    selectedPostId.value = new Set()
+    selectedPostIdSet.value = new Set()
   }
 }
 </script>

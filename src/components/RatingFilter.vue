@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Btn } from '@roku-ui/vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useQuery } from 'vue-query'
 import { v1CountGroupByRating } from '../api'
 import { baseUrl, postFilter } from '../shared'

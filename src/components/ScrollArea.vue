@@ -40,6 +40,7 @@ useMutationObserver(scrollDomRef, () => {
 }, {
   subtree: true,
   attributes: true,
+  childList: true,
 })
 const scrollableLength = computed(() => {
   return (scrollHeight.value ?? 0) - (clientHeight.value ?? 0)

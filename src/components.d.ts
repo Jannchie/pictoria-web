@@ -10,6 +10,7 @@ declare module 'vue' {
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
+    FloatWindow: typeof import('./components/FloatWindow.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']
@@ -26,5 +27,6 @@ declare module 'vue' {
     Slider: typeof import('./components/Slider.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
     TagSelector: typeof import('./components/TagSelector.vue')['default']
+    Window: typeof import('./components/FloatWindow.vuew.vue')['default']
   }
 }

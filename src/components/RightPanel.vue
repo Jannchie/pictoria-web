@@ -2,26 +2,21 @@
 import { computed } from 'vue'
 import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
-import { useQuery, useQueryClient } from 'vue-query'
-import { baseUrl, selectedPostId, useTagGroup } from '../shared'
+import { useQueryClient } from 'vue-query'
+import { baseUrl, selectedPostIdSet, useTagGroup } from '../shared'
 import type { PostPublic } from '../api'
-import { v1GetPost, v1UpdatePostRating, v1UpdatePostScore } from '../api'
+import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
+import { usePostQuery } from '../composables'
 import Rating from './Rating.vue'
 import AutoGenerateTagBtn from './AutoGenerateTagBtn.vue'
 
-const id = computed<number>(() => selectedPostId.value.values().next().value)
+const id = computed<number>(() => selectedPostIdSet.value.values().next().value)
 function isPost(datum: any): datum is PostPublic {
   return 'file_path' in datum
 }
 
 const queryClient = useQueryClient()
-const { data: postData } = useQuery(
-  ['post', id],
-  async () => {
-    const resp = await v1GetPost({ baseUrl, path: { post_id: id.value } })
-    return resp.data
-  },
-)
+const { data: postData } = usePostQuery(id)
 const data = computed(() => {
   if (postData.value) {
     return [postData.value]
@@ -50,9 +45,23 @@ async function onSelectScore(post_id: number, score: number = 0) {
   })
   queryClient.invalidateQueries(['count', 'score'])
 }
+const selectedPostId = ref<number>()
+const windowRef = ref()
+function openWindow(postId: number) {
+  selectedPostId.value = postId
+  windowRef.value?.toggle()
+}
 </script>
 
 <template>
+  <FloatWindow
+    ref="windowRef"
+    :safe-margin="16"
+  >
+    <TagSelector
+      :post-id="id"
+    />
+  </FloatWindow>
   <div
     v-for="datum, i of data"
     :key="i"
@@ -143,23 +152,23 @@ async function onSelectScore(post_id: number, score: number = 0) {
           v-if="datum.tags && datum.tags.length"
           class="flex gap-2 flex-wrap"
         >
-          <Popover
+          <div
             v-for="tag of datum.tags"
             :key="tag.tag_info.name"
-            position="left-start"
+            class="bg-surface-high px-1 py-0.5 rounded cursor-pointer"
+            :style="{
+              backgroundColor: getGroupColor(tag.tag_info.group_id),
+            }"
+            @pointerup="openWindow(datum.id)"
           >
-            <div
-              class="bg-surface-high px-1 py-0.5 rounded cursor-pointer"
-              :style="{
-                backgroundColor: getGroupColor(tag.tag_info.group_id),
-              }"
-            >
-              {{ tag.tag_info.name }}
-            </div>
-            <template #content>
-              <TagSelector :post-id="datum.id" />
-            </template>
-          </Popover>
+            {{ tag.tag_info.name }}
+          </div>
+          <div
+            class="bg-surface-high px-1 py-0.5 rounded cursor-pointer"
+            @pointerup="openWindow(datum.id)"
+          >
+            <i class="i-tabler-plus" />
+          </div>
         </div>
         <div
           v-else
@@ -171,13 +180,25 @@ async function onSelectScore(post_id: number, score: number = 0) {
               No Tags
             </div>
           </div>
-          <Btn
-            size="sm"
-            class="w-full flex items-c"
+
+          <Popover
+            position="left-start"
+            overlay
+            class="w-full"
           >
-            <i class="i-tabler-bookmark-plus" />
-            Add Tag
-          </Btn>
+            <Btn
+              size="sm"
+              class="w-full flex items-c"
+            >
+              <i class="i-tabler-bookmark-plus" />
+              Add Tag
+            </Btn>
+            <template #content>
+              <TagSelector
+                :post-id="datum.id"
+              />
+            </template>
+          </Popover>
         </div>
       </div>
       <div>

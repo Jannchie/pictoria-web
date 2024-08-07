@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { AspectRatio } from '@roku-ui/vue'
 import type { Post } from '../api'
-import { baseUrl, selectedPostId, selectingPostId, unselectedPostId } from '../shared'
+import { baseUrl, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet } from '../shared'
 
 const props = defineProps<{
   post: Post
@@ -13,30 +13,30 @@ function onPointerDown(e: PointerEvent) {
   if (e.button !== 0) {
     return
   }
-  if (selectedPostId.value.has(post.value.id)) {
+  if (selectedPostIdSet.value.has(post.value.id)) {
     if (!e.ctrlKey) {
-      selectedPostId.value = new Set([post.value.id])
+      selectedPostIdSet.value = new Set([post.value.id])
     }
     else {
-      selectedPostId.value = new Set([...selectedPostId.value].filter(p => p !== post.value.id))
+      selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
     }
   }
   else {
     if (!e.ctrlKey) {
-      selectedPostId.value = new Set([post.value.id])
+      selectedPostIdSet.value = new Set([post.value.id])
     }
     else {
-      if (selectedPostId.value.has(post.value.id)) {
-        selectedPostId.value = new Set([...selectedPostId.value].filter(p => p !== post.value.id))
+      if (selectedPostIdSet.value.has(post.value.id)) {
+        selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
       }
       else {
-        selectedPostId.value = new Set([...selectedPostId.value, post.value.id])
+        selectedPostIdSet.value = new Set([...selectedPostIdSet.value, post.value.id])
       }
     }
   }
 }
 const selected = computed(() => {
-  return (selectedPostId.value.has(post.value.id) || selectingPostId.value.has(post.value.id)) && !unselectedPostId.value.has(post.value.id)
+  return (selectedPostIdSet.value.has(post.value.id) || selectingPostIdSet.value.has(post.value.id)) && !unselectedPostIdSet.value.has(post.value.id)
 })
 
 function getIconByExtension(extension: string) {

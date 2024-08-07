@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<{
 
 defineSlots<{
   default: (props: any) => any
+  content: (props: any) => any
 }>()
 
 const wrapperRef = ref<HTMLElement | null>(null)

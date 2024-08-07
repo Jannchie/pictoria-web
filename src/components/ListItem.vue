@@ -1,10 +1,14 @@
 <script setup lang="ts">
-defineProps<{
+const props = withDefaults(defineProps<{
   title: string
   icon?: string
   extraInfo?: any
   active?: boolean
-}>()
+  type?: 'normal' | 'checkbox'
+}>(), {
+  active: false,
+  type: 'normal',
+})
 const emit = defineEmits<{
   dragover: [DragEvent]
   dragleave: [DragEvent]
@@ -25,6 +29,9 @@ function onDrop(event: DragEvent) {
 }
 const folderItemRef = ref<HTMLElement | null>(null)
 const hover = useElementHover(folderItemRef)
+defineExpose({
+  title: props.title,
+})
 </script>
 
 <template>
@@ -32,13 +39,18 @@ const hover = useElementHover(folderItemRef)
     ref="folderItemRef"
     class="flex items-center gap-1 py-1 px-2 rounded"
     :class="{
-      'bg-surface-highest': active,
+      'bg-surface-highest': active && type === 'normal',
       'bg-surface-high': hover || dragover,
     }"
     @dragover="onDragOver"
     @dragleave="onDragleave"
     @drop="onDrop"
   >
+    <Checkbox
+      v-if="type === 'checkbox'"
+      class="flex-shrink-0 pointer-events-none"
+      :value="active"
+    />
     <i
       v-if="icon"
       class="flex-shrink-0"
