@@ -105,8 +105,8 @@ function stopDrag() {
     <div
       v-if="show"
       ref="wrapper"
-      class="fixed z-100"
-      :style="position"
+      class="fixed"
+      :style="[position, { zIndex: 1000000 }]"
       @pointerdown="startDrag"
       @pointermove="drag"
       @pointerup="stopDrag"

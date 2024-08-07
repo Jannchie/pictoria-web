@@ -180,25 +180,14 @@ function openWindow(postId: number) {
               No Tags
             </div>
           </div>
-
-          <Popover
-            position="left-start"
-            overlay
-            class="w-full"
+          <Btn
+            size="sm"
+            class="w-full flex items-c"
+            @pointerup="openWindow(datum.id)"
           >
-            <Btn
-              size="sm"
-              class="w-full flex items-c"
-            >
-              <i class="i-tabler-bookmark-plus" />
-              Add Tag
-            </Btn>
-            <template #content>
-              <TagSelector
-                :post-id="datum.id"
-              />
-            </template>
-          </Popover>
+            <i class="i-tabler-bookmark-plus" />
+            Add Tag
+          </Btn>
         </div>
       </div>
       <div>

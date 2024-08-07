@@ -28,7 +28,7 @@ const tagGroups = computed<Optional<Array<TagGroup>>>(() => {
   return tagGroupsQuery.data.value
 })
 
-const tagsQuery = useQuery<Optional<Array<TagResponse>>>(['tags', postId], async () => {
+const tagsQuery = useQuery<Optional<Array<TagResponse>>>(['tags'], async () => {
   const resp = await v1GetTags({
     baseUrl,
   })
@@ -49,7 +49,7 @@ const currentTags = computed(() => {
   return tags.filter(tag => tag.tag_info.group_id === currentGroupId.value)
 })
 
-const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value], () => {
+const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value, search.value], () => {
   return currentTags.value
 })
 
@@ -136,8 +136,19 @@ watchEffect(() => {
   }
 })
 
-function addTag(tagName: string) {
-  console.log('add tag', tagName)
+async function addTag(tagName: string) {
+  if (!postId.value) {
+    return
+  }
+  await v1AddTagToPost({
+    baseUrl,
+    path: {
+      post_id: postId.value,
+      tag_name: tagName,
+    },
+  })
+  queryClient.invalidateQueries(['post', postId])
+  queryClient.invalidateQueries(['tags'])
 }
 
 const showAddTag = computed(() => {
@@ -153,7 +164,7 @@ const refList = computed<any[]>(() => {
     return [addTagRef.value, ...initCurrentTagsRef.value, ...currentGroupTagsRef.value].sort((a: any, b: any) => a.$el.offsetTop - b.$el.offsetTop)
   }
   else {
-    return [...initCurrentTagsRef.value, ...currentGroupTagsRef.value]
+    return [...initCurrentTagsRef.value, ...currentGroupTagsRef.value].sort((a: any, b: any) => a.$el.offsetTop - b.$el.offsetTop)
   }
 })
 
@@ -186,10 +197,9 @@ onKeyStroke('ArrowDown', () => {
   else {
     currentHoverIndex.value = Math.min(currentHoverIndex.value + 1, refList.value.length - 1)
   }
-  nextTick(() => {
-    refList.value[currentHoverIndex.value]?.$el.scrollIntoView({
-      block: 'nearest',
-    })
+
+  refList.value[currentHoverIndex.value]?.$el.scrollIntoView({
+    block: 'nearest',
   })
 })
 
@@ -229,6 +239,11 @@ onKeyStroke(true, (e) => {
         }
       }
     }
+  }
+})
+watchEffect(() => {
+  if (showAddTag.value && search.value) {
+    currentHoverIndex.value = 0
   }
 })
 </script>
