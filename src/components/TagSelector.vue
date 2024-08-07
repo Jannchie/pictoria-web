@@ -356,8 +356,8 @@ watchEffect(() => {
         </div>
       </ScrollArea>
     </div>
-    <div class="border-t p-2 border-surface-border-high">
-      123
+    <div class="border-t p-2 border-surface-border-high text-xs">
+      <kbd>↑</kbd> <kbd>↓</kbd> to navigate, <kbd>Enter</kbd> to select, <kbd>Tab</kbd> to switch group
     </div>
   </div>
 </template>
@@ -366,5 +366,17 @@ watchEffect(() => {
 .highlight{
   color: rgb(var(--r-color-primary-on));
   font-weight: bolder;
+}
+</style>
+
+<style scoped>
+kbd {
+  background-color: rgb(var(--r-color-surface-base));
+  color: rgb(var(--r-color-surface-on-high));
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+  margin: 0 0.2em;
+  box-shadow: 0 0 0 1px rgb(var(--r-color-surface-border-high));
+  border-bottom: 1px solid rgb(var(--r-color-surface-border-high));
 }
 </style>
