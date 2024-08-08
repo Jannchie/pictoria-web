@@ -139,7 +139,7 @@ const inRange = computed(() => {
   return layoutData.value.map((it) => {
     const top = it.y
     const bottom = it.y + it.height
-    return top >= yRange.value[0] && top <= yRange.value[1] || bottom >= yRange.value[0] && bottom <= yRange.value[1] || top <= yRange.value[0] && bottom >= yRange.value[1]
+    return (top >= yRange.value[0] && top <= yRange.value[1]) || (bottom >= yRange.value[0] && bottom <= yRange.value[1]) || (top <= yRange.value[0] && bottom >= yRange.value[1])
   })
 })
 

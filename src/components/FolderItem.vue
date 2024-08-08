@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import type { DirectorySummary } from '../api'
 import { postFilter } from '../shared'
 
@@ -13,7 +14,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
 <template>
   <div>
     <div
-      class="flex flex-shrink-0 gap-0.5 items-center"
+      class="flex flex-shrink-0 items-center gap-0.5"
       :class="{
         'border-l border-surface-border-high': depth !== 0,
       }"
@@ -21,7 +22,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
       <i
         v-if="folder.children?.length"
         :class="collapsed ? 'i-tabler-chevron-down' : 'i-tabler-chevron-right'"
-        class="cursor-pointer text-xs absolute left-0"
+        class="absolute left-0 cursor-pointer text-xs"
         @click="collapsed = !collapsed"
       />
       <ListItem

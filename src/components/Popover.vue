@@ -135,7 +135,7 @@ onClickOutside(contentRef, (e) => {
     <Overlay
       v-if="showContent && overlay"
       :opacity="0"
-      class="z-10 fixed inset-0"
+      class="fixed inset-0 z-10"
       :style="{
         zIndex,
       }"

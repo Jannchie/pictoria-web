@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full border-b border-surface-border-high pb-1 px-1 flex gap-2">
+  <div class="w-full flex gap-2 border-b border-surface-border-high px-1 pb-1">
     <ScoreFilter />
     <RatingFilter />
   </div>

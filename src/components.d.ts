@@ -17,6 +17,7 @@ declare module 'vue' {
     MainSection: typeof import('./components/MainSection.vue')['default']
     Menu: typeof import('./components/Menu.vue')['default']
     Popover: typeof import('./components/Popover.vue')['default']
+    PostDetailPanel: typeof import('./components/PostDetailPanel.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
     Rating: typeof import('./components/Rating.vue')['default']
     RatingFilter: typeof import('./components/RatingFilter.vue')['default']

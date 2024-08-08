@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onClickOutside, useElementBounding, useMouse, useWindowSize } from '@vueuse/core'
-import { defineExpose, nextTick, provide, ref, watch, watchEffect } from 'vue'
+import { nextTick, provide, ref, watch, watchEffect } from 'vue'
 
 const props = withDefaults(defineProps<{
   safeMargin?: number

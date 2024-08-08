@@ -73,7 +73,7 @@ const folders = useQuery(
 </script>
 
 <template>
-  <div class="flex w-100vw h-100vh flex-col overflow-hidden select-none">
+  <div class="h-100vh w-100vw flex flex-col select-none overflow-hidden">
     <Splitpanes>
       <Pane
         :min-size="8"
@@ -81,7 +81,7 @@ const folders = useQuery(
         :max-size="36"
         class="border-r border-surface-border-high p-2"
       >
-        <div class="flex justify-center items-center h-36px text-xl font-black">
+        <div class="h-36px flex items-center justify-center text-xl font-black">
           Pictoria
         </div>
         <SpecialPathList v-if="false" />
@@ -93,8 +93,8 @@ const folders = useQuery(
         </div>
       </Pane>
       <Pane>
-        <header class="flex flex-col justify-center h-52px items-center">
-          <div class="flex justify-center items-center w-32 flex-grow">
+        <header class="h-52px flex flex-col items-center justify-center">
+          <div class="w-32 flex flex-grow items-center justify-center">
             <Slider
               v-model="waterfallItemWidth"
               size="sm"
@@ -118,7 +118,7 @@ const folders = useQuery(
       </Pane>
     </Splitpanes>
     <div
-      class="bg-surface-low text-surface-on-low h-24px border-t border-surface-border-high"
+      class="h-24px border-t border-surface-border-high bg-surface-low text-surface-on-low"
     >
       <!-- bottom -->
     </div>
@@ -126,10 +126,16 @@ const folders = useQuery(
 </template>
 
 <style>
-.splitpanes__splitter:hover:before {opacity: 1;}
-.splitpanes--vertical > .splitpanes__splitter:before {left: -2px;right: -2px;height: 100%;}
+.splitpanes__splitter:hover:before {
+  opacity: 1;
+  background-color: #e0e0e0;
+}
+.splitpanes--vertical > .splitpanes__splitter:before {left: -4px;right: -4px;height: 100%;}
 .splitpanes--vertical .splitpanes__pane {
     transition: none;
     overflow: unset;
+}
+.splitpanes__splitter {
+  width: 4px;
 }
 </style>

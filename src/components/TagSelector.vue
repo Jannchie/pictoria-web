@@ -49,7 +49,7 @@ const currentTags = computed(() => {
   return tags.filter(tag => tag.tag_info.group_id === currentGroupId.value)
 })
 
-const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value, search.value], () => {
+const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value, search.value, postQuery.isFetched.value], () => {
   return currentTags.value
 })
 
@@ -250,9 +250,9 @@ watchEffect(() => {
 
 <template>
   <div
-    class="bg-surface-base text-surface-on-high rounded text-sm shadow-md w-96 max-w-96 min-h-96 flex flex-col"
+    class="text-surface-on-high max-w-96 min-h-96 w-96 flex flex-col rounded bg-surface-base text-sm shadow-md"
   >
-    <div class="border-b p-2 border-surface-border-high flex gap-2">
+    <div class="flex gap-2 border-b border-surface-border-high p-2">
       <TextField
         ref="searchRef"
         v-model="search"
@@ -270,18 +270,21 @@ watchEffect(() => {
       </Btn>
     </div>
     <div class="flex flex-grow">
-      <div class="border-r w-36 border-surface-border-high flex-shrink-0">
+      <div class="w-36 flex-shrink-0 border-r border-surface-border-high">
         <ListItem
           v-for="group, i in finalTagGroups"
           :key="i"
-          class="p-2 cursor-pointer"
+          class="cursor-pointer p-2"
           :title="group.name"
           icon="i-tabler-bookmark"
           :active="group.id === currentGroupId"
           @click="currentGroupId = group.id"
         />
       </div>
-      <ScrollArea class="flex-grow">
+      <ScrollArea
+        stop-propagation
+        class="flex-grow"
+      >
         <div
           v-if="showAddTag"
           class="border-b border-surface-border-high"
@@ -302,7 +305,7 @@ watchEffect(() => {
           v-if="initCurrentTags.filter(tag => isSearchMatch(tag.tag_info.name)).length"
           class="border-b border-surface-border-high"
         >
-          <div class="text-surface-on-low p-2">
+          <div class="p-2 text-surface-on-low">
             Already Selected ({{ initCurrentTags.filter(tag => isSearchMatch(tag.tag_info.name)).length }})
           </div>
           <template
@@ -326,7 +329,7 @@ watchEffect(() => {
           </template>
         </div>
         <div>
-          <div class="text-surface-on-low p-2">
+          <div class="p-2 text-surface-on-low">
             All ({{ currentGroupTags.filter(tag => isSearchMatch(tag.tag_info.name)).length }})
           </div>
           <template
@@ -350,13 +353,13 @@ watchEffect(() => {
         </div>
         <div
           v-if="displayCurrentGroupTags.length === 100"
-          class="text-xs op50 text-center p-1"
+          class="p-1 text-center text-xs op50"
         >
           Only Show Top 100
         </div>
       </ScrollArea>
     </div>
-    <div class="border-t p-2 border-surface-border-high text-xs">
+    <div class="border-t border-surface-border-high p-2 text-xs">
       <kbd>↑</kbd> <kbd>↓</kbd> to navigate, <kbd>Enter</kbd> to select, <kbd>Tab</kbd> to switch group
     </div>
   </div>

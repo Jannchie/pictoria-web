@@ -11,14 +11,14 @@ const value = computed(() => {
 </script>
 
 <template>
-  <label class="inline-flex items-center cursor-pointer">
+  <label class="inline-flex cursor-pointer items-center">
     <input
       v-model="model"
       type="checkbox"
       class="hidden"
     >
     <span
-      class="w-3.5 h-3.5 inline-block rounded flex items-center justify-center"
+      class="inline-block h-3.5 w-3.5 flex items-center justify-center rounded"
       :class="[{
         'bg-primary-container hover:bg-primary-containerl': value,
         'bg-surface-highest border border-surface-8': !value,

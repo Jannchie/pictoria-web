@@ -72,19 +72,19 @@ const btnText = computed(() => {
       </Btn>
       <template #content>
         <div
-          class="border-surface-border-base bg-surface-low p-1 min-w-52 border rounded"
+          class="min-w-52 border border-surface-border-base rounded bg-surface-low p-1"
         >
           <div
             v-for="score in [5, 4, 3, 2, 1, 0]"
             :key="score"
-            class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
+            class="w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-surface-high"
             @pointerdown="onPointerDown(score)"
           >
             <Checkbox
-              class="flex-shrink-0 pointer-events-none"
+              class="pointer-events-none flex-shrink-0"
               :value="hasScore(score)"
             />
-            <div class="flex gap-1 flex-grow h-16px">
+            <div class="h-16px flex flex-grow gap-1">
               <template v-if="score === 0">
                 Not Scored Yet
               </template>

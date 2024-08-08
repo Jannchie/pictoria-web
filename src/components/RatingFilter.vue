@@ -88,19 +88,19 @@ function getRatingName(rating: number) {
       </Btn>
       <template #content>
         <div
-          class="border-surface-border-base bg-surface-low p-1 min-w-52 border rounded"
+          class="min-w-52 border border-surface-border-base rounded bg-surface-low p-1"
         >
           <div
             v-for="rating in [1, 2, 3, 4, 0]"
             :key="rating"
-            class="gap-2 flex text-xs py-1 px-2 hover:bg-surface-high rounded w-full cursor-pointer items-center"
+            class="w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-surface-high"
             @pointerdown="onPointerDown(rating)"
           >
             <Checkbox
-              class="flex-shrink-0 pointer-events-none"
+              class="pointer-events-none flex-shrink-0"
               :value="hasRating(rating)"
             />
-            <div class="flex gap-1 flex-grow h-16px">
+            <div class="h-16px flex flex-grow gap-1">
               <template v-if="rating === 0">
                 Not Scored Yet
               </template>

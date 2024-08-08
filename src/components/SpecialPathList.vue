@@ -13,7 +13,7 @@ const { data: allCount } = useQuery(
 </script>
 
 <template>
-  <div class="flex flex-col gap-1 text-sm select-none">
+  <div class="flex flex-col select-none gap-1 text-sm">
     <ListItem
       icon="i-tabler-photo"
       title="All"

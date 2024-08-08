@@ -88,37 +88,37 @@ function getIconByExtension(extension: string) {
 
 <template>
   <div
-    class="post-item flex flex-col gap-1 items-center"
+    class="post-item flex flex-col items-center gap-1"
     :class="{ selected }"
   >
     <img
       v-if="post.width && post.height"
       :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-      class="post-content rounded w-inherit select-all"
+      class="post-content w-inherit select-all rounded"
       draggable="true"
       @pointerdown="onPointerDown"
     >
     <AspectRatio
       v-else
       :ratio="1"
-      class="post-content w-full h-full rounded-xl bg-surface-high"
+      class="post-content h-full w-full rounded-xl bg-surface-high"
     >
       <div class="p-12">
         <i
-          class="w-full h-full"
+          class="h-full w-full"
           :class="getIconByExtension(post.extension)"
         />
       </div>
     </AspectRatio>
-    <div class="text-xs text-zinc-4 flex flex-col w-full text-center">
-      <div class=" w-full truncate text-xs">
-        <div class="filename-wrapper inline px-1 rounded">
+    <div class="w-full flex flex-col text-center text-xs text-zinc-4">
+      <div class="w-full truncate text-xs">
+        <div class="filename-wrapper inline rounded px-1">
           {{ `${post.file_path}.${post.extension}` }}
         </div>
       </div>
       <div
         v-if="post.width && post.height"
-        class="w-full truncate font-bold font-mono text-11px"
+        class="w-full truncate text-11px font-bold font-mono"
       >
         {{ post.width }} x {{ post.height }}
       </div>

@@ -42,7 +42,10 @@ export function usePosts() {
     },
   )
 
-  return computed<Post[]>(() => getPostResp.data.value?.data ?? [])
+  return computed<Array<Post>>(() => {
+    const resp = getPostResp.data.value?.data ?? []
+    return resp
+  })
 }
 
 export function useTagGroup() {

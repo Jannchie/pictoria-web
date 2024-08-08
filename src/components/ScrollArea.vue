@@ -8,10 +8,14 @@ const props = withDefaults(
     height?: number
     barWidth?: number
     threshold?: number
+    stopPropagation?: boolean
+    capture?: boolean
   }>(),
   {
     barWidth: 4,
     threshold: 100,
+    stopPropagation: false,
+    capture: false,
   },
 )
 
@@ -81,9 +85,14 @@ useEventListener(() => scrollBarIndicatorRef.value, 'pointerdown', (e) => {
   startScrollTop.value = y.value
   prevUserSelect.value = document.body.style.userSelect
   document.body.style.userSelect = 'none'
+}, {
+  capture: props.capture,
 })
 
-useEventListener(() => document, 'pointermove', () => {
+useEventListener(() => document, 'pointermove', (e) => {
+  if (props.stopPropagation) {
+    e.stopPropagation()
+  }
   if (!dragging.value) {
     return
   }
@@ -94,11 +103,18 @@ useEventListener(() => document, 'pointermove', () => {
   const diff = mouse.y.value - dragStartY.value
   const progress = diff / scrollableHeight.value
   y.value = startScrollTop.value + progress * scrollableLength.value
+}, {
+  capture: props.capture,
 })
 
-useEventListener(() => document, 'pointerup', () => {
+useEventListener(() => document, 'pointerup', (e) => {
+  if (props.stopPropagation) {
+    e.stopPropagation()
+  }
   dragging.value = false
   document.body.style.userSelect = prevUserSelect.value
+}, {
+  capture: props.capture,
 })
 
 defineExpose({
@@ -119,7 +135,7 @@ const hover = useElementHover(() => scrollBarIndicatorRef.value)
       :style="{
         width: `${barWidth}px`,
       }"
-      class="h-full absolute z-999 right-0"
+      class="absolute right-0 z-999 h-full"
     >
       <div
         v-show="scrollBarData.barHeight < clientHeight"

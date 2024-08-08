@@ -8,8 +8,8 @@ export const client = createClient(createConfig())
 /**
  * V1 Get Posts
  */
-export function v1GetPosts(options?: Options<V1GetPostsData>) {
-  return (options?.client ?? client).post<V1GetPostsResponse, V1GetPostsError>({
+export function v1GetPosts<ThrowOnError extends boolean = false>(options?: Options<V1GetPostsData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1GetPostsResponse, V1GetPostsError>({
     ...options,
     url: '/v1/posts',
   })
@@ -18,8 +18,8 @@ export function v1GetPosts(options?: Options<V1GetPostsData>) {
 /**
  * V1 Get Posts Count
  */
-export function v1GetPostsCount(options?: Options) {
-  return (options?.client ?? client).get<V1GetPostsCountResponse, V1GetPostsCountError>({
+export function v1GetPostsCount<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetPostsCountResponse, V1GetPostsCountError>({
     ...options,
     url: '/v1/posts/count',
   })
@@ -28,8 +28,8 @@ export function v1GetPostsCount(options?: Options) {
 /**
  * V1 Count Group By Rating
  */
-export function v1CountGroupByRating(options: Options<V1CountGroupByRatingData>) {
-  return (options?.client ?? client).post<V1CountGroupByRatingResponse, V1CountGroupByRatingError>({
+export function v1CountGroupByRating<ThrowOnError extends boolean = false>(options: Options<V1CountGroupByRatingData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1CountGroupByRatingResponse, V1CountGroupByRatingError>({
     ...options,
     url: '/v1/posts/count/rating',
   })
@@ -38,8 +38,8 @@ export function v1CountGroupByRating(options: Options<V1CountGroupByRatingData>)
 /**
  * V1 Count Group By Score
  */
-export function v1CountGroupByScore(options: Options<V1CountGroupByScoreData>) {
-  return (options?.client ?? client).post<V1CountGroupByScoreResponse, V1CountGroupByScoreError>({
+export function v1CountGroupByScore<ThrowOnError extends boolean = false>(options: Options<V1CountGroupByScoreData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1CountGroupByScoreResponse, V1CountGroupByScoreError>({
     ...options,
     url: '/v1/posts/count/score',
   })
@@ -48,8 +48,8 @@ export function v1CountGroupByScore(options: Options<V1CountGroupByScoreData>) {
 /**
  * V1 Update Post Score
  */
-export function v1UpdatePostScore(options: Options<V1UpdatePostScoreData>) {
-  return (options?.client ?? client).put<V1UpdatePostScoreResponse, V1UpdatePostScoreError>({
+export function v1UpdatePostScore<ThrowOnError extends boolean = false>(options: Options<V1UpdatePostScoreData, ThrowOnError>) {
+  return (options?.client ?? client).put<ThrowOnError, V1UpdatePostScoreResponse, V1UpdatePostScoreError>({
     ...options,
     url: '/v1/posts/{post_id}/score',
   })
@@ -58,8 +58,8 @@ export function v1UpdatePostScore(options: Options<V1UpdatePostScoreData>) {
 /**
  * V1 Update Post Rating
  */
-export function v1UpdatePostRating(options: Options<V1UpdatePostRatingData>) {
-  return (options?.client ?? client).put<V1UpdatePostRatingResponse, V1UpdatePostRatingError>({
+export function v1UpdatePostRating<ThrowOnError extends boolean = false>(options: Options<V1UpdatePostRatingData, ThrowOnError>) {
+  return (options?.client ?? client).put<ThrowOnError, V1UpdatePostRatingResponse, V1UpdatePostRatingError>({
     ...options,
     url: '/v1/posts/{post_id}/rating',
   })
@@ -68,8 +68,8 @@ export function v1UpdatePostRating(options: Options<V1UpdatePostRatingData>) {
 /**
  * V1 Get Post
  */
-export function v1GetPost(options: Options<V1GetPostData>) {
-  return (options?.client ?? client).get<V1GetPostResponse, V1GetPostError>({
+export function v1GetPost<ThrowOnError extends boolean = false>(options: Options<V1GetPostData, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetPostResponse, V1GetPostError>({
     ...options,
     url: '/v1/posts/{post_id}',
   })
@@ -78,8 +78,8 @@ export function v1GetPost(options: Options<V1GetPostData>) {
 /**
  * V1 Get Post By Path
  */
-export function v1GetPostByPath(options: Options<V1GetPostByPathData>) {
-  return (options?.client ?? client).get<V1GetPostByPathResponse, V1GetPostByPathError>({
+export function v1GetPostByPath<ThrowOnError extends boolean = false>(options: Options<V1GetPostByPathData, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetPostByPathResponse, V1GetPostByPathError>({
     ...options,
     url: '/v1/images/{post_path}',
   })
@@ -88,8 +88,8 @@ export function v1GetPostByPath(options: Options<V1GetPostByPathData>) {
 /**
  * V1 Get Thumbnail
  */
-export function v1GetThumbnail(options: Options<V1GetThumbnailData>) {
-  return (options?.client ?? client).get<V1GetThumbnailResponse, V1GetThumbnailError>({
+export function v1GetThumbnail<ThrowOnError extends boolean = false>(options: Options<V1GetThumbnailData, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetThumbnailResponse, V1GetThumbnailError>({
     ...options,
     url: '/v1/thumbnails/{post_path}',
   })
@@ -98,8 +98,8 @@ export function v1GetThumbnail(options: Options<V1GetThumbnailData>) {
 /**
  * V1 Get Tags
  */
-export function v1GetTags(options?: Options) {
-  return (options?.client ?? client).get<V1GetTagsResponse, V1GetTagsError>({
+export function v1GetTags<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetTagsResponse, V1GetTagsError>({
     ...options,
     url: '/v1/tags',
   })
@@ -108,8 +108,8 @@ export function v1GetTags(options?: Options) {
 /**
  * V1 Create Tag
  */
-export function v1CreateTag(options: Options<V1CreateTagData>) {
-  return (options?.client ?? client).post<V1CreateTagResponse, V1CreateTagError>({
+export function v1CreateTag<ThrowOnError extends boolean = false>(options: Options<V1CreateTagData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1CreateTagResponse, V1CreateTagError>({
     ...options,
     url: '/v1/tag/{tag_name}',
   })
@@ -118,8 +118,8 @@ export function v1CreateTag(options: Options<V1CreateTagData>) {
 /**
  * V1 Delete Tag
  */
-export function v1DeleteTag(options: Options<V1DeleteTagData>) {
-  return (options?.client ?? client).delete<V1DeleteTagResponse, V1DeleteTagError>({
+export function v1DeleteTag<ThrowOnError extends boolean = false>(options: Options<V1DeleteTagData, ThrowOnError>) {
+  return (options?.client ?? client).delete<ThrowOnError, V1DeleteTagResponse, V1DeleteTagError>({
     ...options,
     url: '/v1/tag/{tag_name}',
   })
@@ -128,8 +128,8 @@ export function v1DeleteTag(options: Options<V1DeleteTagData>) {
 /**
  * V1 Get Tag
  */
-export function v1GetTag(options: Options<V1GetTagData>) {
-  return (options?.client ?? client).get<V1GetTagResponse, V1GetTagError>({
+export function v1GetTag<ThrowOnError extends boolean = false>(options: Options<V1GetTagData, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetTagResponse, V1GetTagError>({
     ...options,
     url: '/v1/tags/{tag_name}',
   })
@@ -138,8 +138,8 @@ export function v1GetTag(options: Options<V1GetTagData>) {
 /**
  * V1 Update Tag
  */
-export function v1UpdateTag(options: Options<V1UpdateTagData>) {
-  return (options?.client ?? client).put<V1UpdateTagResponse, V1UpdateTagError>({
+export function v1UpdateTag<ThrowOnError extends boolean = false>(options: Options<V1UpdateTagData, ThrowOnError>) {
+  return (options?.client ?? client).put<ThrowOnError, V1UpdateTagResponse, V1UpdateTagError>({
     ...options,
     url: '/v1/tags/{tag_name}',
   })
@@ -148,8 +148,8 @@ export function v1UpdateTag(options: Options<V1UpdateTagData>) {
 /**
  * V1 Add Tag To Post
  */
-export function v1AddTagToPost(options: Options<V1AddTagToPostData>) {
-  return (options?.client ?? client).post<V1AddTagToPostResponse, V1AddTagToPostError>({
+export function v1AddTagToPost<ThrowOnError extends boolean = false>(options: Options<V1AddTagToPostData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1AddTagToPostResponse, V1AddTagToPostError>({
     ...options,
     url: '/v1/posts/{post_id}/tags/{tag_name}',
   })
@@ -158,8 +158,8 @@ export function v1AddTagToPost(options: Options<V1AddTagToPostData>) {
 /**
  * V1 Remove Tag From Post
  */
-export function v1RemoveTagFromPost(options: Options<V1RemoveTagFromPostData>) {
-  return (options?.client ?? client).delete<V1RemoveTagFromPostResponse, V1RemoveTagFromPostError>({
+export function v1RemoveTagFromPost<ThrowOnError extends boolean = false>(options: Options<V1RemoveTagFromPostData, ThrowOnError>) {
+  return (options?.client ?? client).delete<ThrowOnError, V1RemoveTagFromPostResponse, V1RemoveTagFromPostError>({
     ...options,
     url: '/v1/posts/{post_id}/tags/{tag_name}',
   })
@@ -168,8 +168,8 @@ export function v1RemoveTagFromPost(options: Options<V1RemoveTagFromPostData>) {
 /**
  * V1 Get Tag Groups
  */
-export function v1GetTagGroups(options?: Options) {
-  return (options?.client ?? client).get<V1GetTagGroupsResponse, V1GetTagGroupsError>({
+export function v1GetTagGroups<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetTagGroupsResponse, V1GetTagGroupsError>({
     ...options,
     url: '/v1/tag-groups',
   })
@@ -178,8 +178,8 @@ export function v1GetTagGroups(options?: Options) {
 /**
  * V1 Cmd Process Posts
  */
-export function v1CmdProcessPosts(options?: Options) {
-  return (options?.client ?? client).post<V1CmdProcessPostsResponse, V1CmdProcessPostsError>({
+export function v1CmdProcessPosts<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1CmdProcessPostsResponse, V1CmdProcessPostsError>({
     ...options,
     url: '/v1/cmd/process-posts',
   })
@@ -188,8 +188,8 @@ export function v1CmdProcessPosts(options?: Options) {
 /**
  * V1 Cmd Auto Tags
  */
-export function v1CmdAutoTags(options: Options<V1CmdAutoTagsData>) {
-  return (options?.client ?? client).get<V1CmdAutoTagsResponse, V1CmdAutoTagsError>({
+export function v1CmdAutoTags<ThrowOnError extends boolean = false>(options: Options<V1CmdAutoTagsData, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1CmdAutoTagsResponse, V1CmdAutoTagsError>({
     ...options,
     url: '/v1/cmd/auto-tags/{post_id}',
   })
@@ -198,8 +198,8 @@ export function v1CmdAutoTags(options: Options<V1CmdAutoTagsData>) {
 /**
  * V1 Get Tags Count
  */
-export function v1GetTagsCount(options?: Options) {
-  return (options?.client ?? client).get<V1GetTagsCountResponse, V1GetTagsCountError>({
+export function v1GetTagsCount<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetTagsCountResponse, V1GetTagsCountError>({
     ...options,
     url: '/v1/tags/count',
   })
@@ -208,8 +208,8 @@ export function v1GetTagsCount(options?: Options) {
 /**
  * V1 Get Folders
  */
-export function v1GetFolders(options?: Options) {
-  return (options?.client ?? client).get<V1GetFoldersResponse, V1GetFoldersError>({
+export function v1GetFolders<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, V1GetFoldersResponse, V1GetFoldersError>({
     ...options,
     url: '/v1/folders',
   })
@@ -218,10 +218,13 @@ export function v1GetFolders(options?: Options) {
 /**
  * V1 Upload File
  */
-export function v1UploadFile(options: Options<V1UploadFileData>) {
-  return (options?.client ?? client).post<V1UploadFileResponse, V1UploadFileError>({
+export function v1UploadFile<ThrowOnError extends boolean = false>(options: Options<V1UploadFileData, ThrowOnError>) {
+  return (options?.client ?? client).post<ThrowOnError, V1UploadFileResponse, V1UploadFileError>({
     ...options,
     ...formDataBodySerializer,
+    headers: {
+      'Content-Type': null,
+    },
     url: '/v1/upload',
   })
 }
@@ -229,8 +232,8 @@ export function v1UploadFile(options: Options<V1UploadFileData>) {
 /**
  * Root
  */
-export function root(options?: Options) {
-  return (options?.client ?? client).get<RootResponse, RootError>({
+export function root<ThrowOnError extends boolean = false>(options?: Options<unknown, ThrowOnError>) {
+  return (options?.client ?? client).get<ThrowOnError, RootResponse, RootError>({
     ...options,
     url: '/',
   })
