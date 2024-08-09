@@ -4,7 +4,7 @@ import type { Post } from '../api'
 
 import { v1GetPosts, v1GetTagGroups } from '../api'
 
-export const baseUrl = 'http://localhost:8000'
+export const baseUrl = 'http://localhost:4777'
 interface ImageDatum {
   src: string
 }
@@ -56,4 +56,9 @@ export function useTagGroup() {
     staleTime: Infinity,
   })
   return computed(() => tagGroupResp.data.value ?? [])
+}
+
+export const tagSelectorWindowRef = ref()
+export function openTagSelectorWindow() {
+  tagSelectorWindowRef.value?.toggle()
 }

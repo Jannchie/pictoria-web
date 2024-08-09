@@ -4,7 +4,7 @@ import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
 import type { PostPublic } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
-import { baseUrl, useTagGroup } from '../shared'
+import { baseUrl, openTagSelectorWindow, useTagGroup } from '../shared'
 
 defineProps<{
   post: PostPublic
@@ -31,26 +31,12 @@ async function onSelectScore(post_id: number, score: number = 0) {
   })
   queryClient.invalidateQueries(['count', 'score'])
 }
-const selectedPostId = ref<number>()
-const windowRef = ref()
-function openWindow(postId: number) {
-  selectedPostId.value = postId
-  windowRef.value?.toggle()
-}
 </script>
 
 <template>
   <div
     class="flex flex-col border-zinc-8 text-xs"
   >
-    <FloatWindow
-      ref="windowRef"
-      :safe-margin="16"
-    >
-      <TagSelector
-        :post-id="post.id"
-      />
-    </FloatWindow>
     <div class="flex justify-center">
       <img
         :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
@@ -140,13 +126,13 @@ function openWindow(postId: number) {
           :style="{
             backgroundColor: getGroupColor(tag.tag_info.group_id),
           }"
-          @pointerup="openWindow(post.id)"
+          @pointerup="openTagSelectorWindow()"
         >
           {{ tag.tag_info.name }}
         </div>
         <div
           class="cursor-pointer rounded bg-surface-high px-1 py-0.5"
-          @pointerup="openWindow(post.id)"
+          @pointerup="openTagSelectorWindow()"
         >
           <i class="i-tabler-plus" />
         </div>
@@ -164,7 +150,7 @@ function openWindow(postId: number) {
         <Btn
           size="sm"
           class="my-2 w-full flex"
-          @pointerup="openWindow(post.id)"
+          @pointerup="openTagSelectorWindow()"
         >
           <i class="i-tabler-bookmark-plus" />
           Add Tag

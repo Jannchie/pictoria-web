@@ -124,6 +124,26 @@ export type V1GetPostsResponse = Array<Post>
 
 export type V1GetPostsError = HTTPValidationError
 
+export interface V1GetPostData {
+  path: {
+    post_id: number
+  }
+}
+
+export type V1GetPostResponse = PostPublic
+
+export type V1GetPostError = HTTPValidationError
+
+export interface V1DeletePostData {
+  path: {
+    post_id: number
+  }
+}
+
+export type V1DeletePostResponse = unknown
+
+export type V1DeletePostError = HTTPValidationError
+
 export type V1GetPostsCountResponse = CountResponse
 
 export type V1GetPostsCountError = unknown
@@ -165,16 +185,6 @@ export interface V1UpdatePostRatingData {
 export type V1UpdatePostRatingResponse = unknown
 
 export type V1UpdatePostRatingError = HTTPValidationError
-
-export interface V1GetPostData {
-  path: {
-    post_id: number
-  }
-}
-
-export type V1GetPostResponse = PostPublic
-
-export type V1GetPostError = HTTPValidationError
 
 export interface V1GetPostByPathData {
   path: {
@@ -319,6 +329,34 @@ export interface $OpenApiTs {
       }
     }
   }
+  '/v1/posts/{post_id}': {
+    get: {
+      req: V1GetPostData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: PostPublic
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+    delete: {
+      req: V1DeletePostData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
   '/v1/posts/count': {
     get: {
       res: {
@@ -382,21 +420,6 @@ export interface $OpenApiTs {
          * Successful Response
          */
         200: unknown
-        /**
-         * Validation Error
-         */
-        422: HTTPValidationError
-      }
-    }
-  }
-  '/v1/posts/{post_id}': {
-    get: {
-      req: V1GetPostData
-      res: {
-        /**
-         * Successful Response
-         */
-        200: PostPublic
         /**
          * Validation Error
          */

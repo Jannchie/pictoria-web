@@ -21,7 +21,7 @@ const data = computed(() => {
 </script>
 
 <template>
-  <div
+  <template
     v-for="datum, i of data"
     :key="i"
   >
@@ -32,5 +32,5 @@ const data = computed(() => {
     <div v-else>
       {{ datum }}
     </div>
-  </div>
+  </template>
 </template>

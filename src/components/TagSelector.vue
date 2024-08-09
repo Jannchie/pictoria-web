@@ -282,7 +282,6 @@ watchEffect(() => {
         />
       </div>
       <ScrollArea
-        stop-propagation
         class="flex-grow"
       >
         <div

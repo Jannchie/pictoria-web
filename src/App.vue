@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
-import { useQuery } from 'vue-query'
-import { baseUrl, waterfallItemWidth } from './shared'
-import { v1GetFolders } from './api'
+import { useQuery, useQueryClient } from 'vue-query'
+import { baseUrl, selectedPostIdSet, waterfallItemWidth } from './shared'
+import { v1DeletePost, v1GetFolders, v1UploadFile } from './api'
 
 const dropArea = document.body as HTMLElement
 dropArea.addEventListener('dragover', (event: DragEvent) => {
@@ -45,22 +45,16 @@ function traverseFileTree(item: any, path: string = '') {
     })
   }
 }
-
+const queryClient = useQueryClient()
 async function onUploadFile(file: File, relativePath: string) {
-  // await v1UploadFile({
-  //   baseUrl,
-  //   body: {
-  //     file,
-  //     path: relativePath,
-  //   },
-  // })
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('path', relativePath)
-  await fetch('http://localhost:8000/v1/upload', {
-    method: 'POST',
-    body: formData,
+  await v1UploadFile({
+    baseUrl,
+    body: {
+      file,
+      path: relativePath,
+    },
   })
+  queryClient.invalidateQueries(['posts'])
 }
 
 const folders = useQuery(
@@ -70,10 +64,23 @@ const folders = useQuery(
     return resp.data
   },
 )
+onKeyStroke('Delete', async () => {
+  for (const post_id of selectedPostIdSet.value) {
+    await v1DeletePost({
+      baseUrl,
+      path: {
+        post_id,
+      },
+    })
+  }
+  queryClient.invalidateQueries(['posts'])
+})
 </script>
 
 <template>
   <div class="h-100vh w-100vw flex flex-col select-none overflow-hidden">
+    <TagSelectorWindow />
+    <!-- <DialogContainer /> -->
     <Splitpanes>
       <Pane
         :min-size="8"

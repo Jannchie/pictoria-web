@@ -9,6 +9,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
+    Dialog: typeof import('./components/Dialog.vue')['default']
+    DialogContainer: typeof import('./components/DialogContainer.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FloatWindow: typeof import('./components/FloatWindow.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
@@ -28,6 +30,7 @@ declare module 'vue' {
     Slider: typeof import('./components/Slider.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
     TagSelector: typeof import('./components/TagSelector.vue')['default']
+    TagSelectorWindow: typeof import('./components/TagSelectorWindow.vue')['default']
     Window: typeof import('./components/FloatWindow.vuew.vue')['default']
   }
 }
