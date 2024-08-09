@@ -2,7 +2,7 @@
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { useQuery, useQueryClient } from 'vue-query'
-import { baseUrl, selectedPostIdSet, waterfallItemWidth } from './shared'
+import { baseUrl, selectedPostIdSet, showPost, waterfallItemWidth } from './shared'
 import { v1DeletePost, v1GetFolders, v1UploadFile } from './api'
 
 const dropArea = document.body as HTMLElement
@@ -66,6 +66,9 @@ const folders = useQuery(
 )
 onKeyStroke('Delete', async () => {
   for (const post_id of selectedPostIdSet.value) {
+    if (post_id === undefined) {
+      continue
+    }
     await v1DeletePost({
       baseUrl,
       path: {
@@ -99,7 +102,11 @@ onKeyStroke('Delete', async () => {
           />
         </div>
       </Pane>
-      <Pane>
+      <Pane class="relative">
+        <PostDetail
+          v-if="showPost"
+          :post="showPost"
+        />
         <header class="h-52px flex flex-col items-center justify-center">
           <div class="w-32 flex flex-grow items-center justify-center">
             <Slider

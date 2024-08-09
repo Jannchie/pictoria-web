@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { AspectRatio } from '@roku-ui/vue'
 import type { Post } from '../api'
-import { baseUrl, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet } from '../shared'
+import { baseUrl, selectedPostIdSet, selectingPostIdSet, showPost, unselectedPostIdSet } from '../shared'
 
 const props = defineProps<{
   post: Post
@@ -97,6 +97,7 @@ function getIconByExtension(extension: string) {
       class="post-content w-inherit select-all rounded"
       draggable="true"
       @pointerdown="onPointerDown"
+      @dblclick="showPost = post"
     >
     <AspectRatio
       v-else

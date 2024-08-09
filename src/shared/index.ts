@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { useQuery } from 'vue-query'
-import type { Post } from '../api'
+import type { Post, PostPublic } from '../api'
 
 import { v1GetPosts, v1GetTagGroups } from '../api'
 
@@ -62,3 +62,5 @@ export const tagSelectorWindowRef = ref()
 export function openTagSelectorWindow() {
   tagSelectorWindowRef.value?.toggle()
 }
+
+export const showPost = ref<PostPublic | null>(null)
