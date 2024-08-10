@@ -78,6 +78,17 @@ onKeyStroke('Delete', async () => {
   }
   queryClient.invalidateQueries(['posts'])
 })
+useEventListener('wheel', (event) => {
+  if (event.ctrlKey) {
+    event.preventDefault()
+    if (event.deltaY < 0) {
+      waterfallItemWidth.value = Math.min(waterfallItemWidth.value + 50, 800)
+    }
+    else {
+      waterfallItemWidth.value = Math.max(waterfallItemWidth.value - 50, 50)
+    }
+  }
+}, { passive: false })
 </script>
 
 <template>
