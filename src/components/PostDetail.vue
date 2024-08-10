@@ -33,7 +33,7 @@ const initScale = computed(() => {
 const scale = ref(initScale.value)
 
 watchEffect(() => {
-  scale.value = initScale.value
+  scale.value = Math.round(initScale.value * 100) / 100
 })
 const scaleStr = computed(() => {
   return Number(scale.value * 100).toFixed(0)
@@ -78,7 +78,7 @@ const my = computed(() => mouse.y.value - imgWrapperTop.value)
 //   x.value = (imgWrapperWidth.value - scaledWidth.value) / 2
 //   y.value = (imgWrapperHeight.value - scaledHeight.value) / 2
 // }
-function onWheel(e) {
+function onWheel(e: WheelEvent) {
   e.preventDefault()
 
   // 计算缩放前鼠标相对于图片的位置
@@ -88,7 +88,7 @@ function onWheel(e) {
   // 更新缩放比例
   const delta = e.deltaY
   const newScale = Math.max(0.1, Math.min(8, scale.value * (1 - delta / 1000)))
-  scale.value = newScale
+  scale.value = Math.round(newScale * 100) / 100
 
   // 计算缩放后图片左上角的位置
   x.value = mx.value - offsetX * newScale
@@ -140,7 +140,7 @@ const miniMapRef = ref<HTMLDivElement | null>(null)
 
 const miniMapBounding = useElementBounding(miniMapRef)
 
-function onMiniMapPointerDown(e) {
+function onMiniMapPointerDown(e: PointerEvent) {
   dragging.value = true
   startMiniMapViewBox.x = -x.value * miniMapScale.value / scale.value
   startMiniMapViewBox.y = -y.value * miniMapScale.value / scale.value
@@ -155,7 +155,7 @@ function onMiniMapPointerDown(e) {
   y.value = -offsetY * scale.value
 }
 
-function onMiniMapPointerMove(e) {
+function onMiniMapPointerMove(e: PointerEvent) {
   if (dragging.value) {
     const offsetX = e.movementX / miniMapScale.value
     const offsetY = e.movementY / miniMapScale.value
@@ -168,15 +168,50 @@ function onMiniMapPointerMove(e) {
 function onMiniMapPointerUp() {
   dragging.value = false
 }
+
+function adjustForScaling(newScale: number, mouseX: number, mouseY: number) {
+  // 计算当前鼠标相对于图片的位置
+  const currentMouseOffsetX = (mouseX - x.value) / scale.value
+  const currentMouseOffsetY = (mouseY - y.value) / scale.value
+
+  // 计算新缩放比例下鼠标相对于图片的位置
+  const newMouseOffsetX = currentMouseOffsetX * newScale
+  const newMouseOffsetY = currentMouseOffsetY * newScale
+
+  // 调整图片位置，使得图像的中心保持不变
+  x.value = mouseX - newMouseOffsetX
+  y.value = mouseY - newMouseOffsetY
+}
+
+function scaleWithSlider(newScale: number) {
+  const mouseX = imgWrapperWidth.value / 2
+  const mouseY = imgWrapperHeight.value / 2
+  adjustForScaling(newScale, mouseX, mouseY)
+  scale.value = newScale
+}
 </script>
 
 <template>
   <div
     class="absolute inset-0 z-10000 flex flex-col bg-surface-lowest"
   >
-    <div class="h-52px w-full flex-shrink-0 border-b border-b-surface-border-high">
-      {{ scaleStr }}%
-    </div>
+    <header class="h-52px flex flex-col items-center justify-center">
+      <div class="flex flex-grow items-center justify-center gap-2">
+        <div class="text-xs font-mono">
+          {{ scaleStr }}%
+        </div>
+        <Slider
+          :model-value="scale"
+          size="sm"
+          :min="0.10"
+          :max="8.00"
+          :step="0.01"
+          :width="8"
+          @update:model-value="scaleWithSlider"
+        />
+      </div>
+      <FilterRow />
+    </header>
     <div
       ref="imgWrapperRef"
       class="relative h-full w-full flex-grow overflow-hidden"
@@ -198,8 +233,6 @@ function onMiniMapPointerUp() {
         }"
         :src="imgSrc"
       >
-
-      <!-- 缩略图 -->
       <div
         ref="miniMapRef"
         class="absolute bottom-4 left-4 z-200 outline-white outline"

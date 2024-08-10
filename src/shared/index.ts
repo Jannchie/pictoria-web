@@ -34,17 +34,15 @@ export function usePosts() {
   const getPostResp = useQuery(
     ['posts', postFilter],
     async () => {
-      const resp = await v1GetPosts({
+      return await v1GetPosts({
         baseUrl,
         body: postFilter.value,
       })
-      return resp
     },
   )
 
   return computed<Array<Post>>(() => {
-    const resp = getPostResp.data.value?.data ?? []
-    return resp
+    return getPostResp.data.value?.data ?? []
   })
 }
 

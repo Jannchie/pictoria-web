@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { PostPublic } from '../api'
 import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
@@ -103,7 +104,7 @@ function onSelectStart({ ctrl, shift }: {
       <PostItem
         v-for="post in posts"
         :key="post.id"
-        :post="post"
+        :post="post as PostPublic"
       />
     </LazyWaterfall>
   </section>

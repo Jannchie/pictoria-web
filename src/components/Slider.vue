@@ -64,12 +64,30 @@ const ticks = computed(() => getTicks(tickNum.value, options.value))
 
 const model = defineModel<any>({
   default: undefined,
+  
 })
 const length = computed(() => options.value.length ?? 0)
 const currentIndex = ref(!options.value.includes(model.value) ? 0 : options.value.indexOf(model.value))
 
 function optionToIndex(option: any) {
-  return options.value.indexOf(option)
+  let res = options.value.indexOf(option)
+  if (res === -1) {
+    // 如果 model 是数字，则从 options 中找到最接近的值
+    if (typeof option === 'number') {
+      let minDiff = Infinity
+      for (let i = 0; i < options.value.length; i++) {
+        const diff = Math.abs(options.value[i] - option)
+        if (diff < minDiff) {
+          minDiff = diff
+          res = i
+        }
+      }
+    }
+    else {
+      res = 0
+    }
+  }
+  return res
 }
 
 const colorCls = computed(() => {
@@ -107,7 +125,14 @@ const indicatorInnerCls = computed(() => {
 })
 
 watchEffect(() => {
+  if (currentIndex.value < 0) {
+    return
+  }
   model.value = options.value[currentIndex.value]
+})
+
+watchEffect(() => {
+  currentIndex.value = optionToIndex(model.value)
 })
 
 const wrapper = ref<HTMLElement>()
@@ -207,7 +232,7 @@ const animateCls = computed(() => props.animate
 </script>
 
 <template>
-  <div class="relative inline-block w-full">
+  <div class="relative w-full">
     <div
       ref="wrapper"
       type="size"
