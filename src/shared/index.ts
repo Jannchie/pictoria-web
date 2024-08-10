@@ -30,7 +30,7 @@ export const selectedPostIdSet = ref<Set<number | undefined>>(new Set())
 export const selectingPostIdSet = ref<Set<number | undefined>>(new Set())
 export const unselectedPostIdSet = ref<Set<number | undefined>>(new Set())
 export const currentPath = ref<string | symbol>('')
-
+export const showNSFW = ref(false)
 export function usePosts() {
   const getPostResp = useQuery(
     ['posts', postFilter],

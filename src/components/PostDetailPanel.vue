@@ -4,7 +4,7 @@ import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
 import type { PostWithTag } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
-import { baseUrl, openTagSelectorWindow, useTagGroup } from '../shared'
+import { baseUrl, openTagSelectorWindow, showNSFW, useTagGroup } from '../shared'
 
 const props = defineProps<{
   post: PostWithTag
@@ -65,10 +65,15 @@ function isImage(extension: string) {
       v-if="isImage(post.extension)"
       class="flex justify-center"
     >
-      <img
-        :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-        class="h-40 rounded"
-      >
+      <div class="overflow-hidden rounded">
+        <img
+          :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
+          class="h-40 overflow-hidden rounded"
+          :class="{
+            blur: (post?.rating ?? 0) >= 3 && !showNSFW,
+          }"
+        >
+      </div>
     </div>
     <div>
       <div class="py-2 text-zinc-4 font-black">

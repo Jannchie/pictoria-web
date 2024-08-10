@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { AspectRatio } from '@roku-ui/vue'
 import type { PostBase } from '../api'
-import { baseUrl, selectedPostIdSet, selectingPostIdSet, showPost, unselectedPostIdSet } from '../shared'
+import { baseUrl, selectedPostIdSet, selectingPostIdSet, showNSFW, showPost, unselectedPostIdSet } from '../shared'
 
 const props = defineProps<{
   post: PostBase
@@ -91,14 +91,19 @@ function getIconByExtension(extension: string) {
     class="post-item flex flex-col items-center gap-1"
     :class="{ selected }"
   >
-    <img
+    <div
       v-if="post.width && post.height"
-      :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-      class="post-content w-inherit select-all rounded-lg"
-      draggable="true"
-      @pointerdown="onPointerDown"
-      @dblclick="showPost = post"
+      class="overflow-hidden rounded-lg"
     >
+      <img
+        :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
+        class="post-content w-inherit select-all"
+        draggable="true"
+        :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
+        @pointerdown="onPointerDown"
+        @dblclick="showPost = post"
+      >
+    </div>
     <AspectRatio
       v-else
       :ratio="1"
