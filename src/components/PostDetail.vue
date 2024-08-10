@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue'
 import { useElementBounding, useMouse } from '@vueuse/core'
+import { Btn, Paper } from '@roku-ui/vue'
 import type { PostPublic } from '../api'
 import { baseUrl } from '../shared'
 
@@ -74,10 +75,16 @@ watchEffect(() => {
 const mouse = useMouse({ type: 'client' })
 const mx = computed(() => mouse.x.value - imgWrapperLeft.value)
 const my = computed(() => mouse.y.value - imgWrapperTop.value)
-// function toCenter() {
-//   x.value = (imgWrapperWidth.value - scaledWidth.value) / 2
-//   y.value = (imgWrapperHeight.value - scaledHeight.value) / 2
-// }
+function toInit() {
+  scale.value = initScale.value
+  x.value = (imgWrapperWidth.value - scaledWidth.value) / 2
+  y.value = (imgWrapperHeight.value - scaledHeight.value) / 2
+}
+function to1x() {
+  scale.value = 1.00
+  x.value = (imgWrapperWidth.value - scaledWidth.value) / 2
+  y.value = (imgWrapperHeight.value - scaledHeight.value) / 2
+}
 function onWheel(e: WheelEvent) {
   e.preventDefault()
 
@@ -189,28 +196,70 @@ function scaleWithSlider(newScale: number) {
   adjustForScaling(newScale, mouseX, mouseY)
   scale.value = newScale
 }
+const filpVertical = ref(false)
+function toggleFlipVertical() {
+  filpVertical.value = !filpVertical.value
+}
 </script>
 
 <template>
   <div
     class="absolute inset-0 z-10000 flex flex-col bg-surface-lowest"
   >
-    <header class="h-52px flex flex-col items-center justify-center">
+    <header class="flex flex-col items-center justify-center py-2">
       <div class="flex flex-grow items-center justify-center gap-2">
-        <div class="text-xs font-mono">
-          {{ scaleStr }}%
+        <div class="flex flex-grow items-center justify-center gap-2">
+          <div class="w-27px text-xs font-mono">
+            {{ scaleStr }}%
+          </div>
+          <Slider
+            :model-value="scale"
+            size="sm"
+            :min="0.10"
+            :max="8.00"
+            :step="0.01"
+            :min-width="8"
+            @update:model-value="scaleWithSlider"
+          />
+
+          <Popover
+            position="bottom"
+            trigger="hover"
+          >
+            <Btn
+              icon
+              size="sm"
+              @click="toInit"
+            >
+              <i class="i-tabler-focus-centered" />
+            </Btn>
+
+            <template #content>
+              <Paper
+                class="w-20 text-center text-xs !p-1"
+                with-border
+              >
+                initial scale
+              </Paper>
+            </template>
+          </Popover>
+          <Btn
+            icon
+            size="sm"
+            @click="to1x"
+          >
+            <i class="i-tabler-multiplier-1x" />
+          </Btn>
+          <Btn
+            icon
+            size="sm"
+            @click="toggleFlipVertical"
+          >
+            <i class="i-tabler-flip-vertical" />
+          </Btn>
         </div>
-        <Slider
-          :model-value="scale"
-          size="sm"
-          :min="0.10"
-          :max="8.00"
-          :step="0.01"
-          :width="8"
-          @update:model-value="scaleWithSlider"
-        />
+        <div />
       </div>
-      <FilterRow />
     </header>
     <div
       ref="imgWrapperRef"
@@ -230,6 +279,7 @@ function scaleWithSlider(newScale: number) {
           height: `${scaledHeight}px`,
           left: `${x}px`,
           top: `${y}px`,
+          transform: `scaleX(${filpVertical ? -1 : 1})`,
         }"
         :src="imgSrc"
       >
