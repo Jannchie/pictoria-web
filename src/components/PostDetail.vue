@@ -200,6 +200,10 @@ const filpVertical = ref(false)
 function toggleFlipVertical() {
   filpVertical.value = !filpVertical.value
 }
+
+onKeyStroke('Escape', () => {
+  showPost.value = null
+})
 </script>
 
 <template>
@@ -208,13 +212,29 @@ function toggleFlipVertical() {
   >
     <header class="flex flex-col items-center justify-center py-2">
       <div class="w-full flex flex-grow items-center justify-between gap-2">
-        <Btn
-          icon
-          size="sm"
-          @click="showPost = null"
+        <Popover
+          position="bottom"
+          trigger="hover"
         >
-          <i class="i-tabler-arrow-left" />
-        </Btn>
+          <Btn
+            icon
+            size="sm"
+            @click="showPost = null"
+          >
+            <i class="i-tabler-arrow-left" />
+          </Btn>
+          <template #content>
+            <Paper
+              class="w-20 py-2 text-center text-xs !p-1 !py-3"
+              with-border
+            >
+              <kbd>Esc</kbd>
+              <span>
+                back
+              </span>
+            </Paper>
+          </template>
+        </Popover>
         <div class="flex items-center justify-center gap-2">
           <div class="w-27px text-xs font-mono">
             {{ scaleStr }}%

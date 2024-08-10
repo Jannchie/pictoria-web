@@ -371,7 +371,7 @@ watchEffect(() => {
 }
 </style>
 
-<style scoped>
+<style>
 kbd {
   background-color: rgb(var(--r-color-surface-base));
   color: rgb(var(--r-color-surface-on-high));
