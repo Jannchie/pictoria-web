@@ -26,7 +26,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
         :icon="collapsed ? 'i-tabler-folder-open' : 'i-tabler-folder'"
         :title="folder.name "
         :extra-info="folder.file_count"
-        @click="postFilter.folder = folder.path.replace('\\', '/')"
+        @click="$router.push(`/dir/${folder.path.replace('\\', '/')}`)"
         @dblclick="collapsed = !collapsed"
       />
     </div>

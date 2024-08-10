@@ -20,6 +20,10 @@ const { data: allCount } = useQuery(
       :extra-info="allCount"
     />
     <ListItem
+      icon="i-tabler-bookmarks"
+      title="Tag Manager"
+    />
+    <ListItem
       icon="i-tabler-clock"
       title="Recently"
     />

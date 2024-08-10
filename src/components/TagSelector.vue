@@ -5,7 +5,7 @@ import { Btn, TextField } from '@roku-ui/vue'
 import type { TagGroup, TagResponse } from '../api'
 import { v1AddTagToPost, v1GetTagGroups, v1GetTags, v1RemoveTagFromPost } from '../api'
 import { baseUrl } from '../shared'
-import { usePostQuery } from '../composables'
+import { usePostQuery } from '../composables/usePostQuery'
 
 type Optional<T> = T | undefined
 

@@ -40,7 +40,7 @@ const extensionCountMutation = useQuery(['count', 'extension', filterWithoutExte
   return resp.data
 })
 const scoreCountList = computed(() => {
-  const resp = {}
+  const resp: Record<string, number> = {}
   const data = extensionCountMutation.data
   data.value?.forEach((d) => {
     resp[d.extension] = d.count

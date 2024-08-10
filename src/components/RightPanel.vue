@@ -3,7 +3,6 @@ import { computed } from 'vue'
 
 import { selectedPostIdSet, showPost } from '../shared'
 import type { PostBase } from '../api'
-import { usePostQuery } from '../composables'
 
 function isPost(datum: any): datum is PostBase {
   return 'file_path' in datum

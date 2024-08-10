@@ -30,6 +30,8 @@ declare module 'vue' {
     Rating: typeof import('./components/Rating.vue')['default']
     RatingFilter: typeof import('./components/RatingFilter.vue')['default']
     RightPanel: typeof import('./components/RightPanel.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     ScoreFilter: typeof import('./components/ScoreFilter.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']

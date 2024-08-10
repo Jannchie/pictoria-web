@@ -4,6 +4,7 @@ import type { PostBase } from '../api'
 import { v1GetPosts, v1GetTagGroups } from '../api'
 
 export const baseUrl = 'http://localhost:4777'
+
 interface ImageDatum {
   src: string
 }
