@@ -136,13 +136,26 @@ const miniMapViewBox = computed(() => ({
 const dragging = ref(false)
 const startMiniMapViewBox = { x: 0, y: 0 }
 
-function onMiniMapMouseDown(e) {
+const miniMapRef = ref<HTMLDivElement | null>(null)
+
+const miniMapBounding = useElementBounding(miniMapRef)
+
+function onMiniMapPointerDown(e) {
   dragging.value = true
   startMiniMapViewBox.x = -x.value * miniMapScale.value / scale.value
   startMiniMapViewBox.y = -y.value * miniMapScale.value / scale.value
+
+  const clickX = e.clientX - miniMapBounding.left.value
+  const clickY = e.clientY - miniMapBounding.top.value
+
+  const offsetX = (clickX / miniMapScale.value) - (imgWrapperWidth.value / (2 * scale.value))
+  const offsetY = (clickY / miniMapScale.value) - (imgWrapperHeight.value / (2 * scale.value))
+
+  x.value = -offsetX * scale.value
+  y.value = -offsetY * scale.value
 }
 
-function onMiniMapMouseMove(e) {
+function onMiniMapPointerMove(e) {
   if (dragging.value) {
     const offsetX = e.movementX / miniMapScale.value
     const offsetY = e.movementY / miniMapScale.value
@@ -152,22 +165,8 @@ function onMiniMapMouseMove(e) {
   }
 }
 
-function onMiniMapMouseUp() {
+function onMiniMapPointerUp() {
   dragging.value = false
-}
-
-function onMiniMapClick(e) {
-  if (!dragging.value) {
-    const rect = e.target.getBoundingClientRect()
-    const clickX = e.clientX - rect.left
-    const clickY = e.clientY - rect.top
-
-    const offsetX = (clickX / miniMapScale.value) - (imgWrapperWidth.value / (2 * scale.value))
-    const offsetY = (clickY / miniMapScale.value) - (imgWrapperHeight.value / (2 * scale.value))
-
-    x.value = -offsetX * scale.value
-    y.value = -offsetY * scale.value
-  }
 }
 </script>
 
@@ -186,7 +185,6 @@ function onMiniMapClick(e) {
       @pointerup.stop="onPointerUp"
       @wheel.stop="onWheel"
     >
-      <!-- Cover -->
       <img
         class="absolute object-contain"
         :draggable="false"
@@ -203,12 +201,12 @@ function onMiniMapClick(e) {
 
       <!-- 缩略图 -->
       <div
-        class="absolute bottom-4 left-4 z-200 border-2 border-gray-300 bg-white p-1"
-        @mousedown.stop="onMiniMapMouseDown"
-        @mouseup.stop="onMiniMapMouseUp"
-        @mousemove.stop="onMiniMapMouseMove"
-        @mouseleave.stop="onMiniMapMouseUp"
-        @click.stop="onMiniMapClick"
+        ref="miniMapRef"
+        class="absolute bottom-4 left-4 z-200 outline-white outline"
+        @pointerdown.stop="onMiniMapPointerDown"
+        @pointerup.stop="onMiniMapPointerUp"
+        @pointermove.stop="onMiniMapPointerMove"
+        @mouseleave.stop="onMiniMapPointerUp"
       >
         <div
           class="relative"
@@ -229,7 +227,7 @@ function onMiniMapClick(e) {
           >
           <!-- 显示视口框 -->
           <div
-            class="absolute border-2 border-red-500"
+            class="absolute border-2 border-primary-5"
             :style="{
               width: `${miniMapViewBox.width}px`,
               height: `${miniMapViewBox.height}px`,
