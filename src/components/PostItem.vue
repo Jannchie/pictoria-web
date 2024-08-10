@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { AspectRatio } from '@roku-ui/vue'
-import type { PostPublic } from '../api'
+import type { PostBase } from '../api'
 import { baseUrl, selectedPostIdSet, selectingPostIdSet, showPost, unselectedPostIdSet } from '../shared'
 
 const props = defineProps<{
-  post: PostPublic
+  post: PostBase
 
 }>()
 const post = computed(() => props.post)

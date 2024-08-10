@@ -2,11 +2,11 @@
 import { computed, ref, watchEffect } from 'vue'
 import { useElementBounding, useMouse } from '@vueuse/core'
 import { Btn, Paper } from '@roku-ui/vue'
-import type { PostPublic } from '../api'
+import type { PostWithTag } from '../api'
 import { baseUrl, showPost } from '../shared'
 
 const props = defineProps<{
-  post: PostPublic
+  post: PostWithTag
 }>()
 const post = computed(() => props.post)
 const imgSrc = computed(() => `${baseUrl}/v1/images/${post.value.file_path}.${post.value.extension}`)

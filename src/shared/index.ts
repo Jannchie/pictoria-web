@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 import { useQuery } from 'vue-query'
-import type { Post, PostPublic } from '../api'
-
+import type { PostBase } from '../api'
 import { v1GetPosts, v1GetTagGroups } from '../api'
 
 export const baseUrl = 'http://localhost:4777'
@@ -12,17 +11,19 @@ interface InputDatum {
   label: string
   value: string
 }
-interface WaterfallItem {
+interface PostFilter {
   rating: number[]
   score: number[]
   tags: string[]
+  extension: string[]
   folder?: string
 }
-export type RightPanelDatum = Post | ImageDatum | InputDatum
-export const postFilter = ref<WaterfallItem>({
+export type RightPanelDatum = PostBase | ImageDatum | InputDatum
+export const postFilter = ref<PostFilter>({
   rating: [],
   score: [],
   tags: [],
+  extension: [],
 })
 export const waterfallItemWidth = useStorage('pictoria.waterfallItemWidth', 400)
 export const selectedPostIdSet = ref<Set<number | undefined>>(new Set())
@@ -41,7 +42,7 @@ export function usePosts() {
     },
   )
 
-  return computed<Array<Post>>(() => {
+  return computed<Array<PostBase>>(() => {
     return getPostResp.data.value?.data ?? []
   })
 }
@@ -61,4 +62,4 @@ export function openTagSelectorWindow() {
   tagSelectorWindowRef.value?.toggle()
 }
 
-export const showPost = ref<PostPublic | null>(null)
+export const showPost = ref<PostBase | null>(null)

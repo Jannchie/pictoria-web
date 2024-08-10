@@ -21,6 +21,7 @@ export interface HTTPValidationError {
 }
 
 export interface PostBase {
+  id: number
   file_path: string
   extension: string
   width?: number
@@ -53,7 +54,8 @@ export interface PostHasTagPublic {
   tag_info: TagPublic
 }
 
-export interface PostPublic {
+export interface PostWithTag {
+  id: number
   file_path: string
   extension: string
   width?: number
@@ -67,7 +69,6 @@ export interface PostPublic {
   meta?: string
   md5?: string
   size?: number
-  id: number
   tags?: Array<PostHasTagPublic>
 }
 
@@ -130,7 +131,7 @@ export interface V1GetPostData {
   }
 }
 
-export type V1GetPostResponse = PostPublic
+export type V1GetPostResponse = PostWithTag
 
 export type V1GetPostError = HTTPValidationError
 
@@ -336,7 +337,7 @@ export interface $OpenApiTs {
         /**
          * Successful Response
          */
-        200: PostPublic
+        200: PostWithTag
         /**
          * Validation Error
          */

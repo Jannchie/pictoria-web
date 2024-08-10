@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
+    BaseFilter: typeof import('./components/BaseFilter.vue')['default']
     BasicFilter: typeof import('./components/BasicFilter.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     copy: typeof import('./components/ExtensionFilter.vue')['default']

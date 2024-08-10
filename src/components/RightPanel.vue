@@ -2,10 +2,10 @@
 import { computed } from 'vue'
 
 import { selectedPostIdSet, showPost } from '../shared'
-import type { PostPublic } from '../api'
+import type { PostBase } from '../api'
 import { usePostQuery } from '../composables'
 
-function isPost(datum: any): datum is PostPublic {
+function isPost(datum: any): datum is PostBase {
   return 'file_path' in datum
 }
 const id = computed<number | undefined>(() => {

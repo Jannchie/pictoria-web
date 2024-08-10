@@ -72,6 +72,10 @@ export const $HTTPValidationError = {
 
 export const $PostBase = {
   properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
     file_path: {
       type: 'string',
       title: 'File Path',
@@ -128,7 +132,7 @@ export const $PostBase = {
     },
   },
   type: 'object',
-  required: ['file_path', 'extension'],
+  required: ['id', 'file_path', 'extension'],
   title: 'PostBase',
 } as const
 
@@ -202,8 +206,12 @@ export const $PostHasTagPublic = {
   title: 'PostHasTagPublic',
 } as const
 
-export const $PostPublic = {
+export const $PostWithTag = {
   properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
     file_path: {
       type: 'string',
       title: 'File Path',
@@ -258,10 +266,6 @@ export const $PostPublic = {
       type: 'integer',
       title: 'Size',
     },
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
     tags: {
       items: {
         $ref: '#/components/schemas/PostHasTagPublic',
@@ -272,8 +276,8 @@ export const $PostPublic = {
     },
   },
   type: 'object',
-  required: ['file_path', 'extension', 'id'],
-  title: 'PostPublic',
+  required: ['id', 'file_path', 'extension'],
+  title: 'PostWithTag',
 } as const
 
 export const $RatingCountResponse = {

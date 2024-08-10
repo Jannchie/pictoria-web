@@ -2,12 +2,12 @@
 import { useQueryClient } from 'vue-query'
 import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
-import type { PostPublic } from '../api'
+import type { PostWithTag } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
 import { baseUrl, openTagSelectorWindow, useTagGroup } from '../shared'
 
 defineProps<{
-  post: PostPublic
+  post: PostWithTag
 }>()
 const queryClient = useQueryClient()
 
