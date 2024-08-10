@@ -82,7 +82,7 @@ const btnText = computed(() => {
           >
             <Checkbox
               class="pointer-events-none flex-shrink-0"
-              :value="hasScore(score)"
+              :model-value="hasScore(score)"
             />
             <div class="h-16px flex flex-grow gap-1">
               <template v-if="score === 0">

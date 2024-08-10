@@ -49,7 +49,7 @@ defineExpose({
     <Checkbox
       v-if="type === 'checkbox'"
       class="pointer-events-none flex-shrink-0"
-      :value="active"
+      :model-value="active"
     />
     <i
       v-if="icon"

@@ -2,36 +2,36 @@
 import { Btn } from '@roku-ui/vue'
 import { computed } from 'vue'
 import { useQuery } from 'vue-query'
-import { v1CountGroupByRating } from '../api'
+import { v1CountGroupByExtension } from '../api'
 import { baseUrl, postFilter } from '../shared'
 
 const ratingFilterData = computed({
   get() {
-    return postFilter.value.rating
+    return postFilter.value.extension
   },
-  set(val: number[]) {
-    postFilter.value.rating = val
+  set(val: string[]) {
+    postFilter.value.extension = val
   },
 })
-function hasRating(rating: number) {
-  return ratingFilterData.value.includes(rating)
+function hasExt(ext: string) {
+  return ratingFilterData.value.includes(ext)
 }
-function onPointerDown(rating: number) {
-  if (hasRating(rating)) {
-    ratingFilterData.value = ratingFilterData.value.filter(s => s !== rating)
+function onPointerDown(ext: string) {
+  if (hasExt(ext)) {
+    ratingFilterData.value = ratingFilterData.value.filter(s => s !== ext)
   }
   else {
-    ratingFilterData.value = [...ratingFilterData.value, rating]
+    ratingFilterData.value = [...ratingFilterData.value, ext]
   }
 }
-const filterWithoutRating = computed(() => {
+const filterWithoutExtension = computed(() => {
   return {
     ...postFilter.value,
-    rating: [],
+    extension: [],
   }
 })
-const scoreCountMutation = useQuery(['count', 'rating', filterWithoutRating], async () => {
-  const resp = await v1CountGroupByRating({
+const extensionCountMutation = useQuery(['count', 'extension', filterWithoutExtension], async () => {
+  const resp = await v1CountGroupByExtension({
     baseUrl,
     body: {
       ...postFilter.value,
@@ -40,38 +40,29 @@ const scoreCountMutation = useQuery(['count', 'rating', filterWithoutRating], as
   return resp.data
 })
 const scoreCountList = computed(() => {
-  const resp = [0, 0, 0, 0, 0]
-  const data = scoreCountMutation.data
+  const resp = {}
+  const data = extensionCountMutation.data
   data.value?.forEach((d) => {
-    resp[Number(d.rating)] = d.count
+    resp[d.extension] = d.count
   })
   return resp
+})
+
+const extensions = computed(() => {
+  return extensionCountMutation.data.value?.map(d => d.extension) ?? []
 })
 
 const btnText = computed(() => {
   const score = ratingFilterData.value
   if (score.length === 0) {
-    return 'Rating'
+    return 'Extension'
   }
   else {
-    return score.map(s => getRatingName(s)).join(', ')
+    return score.map(s => getExtensionName(s)).join(', ')
   }
 })
-function getRatingName(rating: number) {
-  switch (rating) {
-    case 0:
-      return 'Not Rating Yet'
-    case 1:
-      return 'General'
-    case 2:
-      return 'Sensitive'
-    case 3:
-      return 'Questionable'
-    case 4:
-      return 'Explicit'
-    default:
-      return 'Unknown'
-  }
+function getExtensionName(ext: string) {
+  return ext
 }
 </script>
 
@@ -81,8 +72,8 @@ function getRatingName(rating: number) {
       <Btn
         size="sm"
       >
-        <i class="i-tabler-star" />
-        <span>
+        <i class="i-tabler-file" />
+        <span class="flex-grow">
           {{ btnText }}
         </span>
       </Btn>
@@ -91,28 +82,28 @@ function getRatingName(rating: number) {
           class="min-w-52 border border-surface-border-base rounded bg-surface-low p-1"
         >
           <div
-            v-for="rating in [1, 2, 3, 4, 0]"
-            :key="rating"
+            v-for="ext in extensions"
+            :key="ext"
             class="w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs hover:bg-surface-high"
-            @pointerdown="onPointerDown(rating)"
+            @pointerdown="onPointerDown(ext)"
           >
             <Checkbox
               class="pointer-events-none flex-shrink-0"
-              :model-value="hasRating(rating)"
+              :model-value="hasExt(ext)"
             />
             <div class="h-16px flex flex-grow gap-1">
-              <template v-if="rating === 0">
+              <template v-if="ext === ''">
                 Not Scored Yet
               </template>
               <template v-else>
-                {{ getRatingName(rating) }}
+                {{ getExtensionName(ext) }}
               </template>
             </div>
             <div
-              v-if="scoreCountList[rating]"
+              v-if="scoreCountList[ext]"
               class="flex-shrink-0"
             >
-              {{ scoreCountList[rating] }}
+              {{ scoreCountList[ext] }}
             </div>
           </div>
         </div>

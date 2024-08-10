@@ -56,6 +56,22 @@ export const $DirectorySummary = {
   title: 'DirectorySummary',
 } as const
 
+export const $ExtensionCountResponse = {
+  properties: {
+    extension: {
+      type: 'string',
+      title: 'Extension',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+  },
+  type: 'object',
+  required: ['extension', 'count'],
+  title: 'ExtensionCountResponse',
+} as const
+
 export const $HTTPValidationError = {
   properties: {
     detail: {

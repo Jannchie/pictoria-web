@@ -16,6 +16,11 @@ export interface DirectorySummary {
   children?: Array<DirectorySummary>
 }
 
+export interface ExtensionCountResponse {
+  extension: string
+  count: number
+}
+
 export interface HTTPValidationError {
   detail?: Array<ValidationError>
 }
@@ -164,6 +169,14 @@ export interface V1CountGroupByScoreData {
 export type V1CountGroupByScoreResponse = Array<ScoreCountResponse>
 
 export type V1CountGroupByScoreError = HTTPValidationError
+
+export interface V1CountGroupByExtensionData {
+  body: PostFilter
+}
+
+export type V1CountGroupByExtensionResponse = Array<ExtensionCountResponse>
+
+export type V1CountGroupByExtensionError = HTTPValidationError
 
 export interface V1UpdatePostScoreData {
   body: ScoreUpdate
@@ -391,6 +404,21 @@ export interface $OpenApiTs {
          * Successful Response
          */
         200: Array<ScoreCountResponse>
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/posts/count/extension': {
+    post: {
+      req: V1CountGroupByExtensionData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: Array<ExtensionCountResponse>
         /**
          * Validation Error
          */
