@@ -31,13 +31,20 @@ async function onSelectScore(post_id: number, score: number = 0) {
   })
   queryClient.invalidateQueries(['count', 'score'])
 }
+
+function isImage(extension: string) {
+  return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)
+}
 </script>
 
 <template>
   <div
     class="flex flex-col border-zinc-8 text-xs"
   >
-    <div class="flex justify-center">
+    <div
+      v-if="isImage(post.extension)"
+      class="flex justify-center"
+    >
       <img
         :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
         class="h-40 rounded"

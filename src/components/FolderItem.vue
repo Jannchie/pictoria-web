@@ -19,12 +19,6 @@ const folderItemRef = ref<HTMLElement | null>(null)
         'border-l border-surface-border-high': depth !== 0,
       }"
     >
-      <i
-        v-if="folder.children?.length"
-        :class="collapsed ? 'i-tabler-chevron-down' : 'i-tabler-chevron-right'"
-        class="absolute left-0 cursor-pointer text-xs"
-        @click="collapsed = !collapsed"
-      />
       <ListItem
         ref="folderItemRef"
         class="flex-grow"
@@ -32,7 +26,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
         :icon="collapsed ? 'i-tabler-folder-open' : 'i-tabler-folder'"
         :title="folder.name "
         :extra-info="folder.file_count"
-        @click="postFilter.folder = folder.path"
+        @click="postFilter.folder = folder.path.replace('\\', '/')"
         @dblclick="collapsed = !collapsed"
       />
     </div>

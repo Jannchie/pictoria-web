@@ -10,15 +10,16 @@ const props = withDefaults(
     threshold?: number
     stopPropagation?: boolean
     capture?: boolean
+    minBarHeight?: number
   }>(),
   {
     barWidth: 4,
     threshold: 100,
     stopPropagation: false,
     capture: false,
+    minBarHeight: 20,
   },
 )
-
 const parentElement = useParentElement()
 const parentBounds = useElementBounding(parentElement)
 const scrollBarIndicatorRef = ref<HTMLElement | null>()
@@ -56,7 +57,8 @@ const barHeight = computed(() => {
   if (!scrollDomRef.value) {
     return 0
   }
-  return clientHeight.value / scrollHeight.value * clientHeight.value
+  const calculatedBarHeight = clientHeight.value / scrollHeight.value * clientHeight.value
+  return Math.max(calculatedBarHeight, props.minBarHeight)
 })
 const scrollableHeight = computed(() => {
   return clientHeight.value - barHeight.value

@@ -70,7 +70,7 @@ export const $HTTPValidationError = {
   title: 'HTTPValidationError',
 } as const
 
-export const $Post = {
+export const $PostBase = {
   properties: {
     file_path: {
       type: 'string',
@@ -126,14 +126,10 @@ export const $Post = {
       type: 'integer',
       title: 'Size',
     },
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
   },
   type: 'object',
   required: ['file_path', 'extension'],
-  title: 'Post',
+  title: 'PostBase',
 } as const
 
 export const $PostCountResponse = {
@@ -172,6 +168,14 @@ export const $PostFilter = {
       },
       type: 'array',
       title: 'Tags',
+      default: [],
+    },
+    extension: {
+      items: {
+        type: 'string',
+      },
+      type: 'array',
+      title: 'Extension',
       default: [],
     },
     folder: {

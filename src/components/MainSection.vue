@@ -96,7 +96,7 @@ function onSelectStart({ ctrl, shift }: {
       :items="items"
       :item-width="waterfallItemWidth"
       :cols="cols"
-      :gap="20"
+      :gap="24"
       :padding-x="8"
       :padding-y="8"
       :y-gap="36"

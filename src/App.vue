@@ -106,12 +106,15 @@ useEventListener('wheel', (event) => {
           Pictoria
         </div>
         <SpecialPathList v-if="false" />
-        <div v-if="folders.data.value">
+        <ScrollArea
+          v-if="folders.data.value"
+          class="overflow-y-auto text-sm !max-h-[calc(100vh-36px-24px-16px)]"
+        >
           <FolderItem
             :folder="folders.data.value"
             :depth="0"
           />
-        </div>
+        </ScrollArea>
       </Pane>
       <Pane class="relative">
         <PostDetail

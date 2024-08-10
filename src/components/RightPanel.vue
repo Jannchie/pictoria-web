@@ -8,7 +8,7 @@ import { usePostQuery } from '../composables'
 function isPost(datum: any): datum is PostPublic {
   return 'file_path' in datum
 }
-const id = computed<number>(() => {
+const id = computed<number | undefined>(() => {
   const selected = selectedPostIdSet.value.values().next().value
   if (selected) {
     return selected
@@ -16,7 +16,7 @@ const id = computed<number>(() => {
   else if (showPost.value) {
     return showPost.value.id
   }
-  return 0
+  return undefined
 })
 const { data: postData } = usePostQuery(id)
 const data = computed(() => {

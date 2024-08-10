@@ -20,7 +20,7 @@ export interface HTTPValidationError {
   detail?: Array<ValidationError>
 }
 
-export interface Post {
+export interface PostBase {
   file_path: string
   extension: string
   width?: number
@@ -34,7 +34,6 @@ export interface Post {
   meta?: string
   md5?: string
   size?: number
-  id?: number
 }
 
 export interface PostCountResponse {
@@ -45,6 +44,7 @@ export interface PostFilter {
   rating?: Array<(number)>
   score?: Array<(number)>
   tags?: Array<string>
+  extension?: Array<string>
   folder?: string
 }
 
@@ -120,7 +120,7 @@ export interface V1GetPostsData {
   }
 }
 
-export type V1GetPostsResponse = Array<Post>
+export type V1GetPostsResponse = Array<PostBase>
 
 export type V1GetPostsError = HTTPValidationError
 
@@ -321,7 +321,7 @@ export interface $OpenApiTs {
         /**
          * Successful Response
          */
-        200: Array<Post>
+        200: Array<PostBase>
         /**
          * Validation Error
          */

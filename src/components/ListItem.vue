@@ -37,7 +37,7 @@ defineExpose({
 <template>
   <div
     ref="folderItemRef"
-    class="flex items-center gap-1 rounded px-2 py-1"
+    class="w-full flex items-center gap-1 rounded px-2 py-1"
     :class="{
       'bg-surface-highest': active && type === 'normal',
       'bg-surface-high': hover || dragover,

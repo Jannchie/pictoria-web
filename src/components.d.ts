@@ -8,9 +8,12 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
+    BasicFilter: typeof import('./components/BasicFilter.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
+    copy: typeof import('./components/ExtensionFilter.vue')['default']
     Dialog: typeof import('./components/Dialog.vue')['default']
     DialogContainer: typeof import('./components/DialogContainer.vue')['default']
+    ExtensionFilter: typeof import('./components/ExtensionFilter.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FloatWindow: typeof import('./components/FloatWindow.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']

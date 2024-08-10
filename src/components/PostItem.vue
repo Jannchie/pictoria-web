@@ -94,7 +94,7 @@ function getIconByExtension(extension: string) {
     <img
       v-if="post.width && post.height"
       :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-      class="post-content w-inherit select-all rounded"
+      class="post-content w-inherit select-all rounded-lg"
       draggable="true"
       @pointerdown="onPointerDown"
       @dblclick="showPost = post"

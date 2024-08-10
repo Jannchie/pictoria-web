@@ -8,5 +8,5 @@ import { highlightDirective } from './utils'
 
 const app = createApp(App)
 app.directive('highlight', highlightDirective)
-app.use(VueQueryPlugin)
+app.use(VueQueryPlugin, { queryClientConfig: { defaultOptions: { queries: { staleTime: 1000 * 60 * 5 } } } })
 app.mount('#app')
