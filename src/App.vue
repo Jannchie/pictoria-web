@@ -107,7 +107,7 @@ onKeyStroke('Delete', async () => {
           v-if="showPost"
           :post="showPost"
         />
-        <header class="h-52px flex flex-col items-center justify-center">
+        <header class="h-60px flex flex-col items-center justify-center">
           <div class="w-32 flex flex-grow items-center justify-center">
             <Slider
               v-model="waterfallItemWidth"

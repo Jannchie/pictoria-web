@@ -3,7 +3,7 @@ import { computed, ref, watchEffect } from 'vue'
 import { useElementBounding, useMouse } from '@vueuse/core'
 import { Btn, Paper } from '@roku-ui/vue'
 import type { PostPublic } from '../api'
-import { baseUrl } from '../shared'
+import { baseUrl, showPost } from '../shared'
 
 const props = defineProps<{
   post: PostPublic
@@ -207,8 +207,15 @@ function toggleFlipVertical() {
     class="absolute inset-0 z-10000 flex flex-col bg-surface-lowest"
   >
     <header class="flex flex-col items-center justify-center py-2">
-      <div class="flex flex-grow items-center justify-center gap-2">
-        <div class="flex flex-grow items-center justify-center gap-2">
+      <div class="w-full flex flex-grow items-center justify-between gap-2">
+        <Btn
+          icon
+          size="sm"
+          @click="showPost = null"
+        >
+          <i class="i-tabler-arrow-left" />
+        </Btn>
+        <div class="flex items-center justify-center gap-2">
           <div class="w-27px text-xs font-mono">
             {{ scaleStr }}%
           </div>

@@ -81,7 +81,7 @@ function onSelectStart({ ctrl, shift }: {
 
 <template>
   <section
-    class="relative h-[calc(100vh-52px-24px)]"
+    class="relative h-[calc(100vh-60px-24px)]"
   >
     <SelectArea
       :target="waterfallContentDom"
