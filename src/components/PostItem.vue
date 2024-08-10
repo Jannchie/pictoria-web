@@ -91,9 +91,10 @@ function getIconByExtension(extension: string) {
     class="post-item flex flex-col items-center gap-1"
     :class="{ selected }"
   >
-    <div
+    <AspectRatio
       v-if="post.width && post.height"
-      class="overflow-hidden rounded-lg"
+      :ratio="post.width / post.height"
+      class="w-full overflow-hidden rounded-lg bg-surface-high"
     >
       <img
         :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
@@ -103,7 +104,7 @@ function getIconByExtension(extension: string) {
         @pointerdown="onPointerDown"
         @dblclick="showPost = post"
       >
-    </div>
+    </AspectRatio>
     <AspectRatio
       v-else
       :ratio="1"
