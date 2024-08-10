@@ -6,7 +6,7 @@ import type { PostWithTag } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
 import { baseUrl, openTagSelectorWindow, useTagGroup } from '../shared'
 
-defineProps<{
+const props = defineProps<{
   post: PostWithTag
 }>()
 const queryClient = useQueryClient()
@@ -30,7 +30,27 @@ async function onSelectScore(post_id: number, score: number = 0) {
     },
   })
   queryClient.invalidateQueries(['count', 'score'])
+  queryClient.invalidateQueries(['post', post_id])
 }
+const post = computed(() => props.post)
+const { 1: one, 2: two, 3: three, 4: four, 5: five } = useMagicKeys()
+watchEffect(async () => {
+  if (one.value) {
+    await onSelectScore(post.value.id, 1)
+  }
+  if (two.value) {
+    await onSelectScore(post.value.id, 2)
+  }
+  if (three.value) {
+    await onSelectScore(post.value.id, 3)
+  }
+  if (four.value) {
+    await onSelectScore(post.value.id, 4)
+  }
+  if (five.value) {
+    await onSelectScore(post.value.id, 5)
+  }
+})
 
 function isImage(extension: string) {
   return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)

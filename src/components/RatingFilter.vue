@@ -49,12 +49,12 @@ const scoreCountList = computed(() => {
 })
 
 const btnText = computed(() => {
-  const score = ratingFilterData.value
-  if (score.length === 0) {
+  const item = ratingFilterData.value
+  if (item.length === 0) {
     return 'Rating'
   }
   else {
-    return score.map(s => getRatingName(s)).join(', ')
+    return item.map(s => getRatingName(s)).join(', ')
   }
 })
 function getRatingName(rating: number) {

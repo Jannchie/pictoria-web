@@ -10,6 +10,7 @@ declare module 'vue' {
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
     BaseFilter: typeof import('./components/BaseFilter.vue')['default']
     BasicFilter: typeof import('./components/BasicFilter.vue')['default']
+    BottomBar: typeof import('./components/BottomBar.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     copy: typeof import('./components/ExtensionFilter.vue')['default']
     Dialog: typeof import('./components/Dialog.vue')['default']

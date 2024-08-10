@@ -2,8 +2,9 @@
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { useQuery, useQueryClient } from 'vue-query'
-import { baseUrl, selectedPostIdSet, showPost, waterfallItemWidth } from './shared'
+import { baseUrl, selectedPostIdSet, showPost, usePosts, waterfallItemWidth } from './shared'
 import { v1DeletePost, v1GetFolders, v1UploadFile } from './api'
+import PostDetail from './components/PostDetail.vue'
 
 const dropArea = document.body as HTMLElement
 dropArea.addEventListener('dragover', (event: DragEvent) => {
@@ -77,6 +78,9 @@ onKeyStroke('Delete', async () => {
     })
   }
   queryClient.invalidateQueries(['posts'])
+  queryClient.invalidateQueries(['count', 'score'])
+  queryClient.invalidateQueries(['count', 'rating'])
+  queryClient.invalidateQueries(['count', 'extension'])
 })
 useEventListener('wheel', (event) => {
   if (event.ctrlKey) {
@@ -121,7 +125,10 @@ useEventListener('wheel', (event) => {
           v-if="showPost"
           :post="showPost"
         />
-        <header class="h-60px flex flex-col items-center justify-center">
+
+        <header
+          class="h-60px flex flex-col items-center justify-center"
+        >
           <div class="w-32 flex flex-grow items-center justify-center">
             <Slider
               v-model="waterfallItemWidth"
@@ -134,7 +141,7 @@ useEventListener('wheel', (event) => {
           </div>
           <FilterRow />
         </header>
-        <MainSection v-if="true" />
+        <MainSection />
       </Pane>
       <Pane
         :min-size="8"
@@ -145,11 +152,7 @@ useEventListener('wheel', (event) => {
         <RightPanel />
       </Pane>
     </Splitpanes>
-    <div
-      class="h-24px border-t border-surface-border-high bg-surface-low text-surface-on-low"
-    >
-      <!-- bottom -->
-    </div>
+    <BottomBar />
   </div>
 </template>
 

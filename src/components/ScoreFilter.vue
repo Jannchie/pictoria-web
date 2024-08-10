@@ -49,12 +49,12 @@ const scoreCountList = computed(() => {
 })
 
 const btnText = computed(() => {
-  const score = scoreFilterData.value
-  if (score.length === 0) {
+  const item = scoreFilterData.value
+  if (item.length === 0) {
     return 'Score'
   }
   else {
-    return score.map(s => s === 0 ? 'Not Scored Yet' : `${s} Star`).join(', ')
+    return item.map(s => s === 0 ? 'Not Scored Yet' : `${s} Star`).join(', ')
   }
 })
 </script>

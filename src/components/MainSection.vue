@@ -77,6 +77,13 @@ function onSelectStart({ ctrl, shift }: {
     selectedPostIdSet.value = new Set()
   }
 }
+
+const { Ctrl_A } = useMagicKeys()
+watchEffect(() => {
+  if (Ctrl_A.value) {
+    selectedPostIdSet.value = new Set(posts.value.map(post => post.id))
+  }
+})
 </script>
 
 <template>

@@ -53,12 +53,12 @@ const extensions = computed(() => {
 })
 
 const btnText = computed(() => {
-  const score = ratingFilterData.value
-  if (score.length === 0) {
+  const item = ratingFilterData.value
+  if (item.length === 0) {
     return 'Extension'
   }
   else {
-    return score.map(s => getExtensionName(s)).join(', ')
+    return item.map(s => getExtensionName(s)).join(', ')
   }
 })
 function getExtensionName(ext: string) {
