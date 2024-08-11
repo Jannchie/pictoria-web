@@ -94,16 +94,18 @@ function getIconByExtension(extension: string) {
     <AspectRatio
       v-if="post.width && post.height"
       :ratio="post.width / post.height"
-      class="w-full overflow-hidden rounded-lg bg-surface-high"
+      class="w-full rounded-lg bg-surface-high"
     >
-      <img
-        :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-        class="post-content w-inherit select-all"
-        draggable="true"
-        :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
-        @pointerdown="onPointerDown"
-        @dblclick="showPost = post"
-      >
+      <div class="post-content overflow-clip rounded-lg">
+        <img
+          :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
+          class="w-inherit select-all rounded-xl"
+          draggable="true"
+          :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
+          @pointerdown="onPointerDown"
+          @dblclick="showPost = post"
+        >
+      </div>
     </AspectRatio>
     <AspectRatio
       v-else
