@@ -39,6 +39,7 @@ declare module 'vue' {
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
     TagSelector: typeof import('./components/TagSelector.vue')['default']
     TagSelectorWindow: typeof import('./components/TagSelectorWindow.vue')['default']
+    VisualScroll: typeof import('./components/VisualScroll.vue')['default']
     Window: typeof import('./components/FloatWindow.vuew.vue')['default']
   }
 }

@@ -18,10 +18,14 @@ const { data: allCount } = useQuery(
       icon="i-tabler-photo"
       title="All"
       :extra-info="allCount"
+      :active="$route.path === '/dir'"
+      @click="$router.push('/dir')"
     />
     <ListItem
       icon="i-tabler-bookmarks"
       title="Tag Manager"
+      :active="$route.path === '/tags'"
+      @click="$router.push('/tags')"
     />
     <ListItem
       icon="i-tabler-clock"
