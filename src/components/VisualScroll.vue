@@ -28,15 +28,15 @@ const calculatedHeightsTrue = shallowRef<number[]>([])
 // watchEffect(() => {
 //   calculatedHeights.value.length = props.items.length
 // })
-const avgHeight = computed(() => {
-  if (props.itemHeight) {
-    return props.itemHeight
-  }
-  if (props.items.length === 0) {
-    return 20
-  }
-  return slotRefsHeight.value / props.items.length
-})
+// const avgHeight = computed(() => {
+//   if (props.itemHeight) {
+//     return props.itemHeight
+//   }
+//   if (props.items.length === 0) {
+//     return 20
+//   }
+//   return slotRefsHeight.value / props.items.length
+// })
 const calculatedHeights = computed(() => {
   return props.items.map((_, i) => {
     if (calculatedHeightsTrue.value[i]) {

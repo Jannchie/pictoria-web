@@ -55,6 +55,16 @@ watchEffect(async () => {
 function isImage(extension: string) {
   return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(extension)
 }
+
+const folders = computed(() => {
+  const names = post.value.file_path.split('/').slice(0, -1)
+  // 返回一个对象数组，包括 name 和 path 两个字段，name 如上所示，而 path 需要包括父亲目录，使用 / 分隔
+  const paths = post.value.file_path.split('/').slice(0, -1).map((_, i, arr) => arr.slice(0, i + 1).join('/'))
+  return names.map((name, i) => ({
+    name,
+    path: paths[i],
+  }))
+})
 </script>
 
 <template>
@@ -139,6 +149,21 @@ function isImage(extension: string) {
         <div v-if="post.created_at">
           {{ timestampToTime(post.created_at) }}
         </div>
+      </div>
+    </div>
+    <div>
+      <div class="py-2 text-zinc-4 font-black">
+        Folder
+      </div>
+      <div class="flex gap-2">
+        <Btn
+          v-for="folder in folders"
+          :key="folder.path"
+          size="sm"
+          @pointerup="$router.push(`/dir/${folder.path}?post_id=${post.id}`)"
+        >
+          {{ folder.name }}
+        </Btn>
       </div>
     </div>
     <div class="flex flex-col gap-1">
