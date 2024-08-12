@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { DirectorySummary } from '../api'
-import { postFilter } from '../shared'
+import { postFilter, showPost } from '../shared'
 
 defineProps<{
   folder: DirectorySummary
@@ -26,7 +26,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
         :icon="collapsed ? 'i-tabler-folder-open' : 'i-tabler-folder'"
         :title="folder.name "
         :extra-info="folder.file_count"
-        @click="$router.push(`/dir/${folder.path.replace('\\', '/')}`)"
+        @click="$router.push(`/dir/${folder.path.replace('\\', '/')}`); showPost = null"
         @dblclick="collapsed = !collapsed"
       />
     </div>

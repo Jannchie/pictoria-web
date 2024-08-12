@@ -12,6 +12,7 @@ declare module 'vue' {
     BasicFilter: typeof import('./components/BasicFilter.vue')['default']
     BottomBar: typeof import('./components/BottomBar.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
+    Chip: typeof import('./components/Tag.vue')['default']
     copy: typeof import('./components/ExtensionFilter.vue')['default']
     Dialog: typeof import('./components/Dialog.vue')['default']
     DialogContainer: typeof import('./components/DialogContainer.vue')['default']
@@ -37,9 +38,11 @@ declare module 'vue' {
     SelectArea: typeof import('./components/SelectArea.vue')['default']
     Slider: typeof import('./components/Slider.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
+    Tag: typeof import('./components/Tag.vue')['default']
     TagSelector: typeof import('./components/TagSelector.vue')['default']
     TagSelectorWindow: typeof import('./components/TagSelectorWindow.vue')['default']
-    VisualScroll: typeof import('./components/VisualScroll.vue')['default']
+    VirtualScroll: typeof import('./components/VirtualScroll.vue')['default']
+    VisualScroll: typeof import('./components/VirtualScroll.vue')['default']
     Window: typeof import('./components/FloatWindow.vuew.vue')['default']
   }
 }

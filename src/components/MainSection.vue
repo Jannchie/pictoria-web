@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { PostWithTag } from '../api'
 import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
@@ -86,19 +86,37 @@ watchEffect(() => {
   }
 })
 const route = useRoute()
-watchEffect(() => {
+const router = useRouter()
+watchEffect(async () => {
   if (route.query.post_id) {
     // 如果有 post_id 参数，则选中这个 post，并且滚动到这个 post
     const postId = Number(route.query.post_id)
     const postIndex = posts.value.findIndex(post => post.id === postId)
+    if (postIndex === -1) {
+      await router.push({ query: { post_id: undefined } })
+      return
+    }
     if (postId) {
       const postLayout = waterfallRef.value?.layoutData?.[postIndex]
       if (postLayout) {
-        waterfallWrapperDom.value?.scrollTo({
-          top: postLayout.y,
-          behavior: 'smooth',
-        })
+        const res = document.querySelector(`#post-item-${postId}`)
+        if (!res) {
+          waterfallWrapperDom.value?.scrollTo({
+            top: postLayout.y,
+            behavior: 'smooth',
+          })
+          selectedPostIdSet.value = new Set([postId])
+        }
       }
+    }
+  }
+})
+// 如果 selectedPostIdSet 只有一个元素，则变更路由，但是不要滚动
+watchEffect(() => {
+  if (selectedPostIdSet.value.size === 1) {
+    const postId = selectedPostIdSet.value.values().next().value
+    if (postId) {
+      router.push({ query: { post_id: postId } })
     }
   }
 })

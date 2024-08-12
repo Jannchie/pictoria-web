@@ -4,7 +4,7 @@ import { filesize } from 'filesize'
 import { Btn } from '@roku-ui/vue'
 import type { PostWithTag } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
-import { baseUrl, openTagSelectorWindow, showNSFW, useTagGroup } from '../shared'
+import { baseUrl, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '../shared'
 
 const props = defineProps<{
   post: PostWithTag
@@ -78,7 +78,7 @@ const folders = computed(() => {
       <div class="overflow-hidden rounded">
         <img
           :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-          class="h-40 overflow-hidden rounded"
+          class="h-40 overflow-hidden rounded object-contain"
           :class="{
             blur: (post?.rating ?? 0) >= 3 && !showNSFW,
           }"
@@ -160,7 +160,7 @@ const folders = computed(() => {
           v-for="folder in folders"
           :key="folder.path"
           size="sm"
-          @pointerup="$router.push(`/dir/${folder.path}?post_id=${post.id}`)"
+          @pointerup="$router.push(`/dir/${folder.path}?post_id=${post.id}`); showPost = null"
         >
           {{ folder.name }}
         </Btn>
@@ -176,23 +176,23 @@ const folders = computed(() => {
         v-if="post.tags && post.tags.length"
         class="flex flex-wrap gap-2"
       >
-        <div
+        <Tag
           v-for="tag of post.tags"
           :key="tag.tag_info.name"
           class="cursor-pointer rounded bg-surface-high px-1 py-0.5"
-          :style="{
-            backgroundColor: getGroupColor(tag.tag_info.group_id),
-          }"
+          rounded="lg"
+          :color="getGroupColor(tag.tag_info.group_id)"
           @pointerup="openTagSelectorWindow()"
         >
           {{ tag.tag_info.name }}
-        </div>
-        <div
+        </Tag>
+        <Tag
           class="cursor-pointer rounded bg-surface-high px-1 py-0.5"
+          rounded="lg"
           @pointerup="openTagSelectorWindow()"
         >
           <i class="i-tabler-plus" />
-        </div>
+        </Tag>
       </div>
       <div
         v-else

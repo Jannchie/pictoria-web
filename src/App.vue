@@ -31,7 +31,7 @@ const folders = useQuery(
         <div class="h-36px flex items-center justify-center text-xl font-black">
           Pictoria
         </div>
-        <ScrollArea>
+        <ScrollArea class="pr-2">
           <SpecialPathList />
           <div
             v-if="folders.data.value"

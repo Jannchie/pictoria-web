@@ -99,7 +99,7 @@ function getIconByExtension(extension: string) {
       <div class="post-content overflow-clip rounded-lg">
         <img
           :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
-          class="w-inherit select-all rounded-xl"
+          class="w-inherit select-all rounded-lg"
           draggable="true"
           :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
           @pointerdown="onPointerDown"
@@ -110,7 +110,7 @@ function getIconByExtension(extension: string) {
     <AspectRatio
       v-else
       :ratio="1"
-      class="post-content h-full w-full rounded-xl bg-surface-high"
+      class="post-content h-full w-full rounded-lg bg-surface-high"
     >
       <div class="p-12">
         <i
