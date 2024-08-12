@@ -11,6 +11,10 @@ export const $Body_v1_upload_file_v1_upload_post = {
       type: 'string',
       title: 'Path',
     },
+    source: {
+      type: 'string',
+      title: 'Source',
+    },
   },
   type: 'object',
   required: ['file', 'path'],
@@ -145,6 +149,14 @@ export const $PostBase = {
     size: {
       type: 'integer',
       title: 'Size',
+    },
+    source: {
+      type: 'string',
+      title: 'Source',
+    },
+    caption: {
+      type: 'string',
+      title: 'Caption',
     },
   },
   type: 'object',
@@ -281,6 +293,14 @@ export const $PostWithTag = {
     size: {
       type: 'integer',
       title: 'Size',
+    },
+    source: {
+      type: 'string',
+      title: 'Source',
+    },
+    caption: {
+      type: 'string',
+      title: 'Caption',
     },
     tags: {
       items: {

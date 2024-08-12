@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
+import { logicAnd } from '@vueuse/math'
 import type { PostWithTag } from '../api'
 import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
@@ -80,10 +81,13 @@ function onSelectStart({ ctrl, shift }: {
 }
 
 const { Ctrl_A } = useMagicKeys()
-watchEffect(() => {
-  if (Ctrl_A.value) {
-    selectedPostIdSet.value = new Set(posts.value.map(post => post.id))
-  }
+const activeElement = useActiveElement()
+const notUsingInput = computed(() =>
+  activeElement.value?.tagName !== 'INPUT'
+  && activeElement.value?.tagName !== 'TEXTAREA')
+
+whenever(logicAnd(Ctrl_A, notUsingInput), () => {
+  selectedPostIdSet.value = new Set(posts.value.map(post => post.id))
 })
 const route = useRoute()
 const router = useRouter()

@@ -3,6 +3,7 @@
 export interface Body_v1_upload_file_v1_upload_post {
   file: (Blob | File)
   path: string
+  source?: string
 }
 
 export interface CountResponse {
@@ -40,6 +41,8 @@ export interface PostBase {
   meta?: string
   md5?: string
   size?: number
+  source?: string
+  caption?: string
 }
 
 export interface PostCountResponse {
@@ -74,6 +77,8 @@ export interface PostWithTag {
   meta?: string
   md5?: string
   size?: number
+  source?: string
+  caption?: string
   tags?: Array<PostHasTagPublic>
 }
 
@@ -306,6 +311,10 @@ export interface V1CmdAutoTagsData {
 export type V1CmdAutoTagsResponse = unknown
 
 export type V1CmdAutoTagsError = HTTPValidationError
+
+export type V1CmdAutoTagsAllResponse = unknown
+
+export type V1CmdAutoTagsAllError = unknown
 
 export type V1GetTagsCountResponse = CountResponse
 
@@ -612,6 +621,16 @@ export interface $OpenApiTs {
          * Validation Error
          */
         422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/cmd/auto-tags': {
+    get: {
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
       }
     }
   }

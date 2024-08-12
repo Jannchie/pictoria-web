@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useQueryClient } from 'vue-query'
 import { filesize } from 'filesize'
-import { Btn } from '@roku-ui/vue'
+import { Btn, TextField } from '@roku-ui/vue'
 import type { PostWithTag } from '../api'
 import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
 import { baseUrl, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '../shared'
@@ -156,6 +156,17 @@ const folders = computed(() => {
         Folder
       </div>
       <div class="flex gap-2">
+        <div
+          v-if="!folders.length"
+          class="h-8 w-full flex flex-col items-center justify-center text-surface-on-low"
+        >
+          <div class="flex flex-col items-center op50">
+            <i class="i-tabler-folder-off" />
+            <div>
+              No folder
+            </div>
+          </div>
+        </div>
         <Btn
           v-for="folder in folders"
           :key="folder.path"
@@ -198,10 +209,10 @@ const folders = computed(() => {
         v-else
         class="h-14 flex flex-col items-center justify-center text-surface-on-low"
       >
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center op50">
           <i class="i-tabler-bookmark-off" />
           <div>
-            No Tags
+            No Tag
           </div>
         </div>
         <Btn
@@ -220,6 +231,25 @@ const folders = computed(() => {
       </div>
       <div>
         <AutoGenerateTagBtn :post-id="post.id" />
+      </div>
+    </div>
+    <div>
+      <div class="py-2 text-zinc-4 font-black">
+        Caption
+      </div>
+      <div>
+        <TextField size="sm" />
+      </div>
+    </div>
+    <div>
+      <div class="py-2 text-zinc-4 font-black">
+        Source
+      </div>
+      <div>
+        <TextField
+          v-model:model-value="post.source"
+          size="sm"
+        />
       </div>
     </div>
   </div>
