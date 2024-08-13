@@ -98,7 +98,7 @@ function getIconByExtension(extension: string) {
     >
       <div class="post-content overflow-clip rounded-lg">
         <img
-          :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
+          :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
           class="w-inherit select-all rounded-lg"
           draggable="true"
           :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
@@ -122,7 +122,7 @@ function getIconByExtension(extension: string) {
     <div class="w-full flex flex-col text-center text-xs text-zinc-4">
       <div class="w-full truncate text-xs">
         <div class="filename-wrapper inline rounded px-1">
-          {{ `${post.file_path}.${post.extension}` }}
+          {{ `${post.file_name}.${post.extension}` }}
         </div>
       </div>
       <div

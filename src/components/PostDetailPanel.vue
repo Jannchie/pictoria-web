@@ -3,7 +3,7 @@ import { useQueryClient } from 'vue-query'
 import { filesize } from 'filesize'
 import { Btn, TextField } from '@roku-ui/vue'
 import type { PostWithTag } from '../api'
-import { v1UpdatePostRating, v1UpdatePostScore } from '../api'
+import { v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '../api'
 import { baseUrl, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '../shared'
 
 const props = defineProps<{
@@ -34,7 +34,15 @@ async function onSelectScore(post_id: number, score: number = 0) {
 }
 const post = computed(() => props.post)
 const { 1: one, 2: two, 3: three, 4: four, 5: five } = useMagicKeys()
+const activeElement = useActiveElement()
+const notUsingInput = computed(() =>
+  activeElement.value?.tagName !== 'INPUT'
+  && activeElement.value?.tagName !== 'TEXTAREA')
+
 watchEffect(async () => {
+  if (!notUsingInput.value) {
+    return
+  }
   if (one.value) {
     await onSelectScore(post.value.id, 1)
   }
@@ -57,14 +65,40 @@ function isImage(extension: string) {
 }
 
 const folders = computed(() => {
-  const names = post.value.file_path.split('/').slice(0, -1)
+  const names = post.value.file_path.split('/')
   // 返回一个对象数组，包括 name 和 path 两个字段，name 如上所示，而 path 需要包括父亲目录，使用 / 分隔
-  const paths = post.value.file_path.split('/').slice(0, -1).map((_, i, arr) => arr.slice(0, i + 1).join('/'))
+  const paths = post.value.file_path.split('/').map((_, i, arr) => arr.slice(0, i + 1).join('/'))
   return names.map((name, i) => ({
     name,
     path: paths[i],
   }))
 })
+
+const updateCaption = useDebounceFn(async (caption: string) => {
+  await v1UpdatePostCaption({
+    baseUrl,
+    path: {
+      post_id: post.value.id,
+    },
+    query: {
+      caption,
+    },
+  })
+  queryClient.invalidateQueries(['post', post.value.id])
+}, 500)
+
+const updateSource = useDebounceFn(async (source: string) => {
+  await v1UpdatePostSource({
+    baseUrl,
+    path: {
+      post_id: post.value.id,
+    },
+    query: {
+      source,
+    },
+  })
+  queryClient.invalidateQueries(['post', post.value.id])
+}, 500)
 </script>
 
 <template>
@@ -77,7 +111,7 @@ const folders = computed(() => {
     >
       <div class="overflow-hidden rounded">
         <img
-          :src="`${baseUrl}/v1/thumbnails/${post.file_path}.${post.extension}`"
+          :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
           class="h-40 overflow-hidden rounded object-contain"
           :class="{
             blur: (post?.rating ?? 0) >= 3 && !showNSFW,
@@ -130,6 +164,12 @@ const folders = computed(() => {
         <div>Path</div>
         <div>
           {{ post.file_path }}
+        </div>
+        <div>
+          Name
+        </div>
+        <div>
+          {{ post.file_name }}
         </div>
         <div>
           Dimension
@@ -238,7 +278,11 @@ const folders = computed(() => {
         Caption
       </div>
       <div>
-        <TextField size="sm" />
+        <TextField
+          :model-value="post.caption"
+          size="sm"
+          @update:model-value="updateCaption"
+        />
       </div>
     </div>
     <div>
@@ -247,8 +291,9 @@ const folders = computed(() => {
       </div>
       <div>
         <TextField
-          v-model:model-value="post.source"
+          :model-value="post.source"
           size="sm"
+          @update:model-value="updateSource"
         />
       </div>
     </div>

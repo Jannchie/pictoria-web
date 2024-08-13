@@ -9,7 +9,7 @@ const props = defineProps<{
   post: PostWithTag
 }>()
 const post = computed(() => props.post)
-const imgSrc = computed(() => `${baseUrl}/v1/images/${post.value.file_path}.${post.value.extension}`)
+const imgSrc = computed(() => `${baseUrl}/v1/images/${post.value.file_path}/${post.value.file_name}.${post.value.extension}`)
 const imgWrapperRef = ref<HTMLDivElement | null>(null)
 const { width: imgWrapperWidth, height: imgWrapperHeight, left: imgWrapperLeft, top: imgWrapperTop } = useElementBounding(imgWrapperRef)
 const imgContentWidth = computed(() => {

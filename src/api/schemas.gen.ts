@@ -7,6 +7,10 @@ export const $Body_v1_upload_file_v1_upload_post = {
       format: 'binary',
       title: 'File',
     },
+    url: {
+      type: 'string',
+      title: 'Url',
+    },
     path: {
       type: 'string',
       title: 'Path',
@@ -17,7 +21,6 @@ export const $Body_v1_upload_file_v1_upload_post = {
     },
   },
   type: 'object',
-  required: ['file', 'path'],
   title: 'Body_v1_upload_file_v1_upload_post',
 } as const
 
@@ -100,6 +103,10 @@ export const $PostBase = {
       type: 'string',
       title: 'File Path',
     },
+    file_name: {
+      type: 'string',
+      title: 'File Name',
+    },
     extension: {
       type: 'string',
       title: 'Extension',
@@ -160,7 +167,7 @@ export const $PostBase = {
     },
   },
   type: 'object',
-  required: ['id', 'file_path', 'extension'],
+  required: ['id', 'file_path', 'file_name', 'extension'],
   title: 'PostBase',
 } as const
 
@@ -244,6 +251,10 @@ export const $PostWithTag = {
       type: 'string',
       title: 'File Path',
     },
+    file_name: {
+      type: 'string',
+      title: 'File Name',
+    },
     extension: {
       type: 'string',
       title: 'Extension',
@@ -312,7 +323,7 @@ export const $PostWithTag = {
     },
   },
   type: 'object',
-  required: ['id', 'file_path', 'extension'],
+  required: ['id', 'file_path', 'file_name', 'extension'],
   title: 'PostWithTag',
 } as const
 
