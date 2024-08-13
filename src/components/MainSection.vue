@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
 import { logicAnd } from '@vueuse/math'
-import type { PostWithTag } from '../api'
-import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
+import { useQuery } from 'vue-query'
+import type { PostBase, PostWithTag } from '../api'
+import { v1GetPosts } from '../api'
+
+import { baseUrl, postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
 
-const posts = usePosts()
+const getPostResp = useQuery(
+  ['posts', postFilter],
+  async () => {
+    return await v1GetPosts({
+      baseUrl,
+      body: postFilter.value,
+    })
+  },
+)
+
+const posts = computed<Array<PostBase>>(() => {
+  return getPostResp.data.value?.data ?? []
+})
 const items = computed(() => posts.value.map(post => ({
   width: post.width ?? 1,
   height: post.height ?? 1,
@@ -130,6 +145,22 @@ watchEffect(() => {
   <section
     class="relative h-[calc(100vh-60px-24px)]"
   >
+    <div v-if="getPostResp.isLoading.value">
+      <div class="flex flex-col items-center p-16 op-50">
+        <i class="i-tabler-loader animate-spin text-2xl" />
+        <div class="text-sm">
+          Loading posts...
+        </div>
+      </div>
+    </div>
+    <div v-else-if="posts.length === 0">
+      <div class="flex flex-col items-center p-16 op-50">
+        <i class="i-tabler-alert-triangle text-2xl" />
+        <div class="text-sm">
+          No posts found
+        </div>
+      </div>
+    </div>
     <SelectArea
       :target="waterfallContentDom"
       @select-start="onSelectStart"

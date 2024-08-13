@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { DirectorySummary } from '../api'
-import { postFilter, showPost } from '../shared'
+import { menuData, postFilter, showPost } from '../shared'
 
 const props = defineProps<{
   folder: DirectorySummary
@@ -9,10 +9,21 @@ const props = defineProps<{
 }>()
 const collapsed = ref(props.folder.children?.length !== 0)
 const folderItemRef = ref<HTMLElement | null>(null)
+function onContextmenu(_: MouseEvent) {
+  menuData.value = null
+  nextTick(() => {
+    menuData.value = {
+      type: 'folder',
+      path: props.folder.path,
+    }
+  })
+}
 </script>
 
 <template>
-  <div>
+  <div
+    @contextmenu.prevent.stop="onContextmenu"
+  >
     <div
       class="flex flex-shrink-0 items-center gap-0.5"
       :class="{

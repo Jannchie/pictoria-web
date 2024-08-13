@@ -19,6 +19,7 @@ declare module 'vue' {
     ExtensionFilter: typeof import('./components/ExtensionFilter.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FloatWindow: typeof import('./components/FloatWindow.vue')['default']
+    FolderGrid: typeof import('./components/FolderGrid.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']

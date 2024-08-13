@@ -2,7 +2,7 @@
 import { Pane, Splitpanes } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import { useQuery } from 'vue-query'
-import { baseUrl } from './shared'
+import { baseUrl, showMenu } from './shared'
 import { v1GetFolders } from './api'
 import { useDropToUpload, useWatchRoute } from './composables'
 
@@ -14,11 +14,26 @@ const folders = useQuery(
     const resp = await v1GetFolders({ baseUrl })
     return resp.data
   },
+  {
+    staleTime: 1000 * 60 * 60,
+  },
 )
 </script>
 
 <template>
   <div class="h-100vh w-100vw flex flex-col select-none overflow-hidden">
+    <FloatWindow v-model="showMenu">
+      <div class="overflow-hidden rounded-lg bg-surface-base text-sm">
+        <ListItem
+          title="New Folder"
+          icon="i-tabler-folder-plus"
+        />
+        <ListItem
+          title="Delete Folder"
+          icon="i-tabler-folder-x"
+        />
+      </div>
+    </FloatWindow>
     <TagSelectorWindow />
     <!-- <DialogContainer /> -->
     <Splitpanes class="max-h-[calc(100vh-24px)]">

@@ -5,6 +5,7 @@ import { nextTick, provide, ref, watch, watchEffect } from 'vue'
 const props = withDefaults(defineProps<{
   safeMargin?: number
   pinned?: boolean
+  show?: boolean
 }>(), {
   safeMargin: 4,
 })
@@ -14,11 +15,12 @@ watchEffect(() => {
   pinned.value = props.pinned ?? false
 })
 provide('pinned', pinned)
-
+const show = defineModel({
+  default: false,
+})
 const position = ref({ left: '0px', top: '0px' })
 const mouse = useMouse()
 const { width: windowWidth, height: windowHeight } = useWindowSize()
-const show = ref(false)
 const wrapper = ref<HTMLElement | null>(null)
 const bounding = useElementBounding(wrapper)
 

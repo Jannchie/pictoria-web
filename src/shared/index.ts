@@ -64,3 +64,10 @@ export function openTagSelectorWindow() {
 }
 
 export const showPost = ref<PostBase | null>(null)
+
+export const menuData = ref<any | null>(null)
+export const showMenu = computed({ get: () => !!menuData.value, set: (val) => {
+  if (!val) {
+    menuData.value = null
+  }
+} })

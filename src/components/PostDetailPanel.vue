@@ -74,7 +74,7 @@ const folders = computed(() => {
   }))
 })
 
-const updateCaption = useDebounceFn(async (caption: string) => {
+const updateCaption = useDebounceFn(async (caption: any) => {
   await v1UpdatePostCaption({
     baseUrl,
     path: {
@@ -87,7 +87,7 @@ const updateCaption = useDebounceFn(async (caption: string) => {
   queryClient.invalidateQueries(['post', post.value.id])
 }, 500)
 
-const updateSource = useDebounceFn(async (source: string) => {
+const updateSource = useDebounceFn(async (source: any) => {
   await v1UpdatePostSource({
     baseUrl,
     path: {
