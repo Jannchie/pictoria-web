@@ -3,11 +3,11 @@ import { ref } from 'vue'
 import type { DirectorySummary } from '../api'
 import { postFilter, showPost } from '../shared'
 
-defineProps<{
+const props = defineProps<{
   folder: DirectorySummary
   depth: number
 }>()
-const collapsed = ref(false)
+const collapsed = ref(props.folder.children?.length !== 0)
 const folderItemRef = ref<HTMLElement | null>(null)
 </script>
 
@@ -23,7 +23,7 @@ const folderItemRef = ref<HTMLElement | null>(null)
         ref="folderItemRef"
         class="flex-grow"
         :active="postFilter.folder === folder.path"
-        :icon="collapsed ? 'i-tabler-folder-open' : 'i-tabler-folder'"
+        :icon="collapsed || postFilter.folder === folder.path ? 'i-tabler-folder-open' : 'i-tabler-folder'"
         :title="folder.name "
         :extra-info="folder.file_count"
         @click="$router.push(`/dir/${folder.path.replace('\\', '/')}`); showPost = null"
