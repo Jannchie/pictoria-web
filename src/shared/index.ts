@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useQuery } from 'vue-query'
 import type { PostBase } from '../api'
 import { v1GetPosts, v1GetTagGroups } from '../api'
@@ -32,6 +32,9 @@ export const selectingPostIdSet = ref<Set<number | undefined>>(new Set())
 export const unselectedPostIdSet = ref<Set<number | undefined>>(new Set())
 export const currentPath = ref<string | symbol>('')
 export const showNSFW = ref(false)
+
+export const postSort = ref<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('id')
+export const postSortOrder = ref<'asc' | 'desc'>('asc')
 export function usePosts() {
   const getPostResp = useQuery(
     ['posts', postFilter],
@@ -44,7 +47,26 @@ export function usePosts() {
   )
 
   return computed<Array<PostBase>>(() => {
-    return getPostResp.data.value?.data ?? []
+    const posts = getPostResp.data.value?.data ?? []
+    return [...posts].sort((a, b) => {
+      if (postSortOrder.value === 'asc') {
+        const tmp = a
+        a = b
+        b = tmp
+      }
+      switch (postSort.value) {
+        case 'score':
+          return (b?.score ?? 0) - (a?.score ?? 0)
+        case 'rating':
+          return (b?.rating ?? 0) - (a?.rating ?? 0)
+        case 'created_at':
+          return (b?.created_at ?? 0) - (a?.created_at ?? 0)
+        case 'file_name':
+          return (b.file_name ?? '').localeCompare(a.file_name)
+        default:
+          return b.id - a.id
+      }
+    })
   })
 }
 

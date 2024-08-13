@@ -5,7 +5,7 @@ import { useQuery } from 'vue-query'
 import type { PostBase, PostWithTag } from '../api'
 import { v1GetPosts } from '../api'
 
-import { baseUrl, postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
+import { baseUrl, postFilter, postSort, postSortOrder, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
@@ -20,9 +20,7 @@ const getPostResp = useQuery(
   },
 )
 
-const posts = computed<Array<PostBase>>(() => {
-  return getPostResp.data.value?.data ?? []
-})
+const posts = usePosts()
 const items = computed(() => posts.value.map(post => ({
   width: post.width ?? 1,
   height: post.height ?? 1,

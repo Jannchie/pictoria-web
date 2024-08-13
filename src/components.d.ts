@@ -29,6 +29,7 @@ declare module 'vue' {
     PostDetail: typeof import('./components/PostDetail.vue')['default']
     PostDetailPanel: typeof import('./components/PostDetailPanel.vue')['default']
     PostItem: typeof import('./components/PostItem.vue')['default']
+    PostSorter: typeof import('./components/PostSorter.vue')['default']
     Rating: typeof import('./components/Rating.vue')['default']
     RatingFilter: typeof import('./components/RatingFilter.vue')['default']
     RightPanel: typeof import('./components/RightPanel.vue')['default']

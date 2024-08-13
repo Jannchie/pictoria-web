@@ -101,7 +101,9 @@ const positionStyle = computed(() => {
   }
 })
 const hover = useElementHover(wrapperRef)
-const active = ref(false)
+const active = defineModel({
+  default: false,
+})
 const showContent = computed(() => {
   return props.trigger === 'hover' ? hover.value : active.value
 })
