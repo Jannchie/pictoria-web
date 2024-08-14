@@ -9,19 +9,21 @@ const props = defineProps<{
 
 }>()
 const post = computed(() => props.post)
+function onPointerUp(e: PointerEvent) {
+  // 如果是右键，且没有按 ctrl 或者 shift，点击的是已经选中的文件，则只选中这个文件
+  if (e.button === 0 && !e.ctrlKey && !e.shiftKey && selectedPostIdSet.value.has(post.value.id)) {
+    // 如果当前节点在 selectingPostIdSet 中，则不操作
+    if (selectingPostIdSet.value.has(post.value.id)) {
+      return
+    }
+    selectedPostIdSet.value = new Set([post.value.id])
+  }
+}
 function onPointerDown(e: PointerEvent) {
   if (e.button !== 0) {
     return
   }
-  if (selectedPostIdSet.value.has(post.value.id)) {
-    if (!e.ctrlKey) {
-      selectedPostIdSet.value = new Set([post.value.id])
-    }
-    else {
-      selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
-    }
-  }
-  else {
+  if (!selectedPostIdSet.value.has(post.value.id)) {
     if (!e.ctrlKey) {
       selectedPostIdSet.value = new Set([post.value.id])
     }
@@ -84,6 +86,13 @@ function getIconByExtension(extension: string) {
       return 'i-tabler-file'
   }
 }
+const imageLoaded = ref(false)
+function onImageLoad(e: Event) {
+  const img = e.target as HTMLImageElement
+  if (img.complete) {
+    imageLoaded.value = true
+  }
+}
 </script>
 
 <template>
@@ -97,14 +106,23 @@ function getIconByExtension(extension: string) {
       class="w-full rounded-lg bg-surface-high"
     >
       <div class="post-content overflow-clip rounded-lg">
-        <img
-          :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
-          class="w-inherit select-all rounded-lg"
-          draggable="true"
-          :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
-          @pointerdown="onPointerDown"
-          @dblclick="showPost = post"
+        <Transition
+          enter-active-class="transition-opacity duration-300"
+          enter-from-class="opacity-0"
+          enter-to-class="opacity-100"
         >
+          <img
+            v-show="imageLoaded"
+            :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
+            class="w-inherit rounded-lg"
+            draggable="true"
+            :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
+            @pointerdown.stop="onPointerDown"
+            @pointerup="onPointerUp"
+            @dblclick="showPost = post"
+            @load="onImageLoad"
+          >
+        </Transition>
       </div>
     </AspectRatio>
     <AspectRatio

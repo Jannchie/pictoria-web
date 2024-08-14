@@ -6,9 +6,9 @@ const props = defineProps<{
   target?: HTMLElement
 }>()
 const emit = defineEmits<{
-  selectStart: [{ shift: boolean, ctrl: boolean }]
-  selectChange: [Area, { shift: boolean, ctrl: boolean }]
-  selectEnd: [Area, { shift: boolean, ctrl: boolean }]
+  selectStart: [{ target: EventTarget | null, shift: boolean, ctrl: boolean }]
+  selectChange: [Area, { target: EventTarget | null, shift: boolean, ctrl: boolean }]
+  selectEnd: [Area, { target: EventTarget | null, shift: boolean, ctrl: boolean }]
 }>()
 const { shift, control: ctrl } = useMagicKeys()
 export interface Area {
@@ -41,17 +41,17 @@ useEventListener(target, 'pointerdown', (e) => {
     y: offsetY,
   }
   dragging.value = true
-  emit('selectStart', { shift: shift.value, ctrl: ctrl.value })
+  emit('selectStart', { target: e.target, shift: shift.value, ctrl: ctrl.value })
 }, { capture: true })
 // 捕获任意元素的 mouseup 事件
-useEventListener(window, 'pointerup', () => {
+useEventListener(window, 'pointerup', (e) => {
   dragging.value = false
   emit('selectEnd', {
     left: Math.min(startPoint.value.x, endPoint.value.x),
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  }, { shift: shift.value, ctrl: ctrl.value })
+  }, { target: e.target, shift: shift.value, ctrl: ctrl.value })
 })
 
 useEventListener(target, 'pointermove', (e) => {
@@ -69,7 +69,7 @@ useEventListener(target, 'pointermove', (e) => {
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  }, { shift: shift.value, ctrl: ctrl.value })
+  }, { target: e.target, shift: shift.value, ctrl: ctrl.value })
 })
 const parent = computed(() => {
   if (!target.value) {
@@ -77,7 +77,7 @@ const parent = computed(() => {
   }
   return target.value.parentElement
 })
-useEventListener(parent, 'scroll', () => {
+useEventListener(parent, 'scroll', (e) => {
   if (!dragging.value) {
     return
   }
@@ -90,7 +90,7 @@ useEventListener(parent, 'scroll', () => {
     top: Math.min(startPoint.value.y, endPoint.value.y),
     right: Math.max(startPoint.value.x, endPoint.value.x),
     bottom: Math.max(startPoint.value.y, endPoint.value.y),
-  }, { shift: shift.value, ctrl: ctrl.value })
+  }, { target: e.target, shift: shift.value, ctrl: ctrl.value })
 })
 
 useEventListener(window, 'dragend', () => {

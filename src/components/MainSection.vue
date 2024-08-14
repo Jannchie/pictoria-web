@@ -2,10 +2,10 @@
 import { useRoute, useRouter } from 'vue-router'
 import { logicAnd } from '@vueuse/math'
 import { useQuery } from 'vue-query'
-import type { PostBase, PostWithTag } from '../api'
+import type { PostWithTag } from '../api'
 import { v1GetPosts } from '../api'
 
-import { baseUrl, postFilter, postSort, postSortOrder, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
+import { baseUrl, postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import ScrollArea from './ScrollArea.vue'
 import type { Area } from './SelectArea.vue'
@@ -35,7 +35,12 @@ const layoutData = computed(() => {
   return waterfallRef.value?.layoutData
 })
 
-function onSelectChange(selectArea: Area, { shift, ctrl }: { shift: boolean, ctrl: boolean }) {
+async function onSelectChange(selectArea: Area, { shift, ctrl }: { target: EventTarget | null, shift: boolean, ctrl: boolean }) {
+  // 如果 selectArea 的面积小于 100px，则无视后续
+  if ((selectArea.right - selectArea.left) < 10 || (selectArea.bottom - selectArea.top) < 10) {
+    return
+  }
+
   // layoutData 是 x,y,width,height 的数组，selectArea 是 left,rihht,top,bottom 的对象。
   // 通过计算两者的交集，得到选中的元素 index
   const currentSelectingId: Set<number | undefined> = new Set()
@@ -74,6 +79,7 @@ function onSelectChange(selectArea: Area, { shift, ctrl }: { shift: boolean, ctr
   }
   else {
     selectedPostIdSet.value = currentSelectingId
+    selectingPostIdSet.value = currentSelectingId
   }
 }
 function onSelectEnd() {
@@ -83,12 +89,8 @@ function onSelectEnd() {
   unselectingPostId.value = new Set()
 }
 
-function onSelectStart({ ctrl, shift }: {
-  ctrl: boolean
-  shift: boolean
-}) {
-  // 如果没有按住 ctrl 或 shift，则清空已选中的元素
-  if (!ctrl && !shift) {
+function selectPointerDown(e: PointerEvent) {
+  if (!e.ctrlKey && !e.shiftKey) {
     selectedPostIdSet.value = new Set()
   }
 }
@@ -161,7 +163,6 @@ watchEffect(() => {
     </div>
     <SelectArea
       :target="waterfallContentDom"
-      @select-start="onSelectStart"
       @select-change="onSelectChange"
       @select-end="onSelectEnd"
     />
@@ -176,6 +177,7 @@ watchEffect(() => {
       :padding-x="8"
       :padding-y="8"
       :y-gap="36"
+      @pointerdown="selectPointerDown"
     >
       <PostItem
         v-for="post in posts"
