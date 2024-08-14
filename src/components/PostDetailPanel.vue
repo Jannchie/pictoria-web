@@ -267,14 +267,6 @@ const updateSource = useDebounceFn(async (source: any) => {
     </div>
     <div>
       <div class="py-2 text-zinc-4 font-black">
-        Command
-      </div>
-      <div>
-        <AutoGenerateTagBtn :post-id="post.id" />
-      </div>
-    </div>
-    <div>
-      <div class="py-2 text-zinc-4 font-black">
         Caption
       </div>
       <div>
@@ -295,6 +287,15 @@ const updateSource = useDebounceFn(async (source: any) => {
           size="sm"
           @update:model-value="updateSource"
         />
+      </div>
+    </div>
+    <div>
+      <div class="py-2 text-zinc-4 font-black">
+        Command
+      </div>
+      <div class="flex flex-col gap-2">
+        <AutoGenerateTagBtn :post-id="post.id" />
+        <AutoGenerateCaptionBtn :post-id="post.id" />
       </div>
     </div>
   </div>
