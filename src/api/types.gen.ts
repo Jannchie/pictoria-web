@@ -345,6 +345,16 @@ export type V1CmdAutoTagsAllResponse = unknown
 
 export type V1CmdAutoTagsAllError = unknown
 
+export interface V1CmdAutoCaptionData {
+  path: {
+    post_id: number
+  }
+}
+
+export type V1CmdAutoCaptionResponse = unknown
+
+export type V1CmdAutoCaptionError = HTTPValidationError
+
 export type V1GetTagsCountResponse = CountResponse
 
 export type V1GetTagsCountError = unknown
@@ -360,6 +370,16 @@ export interface V1UploadFileData {
 export type V1UploadFileResponse = unknown
 
 export type V1UploadFileError = HTTPValidationError
+
+export interface V1UpdateOpenaiKeyData {
+  query: {
+    key: string
+  }
+}
+
+export type V1UpdateOpenaiKeyResponse = unknown
+
+export type V1UpdateOpenaiKeyError = HTTPValidationError
 
 export type RootResponse = unknown
 
@@ -693,6 +713,21 @@ export interface $OpenApiTs {
       }
     }
   }
+  '/v1/cmd/auto-caption/{post_id}': {
+    get: {
+      req: V1CmdAutoCaptionData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
   '/v1/tags/count': {
     get: {
       res: {
@@ -716,6 +751,21 @@ export interface $OpenApiTs {
   '/v1/upload': {
     post: {
       req: V1UploadFileData
+      res: {
+        /**
+         * Successful Response
+         */
+        200: unknown
+        /**
+         * Validation Error
+         */
+        422: HTTPValidationError
+      }
+    }
+  }
+  '/v1/cmd/update-openai-key': {
+    post: {
+      req: V1UpdateOpenaiKeyData
       res: {
         /**
          * Successful Response
