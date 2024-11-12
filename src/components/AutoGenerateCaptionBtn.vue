@@ -38,7 +38,7 @@ async function onAutoTag() {
       v-else
       class="i-tabler-message-2-bolt"
     />
-    <div class="w-full">
+    <div class="w-full overflow-hidden text-ellipsis text-nowrap">
       Auto Generate Caption
     </div>
   </Btn>

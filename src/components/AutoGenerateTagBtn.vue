@@ -38,7 +38,7 @@ async function onAutoTag() {
       v-else
       class="i-tabler-photo-pentagon"
     />
-    <div class="w-full">
+    <div class="w-full overflow-hidden text-ellipsis text-nowrap">
       Auto Generate Tag
     </div>
   </Btn>

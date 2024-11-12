@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { v1UploadFile } from '@/api'
-import { useMutation, useQueryClient } from 'vue-query'
+import { useQueryClient } from 'vue-query'
 
 const dropZoneRef = ref<HTMLElement | null>(null)
 const isDraggingFiles = ref(false)
 const dragEnterCount = ref(0)
-
 const queryClient = useQueryClient()
 
 async function traverseFileTree(item: any, path: string = '') {

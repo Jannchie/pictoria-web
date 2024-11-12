@@ -208,7 +208,7 @@ onKeyStroke('Escape', () => {
 
 <template>
   <div
-    class="bg-surface-base absolute inset-0 z-10000 flex flex-col"
+    class="absolute inset-0 z-10000 flex flex-col bg-surface-base"
   >
     <header class="flex flex-col items-center justify-center py-2">
       <div class="w-full flex flex-grow items-center justify-between gap-2">
@@ -219,6 +219,8 @@ onKeyStroke('Escape', () => {
           <Btn
             icon
             size="sm"
+            variant="transparent"
+            color="surface"
             @click="showPost = null"
           >
             <i class="i-tabler-arrow-left" />
@@ -312,7 +314,7 @@ onKeyStroke('Escape', () => {
       >
       <div
         ref="miniMapRef"
-        class="absolute bottom-4 left-4 z-200 outline-white outline"
+        class="absolute bottom-4 left-4 z-200 bg-white outline-white outline"
         @pointerdown.stop="onMiniMapPointerDown"
         @pointerup.stop="onMiniMapPointerUp"
         @pointermove.stop="onMiniMapPointerMove"
