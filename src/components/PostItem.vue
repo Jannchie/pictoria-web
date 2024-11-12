@@ -6,7 +6,6 @@ import { computed } from 'vue'
 
 const props = defineProps<{
   post: PostBase
-
 }>()
 const post = computed(() => props.post)
 function onPointerUp(e: PointerEvent) {

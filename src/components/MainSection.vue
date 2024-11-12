@@ -1,23 +1,12 @@
 <script setup lang="ts">
-import type { PostWithTag } from '@/api'
 import type LazyWaterfall from './LazyWaterfall.vue'
 import type { Area } from './SelectArea.vue'
-import { v1GetPosts } from '@/api'
 import ScrollArea from '@/components/ScrollArea.vue'
-import { postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '@/shared'
+import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, usePostsQuery, waterfallItemWidth } from '@/shared'
 import { logicAnd } from '@vueuse/math'
-import { useQuery } from 'vue-query'
 import { useRoute, useRouter } from 'vue-router'
 
-const getPostResp = useQuery(
-  ['posts', postFilter],
-  async () => {
-    return await v1GetPosts({
-
-      body: postFilter.value,
-    })
-  },
-)
+const posstQuery = usePostsQuery()
 
 const posts = usePosts()
 const items = computed(() => posts.value.map(post => ({
@@ -144,7 +133,7 @@ watchEffect(() => {
   <section
     class="relative h-[calc(100vh-60px-24px)]"
   >
-    <div v-if="getPostResp.isLoading.value">
+    <div v-if="posstQuery.isLoading.value">
       <div class="flex flex-col items-center p-16 op-50">
         <i class="i-tabler-loader animate-spin text-2xl" />
         <div class="text-sm">

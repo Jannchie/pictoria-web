@@ -14,6 +14,8 @@ declare module 'vue' {
     Checkbox: typeof import('./components/Checkbox.vue')['default']
     Dialog: typeof import('./components/Dialog.vue')['default']
     DialogContainer: typeof import('./components/DialogContainer.vue')['default']
+    Dropoverlay: typeof import('./components/DropOverlay.vue')['default']
+    DropOverlay: typeof import('./components/DropOverlay.vue')['default']
     ExtensionFilter: typeof import('./components/ExtensionFilter.vue')['default']
     FilterRow: typeof import('./components/FilterRow.vue')['default']
     FloatWindow: typeof import('./components/FloatWindow.vue')['default']

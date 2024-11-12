@@ -36,37 +36,43 @@ export const showNSFW = ref(false)
 
 export const postSort = ref<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('id')
 export const postSortOrder = ref<'asc' | 'desc'>('asc')
-export function usePosts() {
-  const getPostResp = useQuery(
+
+export function usePostsQuery() {
+  return useQuery(
     ['posts', postFilter],
     async () => {
-      return await v1GetPosts({
+      const resp = await v1GetPosts({
         body: postFilter.value,
       })
+      return resp.data?.sort((a, b) => {
+        if (postSortOrder.value === 'asc') {
+          const tmp = a
+          a = b
+          b = tmp
+        }
+        switch (postSort.value) {
+          case 'score':
+            return (b?.score ?? 0) - (a?.score ?? 0)
+          case 'rating':
+            return (b?.rating ?? 0) - (a?.rating ?? 0)
+          case 'created_at':
+            return (b?.created_at ?? 0) - (a?.created_at ?? 0)
+          case 'file_name':
+            return (b.file_name ?? '').localeCompare(a.file_name)
+          default:
+            return b.id - a.id
+        }
+      })
+    },
+    {
+      refetchOnWindowFocus: false,
     },
   )
-
+}
+export function usePosts() {
+  const postsQuery = usePostsQuery()
   return computed<Array<PostBase>>(() => {
-    const posts = getPostResp.data.value?.data ?? []
-    return [...posts].sort((a, b) => {
-      if (postSortOrder.value === 'asc') {
-        const tmp = a
-        a = b
-        b = tmp
-      }
-      switch (postSort.value) {
-        case 'score':
-          return (b?.score ?? 0) - (a?.score ?? 0)
-        case 'rating':
-          return (b?.rating ?? 0) - (a?.rating ?? 0)
-        case 'created_at':
-          return (b?.created_at ?? 0) - (a?.created_at ?? 0)
-        case 'file_name':
-          return (b.file_name ?? '').localeCompare(a.file_name)
-        default:
-          return b.id - a.id
-      }
-    })
+    return postsQuery.data.value ?? []
   })
 }
 

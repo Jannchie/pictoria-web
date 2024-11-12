@@ -4,12 +4,11 @@ import { primaryColor, RokuProvider } from '@roku-ui/vue'
 import { Pane, Splitpanes } from 'splitpanes'
 import { useQuery } from 'vue-query'
 import { v1GetFolders } from './api'
-import { useDropToUpload, useWatchRoute } from './composables'
+import { useWatchRoute } from './composables'
 import { showMenu } from './shared'
 
 import 'splitpanes/dist/splitpanes.css'
 
-useDropToUpload()
 useWatchRoute()
 const folders = useQuery(
   ['folders'],
@@ -31,6 +30,7 @@ primaryColor.value = '#bca4d2'
 <template>
   <!-- <ToastSystem /> -->
   <RokuProvider>
+    <DropOverlay />
     <div class="h-100vh w-100vw flex flex-col select-none overflow-hidden">
       <FloatWindow v-model="showMenu">
         <div class="overflow-hidden rounded-lg bg-surface-base text-sm">
