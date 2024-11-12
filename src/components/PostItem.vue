@@ -103,7 +103,7 @@ function onImageLoad(e: Event) {
     <AspectRatio
       v-if="post.width && post.height"
       :ratio="post.width / post.height"
-      class="bg-surface-high w-full rounded-lg"
+      class="bg-surface-high w-full rounded-lg bg-primary"
     >
       <div class="post-content overflow-clip rounded-lg">
         <Transition
@@ -128,7 +128,7 @@ function onImageLoad(e: Event) {
     <AspectRatio
       v-else
       :ratio="1"
-      class="post-content bg-surface-high h-full w-full rounded-lg"
+      class="post-content h-full w-full rounded-lg bg-surface"
     >
       <div class="p-12">
         <i
@@ -155,10 +155,10 @@ function onImageLoad(e: Event) {
 
 <style lang="css" scoped>
 .selected .post-content {
-  outline: 4px solid rgb(var(--r-color-primary-container)) !important;
+  outline: 4px solid var(--r-primary-background-color) !important;
 }
 .selected .filename-wrapper {
-  background-color: rgb(var(--r-color-primary-container)) !important;
+  background-color: var(--r-primary-background-color) !important;
   color: white !important;
 }
 </style>

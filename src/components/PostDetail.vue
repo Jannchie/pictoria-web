@@ -208,7 +208,7 @@ onKeyStroke('Escape', () => {
 
 <template>
   <div
-    class="bg-surfaceest absolute inset-0 z-10000 flex flex-col"
+    class="bg-surface-base absolute inset-0 z-10000 flex flex-col"
   >
     <header class="flex flex-col items-center justify-center py-2">
       <div class="w-full flex flex-grow items-center justify-between gap-2">

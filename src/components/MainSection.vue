@@ -182,7 +182,7 @@ watchEffect(() => {
         v-for="post in posts"
         :id="`post-item-${post.id}`"
         :key="post.id"
-        :post="post as PostWithTag"
+        :post="post"
       />
     </LazyWaterfall>
   </section>
