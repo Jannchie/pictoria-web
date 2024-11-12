@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import type { PostBase } from '@/api'
+import { baseURL, selectedPostIdSet, selectingPostIdSet, showNSFW, showPost, unselectedPostIdSet } from '@/shared'
 import { AspectRatio } from '@roku-ui/vue'
-import type { PostBase } from '../api'
-import { baseUrl, selectedPostIdSet, selectingPostIdSet, showNSFW, showPost, unselectedPostIdSet } from '../shared'
+import { computed } from 'vue'
 
 const props = defineProps<{
   post: PostBase
@@ -103,7 +103,7 @@ function onImageLoad(e: Event) {
     <AspectRatio
       v-if="post.width && post.height"
       :ratio="post.width / post.height"
-      class="w-full rounded-lg bg-surface-high"
+      class="bg-surface-high w-full rounded-lg"
     >
       <div class="post-content overflow-clip rounded-lg">
         <Transition
@@ -113,7 +113,7 @@ function onImageLoad(e: Event) {
         >
           <img
             v-show="imageLoaded"
-            :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
+            :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
             class="w-inherit rounded-lg"
             draggable="true"
             :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
@@ -128,7 +128,7 @@ function onImageLoad(e: Event) {
     <AspectRatio
       v-else
       :ratio="1"
-      class="post-content h-full w-full rounded-lg bg-surface-high"
+      class="post-content bg-surface-high h-full w-full rounded-lg"
     >
       <div class="p-12">
         <i

@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { postSort, postSortOrder } from '@/shared'
 import { Btn } from '@roku-ui/vue'
 import { ref } from 'vue'
-import { postSort, postSortOrder } from '../shared'
 
 const show = ref(false)
 </script>
@@ -22,7 +22,7 @@ const show = ref(false)
       </Btn>
       <template #content>
         <div
-          class="min-w-36 border border-surface-border-base rounded bg-surface-low p-1"
+          class="min-w-36 border border-surface rounded bg-surface p-1"
         >
           <div
             class="flex flex-col gap-1"

@@ -54,7 +54,7 @@ function unifyInput(
 
   // If input is undefined, use default values for all elements
   if (input === undefined) {
-    return Array(n).fill({ active: defaultActiveIcon, normal: defaultNormalIcon })
+    return Array.from<{ active: string, normal: string }>({ length: n }).fill({ active: defaultActiveIcon, normal: defaultNormalIcon })
   }
 
   // Determine the base object to use for filling the array
@@ -68,14 +68,14 @@ function unifyInput(
     if (normalizedArray.length === 1) {
       // If the array only contains one element, use it to fill all elements
       baseObject = normalizedArray[0]
-      return Array(n).fill(baseObject)
+      return Array.from<{ active: string, normal: string }>({ length: n }).fill(baseObject)
     }
     else {
       // If the array contains multiple elements, ensure it has exactly `n` elements
       return normalizedArray
         .slice(0, n) // Use existing elements up to n
         .concat( // Fill remaining with default values
-          Array(Math.max(0, n - normalizedArray.length)).fill({ active: defaultActiveIcon, normal: defaultNormalIcon }),
+          Array.from<{ active: string, normal: string }>({ length: Math.max(0, n - normalizedArray.length) }).fill({ active: defaultActiveIcon, normal: defaultNormalIcon }),
         )
     }
   }
@@ -87,10 +87,10 @@ function unifyInput(
   }
 
   // Create an array with `n` elements, all being `baseObject`
-  return Array(n).fill(baseObject)
+  return Array.from<{ active: string, normal: string }>({ length: n }).fill(baseObject)
 }
 const activeCls = 'text-orange-6'
-const inactiveCls = 'text-surface-on-low'
+const inactiveCls = 'text-surface-dimmed'
 const hoverCls = 'text-orange-6'
 function getCls(idx: number) {
   const normalIcon = iconData.value[idx].normal

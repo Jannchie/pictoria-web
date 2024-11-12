@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed, ref, watchEffect } from 'vue'
-import { useElementBounding, useMouse } from '@vueuse/core'
+import type { PostWithTag } from '@/api'
+import { baseURL, showPost } from '@/shared'
 import { Btn, Paper } from '@roku-ui/vue'
-import type { PostWithTag } from '../api'
-import { baseUrl, showPost } from '../shared'
+import { useElementBounding, useMouse } from '@vueuse/core'
+import { computed, ref, watchEffect } from 'vue'
 
 const props = defineProps<{
   post: PostWithTag
 }>()
 const post = computed(() => props.post)
-const imgSrc = computed(() => `${baseUrl}/v1/images/${post.value.file_path}/${post.value.file_name}.${post.value.extension}`)
+const imgSrc = computed(() => `${baseURL}/v1/images/${post.value.file_path}/${post.value.file_name}.${post.value.extension}`)
 const imgWrapperRef = ref<HTMLDivElement | null>(null)
 const { width: imgWrapperWidth, height: imgWrapperHeight, left: imgWrapperLeft, top: imgWrapperTop } = useElementBounding(imgWrapperRef)
 const imgContentWidth = computed(() => {
@@ -208,7 +208,7 @@ onKeyStroke('Escape', () => {
 
 <template>
   <div
-    class="absolute inset-0 z-10000 flex flex-col bg-surface-lowest"
+    class="bg-surfaceest absolute inset-0 z-10000 flex flex-col"
   >
     <header class="flex flex-col items-center justify-center py-2">
       <div class="w-full flex flex-grow items-center justify-between gap-2">

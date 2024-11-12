@@ -14,10 +14,10 @@ const model = defineModel<boolean | undefined>({ default: undefined })
       class="hidden"
     >
     <span
-      class="inline-block h-3.5 w-3.5 flex items-center justify-center rounded"
+      class="inline-block h-3.5 w-3.5 flex items-center justify-center rounded text-white"
       :class="[{
-        'bg-primary-container hover:bg-primary-containerl': modelValue,
-        'bg-surface-highest border border-surface-8': !modelValue,
+        'bg-primary hover:bg-primary': modelValue,
+        'bg-surface-variant border border-surface-8': !modelValue,
       }]"
     >
       <i

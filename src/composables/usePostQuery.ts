@@ -1,7 +1,7 @@
 import type { MaybeRef } from 'vue'
+import { v1GetPost } from '@/api'
+import { } from '@/shared'
 import { useQuery } from 'vue-query'
-import { v1GetPost } from '../api'
-import { baseUrl } from '../shared'
 
 export function usePostQuery(id: MaybeRef<number | undefined>) {
   return useQuery(
@@ -12,7 +12,7 @@ export function usePostQuery(id: MaybeRef<number | undefined>) {
         return
       }
       const resp = await v1GetPost({
-        baseUrl,
+
         path: { post_id },
       })
       return resp.data

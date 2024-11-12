@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import 'splitpanes/dist/splitpanes.css'
+import { v1DeletePost } from '@/api'
+import { selectedPostIdSet, showPost, waterfallItemWidth } from '@/shared'
 import { useQueryClient } from 'vue-query'
 import PostDetail from '../components/PostDetail.vue'
-import { v1DeletePost } from '../api'
-import { baseUrl, selectedPostIdSet, showPost, waterfallItemWidth } from '../shared'
+import 'splitpanes/dist/splitpanes.css'
 
 const queryClient = useQueryClient()
 
@@ -13,7 +13,6 @@ onKeyStroke('Delete', async () => {
       continue
     }
     await v1DeletePost({
-      baseUrl,
       path: {
         post_id,
       },

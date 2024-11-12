@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
+import type { PostWithTag } from '@/api'
+import type LazyWaterfall from './LazyWaterfall.vue'
+import type { Area } from './SelectArea.vue'
+import { v1GetPosts } from '@/api'
+import ScrollArea from '@/components/ScrollArea.vue'
+import { postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '@/shared'
 import { logicAnd } from '@vueuse/math'
 import { useQuery } from 'vue-query'
-import type { PostWithTag } from '../api'
-import { v1GetPosts } from '../api'
-
-import { baseUrl, postFilter, selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, waterfallItemWidth } from '../shared'
-import type LazyWaterfall from './LazyWaterfall.vue'
-import ScrollArea from './ScrollArea.vue'
-import type { Area } from './SelectArea.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 const getPostResp = useQuery(
   ['posts', postFilter],
   async () => {
     return await v1GetPosts({
-      baseUrl,
+
       body: postFilter.value,
     })
   },
@@ -54,9 +53,9 @@ async function onSelectChange(selectArea: Area, { shift, ctrl }: { target: Event
     // Check if there is an intersection between the element and the selectArea
     const isIntersecting
     = !(elementLeft > selectArea.right
-    || elementRight < selectArea.left
-    || elementTop > selectArea.bottom
-    || elementBottom < selectArea.top)
+      || elementRight < selectArea.left
+      || elementTop > selectArea.bottom
+      || elementBottom < selectArea.top)
     // 如果按住了 shift，则是追加选择，如果按住了 ctrl，则是补集选择
     const post = posts.value[index]
     if (isIntersecting) {

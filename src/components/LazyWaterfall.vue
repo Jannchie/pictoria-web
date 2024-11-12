@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useScroll } from '@vueuse/core'
 import type { ComputedRef, MaybeRef } from 'vue'
+import { useScroll } from '@vueuse/core'
 import { computed, ref, unref, useSlots } from 'vue'
 import { useClientHeight, useClientWidth } from '../composables/useClientHeight'
 

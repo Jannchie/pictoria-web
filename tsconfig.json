@@ -11,6 +11,11 @@
     "module": "ESNext",
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     /* Linting */

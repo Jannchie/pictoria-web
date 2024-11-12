@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { useQuery } from 'vue-query'
+import type { TagResponse } from '@/api'
+import { v1GetTags } from '@/api'
+import { useTagGroup } from '@/shared'
 import { TextField } from '@roku-ui/vue'
-import type { TagResponse } from '../api'
-import { v1GetTags } from '../api'
-import { baseUrl, useTagGroup } from '../shared'
+import { useQuery } from 'vue-query'
 import ScrollArea from '../components/ScrollArea.vue'
 
 const tagQuery = useQuery(['tags'], async () => {
   const resp = await v1GetTags({
-    baseUrl,
   })
   if (resp.data) {
     return resp.data
@@ -37,7 +36,7 @@ const tagGroupByFirstChar = computed(() => {
   return resp
 })
 const tagGroup = useTagGroup()
-function getGroupColor(group_id?: number) {
+function getGroupColor(group_id: number | null) {
   return tagGroup.value.find(g => g.id === group_id)?.color
 }
 </script>
@@ -56,7 +55,7 @@ function getGroupColor(group_id?: number) {
     >
       <template #default="{ item }">
         <div
-          class="border-b border-b-surface-high py-2"
+          class="border-b-surface-high border-b py-2"
         >
           <div
             class="flex flex-col text-sm"

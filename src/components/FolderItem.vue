@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { DirectorySummary } from '@/api'
+import { menuData, postFilter, selectedPostIdSet, showPost } from '@/shared'
 import { ref } from 'vue'
-import type { DirectorySummary } from '../api'
-import { menuData, postFilter, showPost } from '../shared'
 
 const props = defineProps<{
   folder: DirectorySummary
@@ -18,6 +18,13 @@ function onContextmenu(_: MouseEvent) {
     }
   })
 }
+// on drop
+useEventListener(folderItemRef, 'drop', (e: DragEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+  const selected = selectedPostIdSet.value
+  selected.values()
+})
 </script>
 
 <template>
@@ -27,7 +34,7 @@ function onContextmenu(_: MouseEvent) {
     <div
       class="flex flex-shrink-0 items-center gap-0.5"
       :class="{
-        'border-l border-surface-border-high': depth !== 0,
+        'border-l border-surface': depth !== 0,
       }"
     >
       <ListItem

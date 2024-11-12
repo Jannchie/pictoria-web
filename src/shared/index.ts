@@ -1,9 +1,10 @@
+import type { PostBase } from '@/api'
+import { v1GetPosts, v1GetTagGroups } from '@/api'
+import { useStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useQuery } from 'vue-query'
-import type { PostBase } from '../api'
-import { v1GetPosts, v1GetTagGroups } from '../api'
 
-export const baseUrl = 'http://localhost:4777'
+export const baseURL = 'http://localhost:4777'
 
 interface ImageDatum {
   src: string
@@ -40,7 +41,6 @@ export function usePosts() {
     ['posts', postFilter],
     async () => {
       return await v1GetPosts({
-        baseUrl,
         body: postFilter.value,
       })
     },
@@ -72,7 +72,7 @@ export function usePosts() {
 
 export function useTagGroup() {
   const tagGroupResp = useQuery(['tag-groups'], async () => {
-    const resp = await v1GetTagGroups({ baseUrl })
+    const resp = await v1GetTagGroups({ })
     return resp.data
   }, {
     staleTime: Infinity,

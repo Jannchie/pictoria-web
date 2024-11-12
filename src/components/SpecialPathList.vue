@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { v1GetPostsCount } from '@/api'
+import { } from '@/shared'
 import { useQuery } from 'vue-query'
-import { baseUrl } from '../shared'
-import { v1GetPostsCount } from '../api'
 
 const { data: allCount } = useQuery(
   ['post-count'],
   async () => {
-    const resp = await v1GetPostsCount({ baseUrl })
+    const resp = await v1GetPostsCount({ })
     return (resp.data as any).count
   },
 )

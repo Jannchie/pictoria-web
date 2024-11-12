@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import type { DirectorySummary } from '@/api'
+import { v1GetFolders } from '@/api'
+import { } from '@/shared'
+import { Btn } from '@roku-ui/vue'
+import { computed } from 'vue'
 import { useQuery } from 'vue-query'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
-import { Btn } from '@roku-ui/vue'
-import type { DirectorySummary } from '../api'
-import { v1GetFolders } from '../api'
-import { baseUrl } from '../shared'
 
 const folders = useQuery(
   ['folders'],
   async () => {
-    const resp = await v1GetFolders({ baseUrl })
+    const resp = await v1GetFolders({ })
     return resp.data
   },
   {
@@ -30,7 +30,7 @@ function findChildrenByPath(folders: DirectorySummary, targetPath: string): Dire
     return null
   }
   if (folders.path === targetPath) {
-    return folders.children
+    return folders.children ?? []
   }
   if (folders.children) {
     for (const child of folders.children) {

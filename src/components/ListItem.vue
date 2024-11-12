@@ -39,7 +39,7 @@ defineExpose({
     ref="folderItemRef"
     class="w-full flex items-center gap-1 rounded px-2 py-1"
     :class="{
-      'bg-surface-highest': active && type === 'normal',
+      'bg-surface-variant': active && type === 'normal',
       'bg-surface-high': hover || dragover,
     }"
     @dragover="onDragOver"
@@ -61,7 +61,7 @@ defineExpose({
     </div>
     <div
       v-if="extraInfo"
-      class="flex-shrink-0 text-xs text-surface-on-low font-mono"
+      class="flex-shrink-0 text-xs text-surface-dimmed font-mono"
     >
       {{ extraInfo }}
     </div>

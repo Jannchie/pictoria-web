@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { useQuery, useQueryClient } from 'vue-query'
-import { computed, ref } from 'vue'
+import { v1AddTagToPost, v1GetTagGroups, v1GetTags, v1RemoveTagFromPost } from '@/api'
+import { } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
-import type { TagGroup, TagResponse } from '../api'
-import { v1AddTagToPost, v1GetTagGroups, v1GetTags, v1RemoveTagFromPost } from '../api'
-import { baseUrl } from '../shared'
+import { computed, ref } from 'vue'
+import { useQuery, useQueryClient } from 'vue-query'
 import { usePostQuery } from '../composables/usePostQuery'
-
-type Optional<T> = T | undefined
 
 const props = defineProps<{
   postId?: number
@@ -18,25 +15,25 @@ const search = ref('')
 const postQuery = usePostQuery(postId)
 const tagGroupsQuery = useQuery(['tagGroups', postId], async () => {
   const resp = await v1GetTagGroups({
-    baseUrl,
+
   })
   return resp.data
 }, {
   staleTime: Infinity,
 })
-const tagGroups = computed<Optional<Array<TagGroup>>>(() => {
+const tagGroups = computed(() => {
   return tagGroupsQuery.data.value
 })
 
-const tagsQuery = useQuery<Optional<Array<TagResponse>>>(['tags'], async () => {
+const tagsQuery = useQuery(['tags'], async () => {
   const resp = await v1GetTags({
-    baseUrl,
+
   })
   return resp.data
 }, {
   staleTime: Infinity,
 })
-const tags = computed<Optional<Array<TagResponse>>>(() => {
+const tags = computed(() => {
   return tagsQuery.data.value
 })
 
@@ -83,7 +80,7 @@ async function onPointerUp(tagName: string) {
   if (currentTags.value.some(tag => tag.tag_info.name === tagName)) {
     // remove
     await v1RemoveTagFromPost({
-      baseUrl,
+
       path: {
         post_id: postId.value,
         tag_name: tagName,
@@ -92,7 +89,7 @@ async function onPointerUp(tagName: string) {
   }
   else {
     await v1AddTagToPost({
-      baseUrl,
+
       path: {
         post_id: postId.value,
         tag_name: tagName,
@@ -141,7 +138,7 @@ async function addTag(tagName: string) {
     return
   }
   await v1AddTagToPost({
-    baseUrl,
+
     path: {
       post_id: postId.value,
       tag_name: tagName,
@@ -252,7 +249,7 @@ watchEffect(() => {
   <div
     class="text-surface-on-high max-w-96 min-h-96 w-96 flex flex-col rounded bg-surface-base text-sm shadow-md"
   >
-    <div class="flex gap-2 border-b border-surface-border-high p-2">
+    <div class="flex gap-2 border-b border-surface p-2">
       <TextField
         ref="searchRef"
         v-model="search"
@@ -270,7 +267,7 @@ watchEffect(() => {
       </Btn>
     </div>
     <div class="flex flex-grow">
-      <div class="w-36 flex-shrink-0 border-r border-surface-border-high">
+      <div class="w-36 flex-shrink-0 border-r border-surface">
         <ListItem
           v-for="group, i in finalTagGroups"
           :key="i"
@@ -286,7 +283,7 @@ watchEffect(() => {
       >
         <div
           v-if="showAddTag"
-          class="border-b border-surface-border-high"
+          class="border-b border-surface"
         >
           <ListItem
             ref="addTagRef"
@@ -302,9 +299,9 @@ watchEffect(() => {
         </div>
         <div
           v-if="initCurrentTags.filter(tag => isSearchMatch(tag.tag_info.name)).length"
-          class="border-b border-surface-border-high"
+          class="border-b border-surface"
         >
-          <div class="p-2 text-surface-on-low">
+          <div class="p-2 text-surface-dimmed">
             Already Selected ({{ initCurrentTags.filter(tag => isSearchMatch(tag.tag_info.name)).length }})
           </div>
           <template
@@ -328,7 +325,7 @@ watchEffect(() => {
           </template>
         </div>
         <div>
-          <div class="p-2 text-surface-on-low">
+          <div class="p-2 text-surface-dimmed">
             All ({{ currentGroupTags.filter(tag => isSearchMatch(tag.tag_info.name)).length }})
           </div>
           <template
@@ -358,7 +355,7 @@ watchEffect(() => {
         </div>
       </ScrollArea>
     </div>
-    <div class="border-t border-surface-border-high p-2 text-xs">
+    <div class="border-t border-surface p-2 text-xs">
       <kbd>↑</kbd> <kbd>↓</kbd> to navigate, <kbd>Enter</kbd> to select, <kbd>Tab</kbd> to switch group
     </div>
   </div>

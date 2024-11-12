@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useQueryClient } from 'vue-query'
-import { filesize } from 'filesize'
+import type { PostWithTag } from '@/api'
+import { v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
+import { baseURL, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
-import type { PostWithTag } from '../api'
-import { v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '../api'
-import { baseUrl, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '../shared'
+import { filesize } from 'filesize'
+import { useQueryClient } from 'vue-query'
 
 const props = defineProps<{
   post: PostWithTag
@@ -12,7 +12,7 @@ const props = defineProps<{
 const queryClient = useQueryClient()
 
 const tagGroup = useTagGroup()
-function getGroupColor(group_id?: number) {
+function getGroupColor(group_id: number | null) {
   return tagGroup.value.find(g => g.id === group_id)?.color
 }
 
@@ -21,7 +21,6 @@ function timestampToTime(timestamp: number) {
 }
 async function onSelectScore(post_id: number, score: number = 0) {
   await v1UpdatePostScore({
-    baseUrl,
     path: {
       post_id,
     },
@@ -76,7 +75,7 @@ const folders = computed(() => {
 
 const updateCaption = useDebounceFn(async (caption: any) => {
   await v1UpdatePostCaption({
-    baseUrl,
+
     path: {
       post_id: post.value.id,
     },
@@ -89,7 +88,7 @@ const updateCaption = useDebounceFn(async (caption: any) => {
 
 const updateSource = useDebounceFn(async (source: any) => {
   await v1UpdatePostSource({
-    baseUrl,
+
     path: {
       post_id: post.value.id,
     },
@@ -111,7 +110,7 @@ const updateSource = useDebounceFn(async (source: any) => {
     >
       <div class="overflow-hidden rounded">
         <img
-          :src="`${baseUrl}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
+          :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
           class="h-40 overflow-hidden rounded object-contain"
           :class="{
             blur: (post?.rating ?? 0) >= 3 && !showNSFW,
@@ -135,7 +134,7 @@ const updateSource = useDebounceFn(async (source: any) => {
             :colors="['green', 'yellow', 'orange', 'red']"
             :icons="['i-tabler-seeding', 'i-tabler-mood-heart', 'i-tabler-eye-off', 'i-tabler-eyeglass-off']"
             @select="async (d) => v1UpdatePostRating({
-              baseUrl,
+
               path: {
                 post_id: post.id,
               },
@@ -198,7 +197,7 @@ const updateSource = useDebounceFn(async (source: any) => {
       <div class="flex gap-2">
         <div
           v-if="!folders.length"
-          class="h-8 w-full flex flex-col items-center justify-center text-surface-on-low"
+          class="h-8 w-full flex flex-col items-center justify-center text-surface-dimmed"
         >
           <div class="flex flex-col items-center op50">
             <i class="i-tabler-folder-off" />
@@ -230,7 +229,7 @@ const updateSource = useDebounceFn(async (source: any) => {
         <Tag
           v-for="tag of post.tags"
           :key="tag.tag_info.name"
-          class="cursor-pointer rounded bg-surface-high px-1 py-0.5"
+          class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
           :color="getGroupColor(tag.tag_info.group_id)"
           @pointerup="openTagSelectorWindow()"
@@ -238,7 +237,7 @@ const updateSource = useDebounceFn(async (source: any) => {
           {{ tag.tag_info.name }}
         </Tag>
         <Tag
-          class="cursor-pointer rounded bg-surface-high px-1 py-0.5"
+          class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
           @pointerup="openTagSelectorWindow()"
         >
@@ -247,7 +246,7 @@ const updateSource = useDebounceFn(async (source: any) => {
       </div>
       <div
         v-else
-        class="h-14 flex flex-col items-center justify-center text-surface-on-low"
+        class="h-14 flex flex-col items-center justify-center text-surface-dimmed"
       >
         <div class="flex flex-col items-center op50">
           <i class="i-tabler-bookmark-off" />
@@ -283,7 +282,7 @@ const updateSource = useDebounceFn(async (source: any) => {
       </div>
       <div>
         <TextField
-          :model-value="post.source"
+          :model-value="post.source ?? ''"
           size="sm"
           @update:model-value="updateSource"
         />

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useMutation, useQueryClient } from 'vue-query'
-import { computed } from 'vue'
+import { v1CmdAutoCaption } from '@/api'
+import { } from '@/shared'
 import { Btn } from '@roku-ui/vue'
-import { baseUrl } from '../shared'
-import { v1CmdAutoCaption } from '../api'
+import { computed } from 'vue'
+import { useMutation, useQueryClient } from 'vue-query'
 
 const props = defineProps<{
   postId: number
@@ -12,7 +12,7 @@ const id = computed(() => props.postId)
 
 const queryClient = useQueryClient()
 const mutation = useMutation(
-  () => v1CmdAutoCaption({ baseUrl, path: { post_id: id.value } }),
+  () => v1CmdAutoCaption({ path: { post_id: id.value } }),
   {
     onSuccess: () => {
       queryClient.invalidateQueries(['post', id])

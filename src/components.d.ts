@@ -7,13 +7,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AspectRatio: typeof import('./components/AspectRatio.vue')['default']
+    AutoGenerateCaptionBtn: typeof import('./components/AutoGenerateCaptionBtn.vue')['default']
     AutoGenerateTagBtn: typeof import('./components/AutoGenerateTagBtn.vue')['default']
-    BaseFilter: typeof import('./components/BaseFilter.vue')['default']
-    BasicFilter: typeof import('./components/BasicFilter.vue')['default']
     BottomBar: typeof import('./components/BottomBar.vue')['default']
     Checkbox: typeof import('./components/Checkbox.vue')['default']
-    Chip: typeof import('./components/Tag.vue')['default']
-    copy: typeof import('./components/ExtensionFilter.vue')['default']
     Dialog: typeof import('./components/Dialog.vue')['default']
     DialogContainer: typeof import('./components/DialogContainer.vue')['default']
     ExtensionFilter: typeof import('./components/ExtensionFilter.vue')['default']
@@ -24,7 +22,6 @@ declare module 'vue' {
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']
     MainSection: typeof import('./components/MainSection.vue')['default']
-    Menu: typeof import('./components/Menu.vue')['default']
     Popover: typeof import('./components/Popover.vue')['default']
     PostDetail: typeof import('./components/PostDetail.vue')['default']
     PostDetailPanel: typeof import('./components/PostDetailPanel.vue')['default']
@@ -40,11 +37,13 @@ declare module 'vue' {
     SelectArea: typeof import('./components/SelectArea.vue')['default']
     Slider: typeof import('./components/Slider.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
+    Spotlight: typeof import('./components/Spotlight.vue')['default']
     Tag: typeof import('./components/Tag.vue')['default']
     TagSelector: typeof import('./components/TagSelector.vue')['default']
     TagSelectorWindow: typeof import('./components/TagSelectorWindow.vue')['default']
+    Toast: typeof import('./components/Toast.vue')['default']
+    ToastContainer: typeof import('./components/ToastContainer.vue')['default']
+    ToastSystem: typeof import('./components/ToastSystem.vue')['default']
     VirtualScroll: typeof import('./components/VirtualScroll.vue')['default']
-    VisualScroll: typeof import('./components/VirtualScroll.vue')['default']
-    Window: typeof import('./components/FloatWindow.vuew.vue')['default']
   }
 }

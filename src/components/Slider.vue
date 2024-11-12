@@ -64,7 +64,7 @@ const ticks = computed(() => getTicks(tickNum.value, options.value))
 
 const model = defineModel<any>({
   default: undefined,
-  
+
 })
 const length = computed(() => options.value.length ?? 0)
 const currentIndex = ref(!options.value.includes(model.value) ? 0 : options.value.indexOf(model.value))
@@ -93,7 +93,7 @@ function optionToIndex(option: any) {
 const colorCls = computed(() => {
   switch (props.color) {
     case 'primary':
-      return 'bg-primary-containerl'
+      return 'bg-primary'
     case 'secondary':
       return 'bg-secondary-containerl'
     case 'tertiary':
@@ -112,7 +112,7 @@ const indicatorOuterCls = computed(() => {
 const indicatorInnerCls = computed(() => {
   switch (props.color) {
     case 'primary':
-      return 'dark:bg-primary-containerl bg-white'
+      return 'dark:bg-primary bg-white'
     case 'secondary':
       return 'dark:bg-secondary-containerl bg-white'
     case 'tertiary':
@@ -120,7 +120,7 @@ const indicatorInnerCls = computed(() => {
     case 'error':
       return 'dark:bg-error-containerl bg-white'
     default:
-      return 'dark:bg-primary-containerl bg-white'
+      return 'dark:bg-primary bg-white'
   }
 })
 
@@ -287,7 +287,7 @@ const animateCls = computed(() => props.animate
     </div>
     <div
       v-if="ticks.length > 0"
-      class="relative mx-1 h-1em text-xs text-surface-on-low"
+      class="relative mx-1 h-1em text-xs text-surface-dimmed"
       :style="{
         width: `${props.width}rem`,
       }"

@@ -4,7 +4,7 @@ import { Btn, Paper } from '@roku-ui/vue'
 
 <template>
   <Paper
-    class="min-w-86 flex flex-col gap-2 border-primary-container text-sm shadow shadow-surface-lowest/25"
+    class="shadow-surface-lowest/25 border-primary-container min-w-86 flex flex-col gap-2 text-sm shadow"
     with-border
   >
     <div>

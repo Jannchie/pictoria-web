@@ -1,6 +1,6 @@
+import { v1UploadFile } from '@/api'
+import { } from '@/shared'
 import { useQueryClient } from 'vue-query'
-import { v1UploadFile } from '../api'
-import { baseUrl } from '../shared'
 
 export function useDropToUpload() {
   const dropArea = document.body as HTMLElement
@@ -45,7 +45,7 @@ export function useDropToUpload() {
   const queryClient = useQueryClient()
   async function onUploadFile(file: File, relativePath: string) {
     await v1UploadFile({
-      baseUrl,
+
       body: {
         file,
         path: relativePath,
