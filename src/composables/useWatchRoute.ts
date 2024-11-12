@@ -7,7 +7,12 @@ export function useWatchRoute() {
     switch (route.name) {
       case 'dir':
         if (Array.isArray(route.params.folder)) {
-          postFilter.value.folder = route.params.folder.join('/')
+          if (route.params.folder.includes('@')) {
+            postFilter.value.folder = '.'
+          }
+          else {
+            postFilter.value.folder = route.params.folder.join('/')
+          }
         }
         else {
           postFilter.value.folder = route.params.folder
