@@ -112,7 +112,7 @@ function onImageLoad(e: Event) {
         >
           <img
             v-show="imageLoaded"
-            :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
+            :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}?md5=${post.md5}`"
             class="w-inherit rounded-lg"
             draggable="true"
             :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"

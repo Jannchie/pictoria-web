@@ -280,6 +280,20 @@ export type V1GetThumbnailResponse = (unknown)
 
 export type V1GetThumbnailError = (HTTPValidationError)
 
+export interface V1CmdRotateImageData {
+  path: {
+    post_id: number
+  }
+  query?: {
+    clockwise?: boolean
+    engine?: unknown
+  }
+}
+
+export type V1CmdRotateImageResponse = (Post)
+
+export type V1CmdRotateImageError = (HTTPValidationError)
+
 export type V1GetTagsResponse = (Array<TagResponse>)
 
 export type V1GetTagsError = unknown

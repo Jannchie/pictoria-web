@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PostWithTag } from '@/api'
-import { v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
+import { v1CmdRotateImage, v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
 import { baseURL, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
 import { filesize } from 'filesize'
-import { useQueryClient } from 'vue-query'
+import { useMutation, useQueryClient } from 'vue-query'
 
 const props = defineProps<{
   post: PostWithTag
@@ -98,6 +98,23 @@ const updateSource = useDebounceFn(async (source: any) => {
   })
   queryClient.invalidateQueries(['post', post.value.id])
 }, 500)
+
+const routateImageMutation = useMutation(
+  () => v1CmdRotateImage({
+    path: {
+      post_id: post.value.id,
+    },
+    query: {
+      clockwise: true,
+    },
+  }),
+  {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['post', post.value.id])
+      queryClient.invalidateQueries(['posts'])
+    },
+  },
+)
 </script>
 
 <template>
@@ -110,7 +127,7 @@ const updateSource = useDebounceFn(async (source: any) => {
     >
       <div class="overflow-hidden rounded">
         <img
-          :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}`"
+          :src="`${baseURL}/v1/thumbnails/${post.file_path}/${post.file_name}.${post.extension}?md5=${post.md5}`"
           class="h-40 overflow-hidden rounded object-contain"
           :class="{
             blur: (post?.rating ?? 0) >= 3 && !showNSFW,
@@ -295,6 +312,12 @@ const updateSource = useDebounceFn(async (source: any) => {
       <div class="flex flex-col gap-2">
         <AutoGenerateTagBtn :post-id="post.id" />
         <AutoGenerateCaptionBtn :post-id="post.id" />
+        <Btn
+          size="sm"
+          @click="routateImageMutation.mutate()"
+        >
+          Rotate
+        </Btn>
       </div>
     </div>
   </div>
