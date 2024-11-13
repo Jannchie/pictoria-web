@@ -34,6 +34,7 @@ async function onUploadFile(file: File, path: string | null) {
 }
 
 useEventListener(window, 'drop', async (event) => {
+  event.preventDefault()
   dragEnterCount.value = 0
   isDraggingFiles.value = false
   const items = event.dataTransfer?.items
@@ -52,9 +53,13 @@ useEventListener(window, 'drop', async (event) => {
     }
   }
 }, {
-  passive: true,
+  passive: false,
   capture: true,
 })
+
+window.addEventListener('dragover', (e) => {
+  e.preventDefault()
+}, false)
 
 useEventListener(window, 'dragend', () => {
   dragEnterCount.value = 0
