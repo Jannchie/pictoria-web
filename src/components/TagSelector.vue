@@ -14,12 +14,8 @@ const postId = computed(() => props.postId)
 const search = ref('')
 const postQuery = usePostQuery(postId)
 const tagGroupsQuery = useQuery(['tagGroups', postId], async () => {
-  const resp = await v1GetTagGroups({
-
-  })
+  const resp = await v1GetTagGroups({})
   return resp.data
-}, {
-  staleTime: Infinity,
 })
 const tagGroups = computed(() => {
   return tagGroupsQuery.data.value
@@ -43,7 +39,7 @@ const currentTags = computed(() => {
   if (currentGroupId.value === undefined) {
     return tags
   }
-  return tags.filter(tag => tag.tag_info.group_id === currentGroupId.value)
+  return tags.filter(tag => tag.tag_info.group.id === currentGroupId.value)
 })
 
 const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value, search.value, postQuery.isFetched.value], () => {
@@ -243,6 +239,9 @@ watchEffect(() => {
     currentHoverIndex.value = 0
   }
 })
+const searchingInitCurrentTags = computed(() => {
+  return initCurrentTags.value.filter(tag => isSearchMatch(tag.tag_info.name))
+})
 </script>
 
 <template>
@@ -302,7 +301,7 @@ watchEffect(() => {
           class="border-b border-surface"
         >
           <div class="p-2 text-surface-dimmed">
-            Already Selected ({{ initCurrentTags.filter(tag => isSearchMatch(tag.tag_info.name)).length }})
+            Already Selected ({{ searchingInitCurrentTags.length }})
           </div>
           <template
             v-for="tag, i in initCurrentTags"

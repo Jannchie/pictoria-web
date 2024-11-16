@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { PostBase } from '@/api'
+import type { PostPublic } from '@/api'
 import { baseURL, selectedPostIdSet, selectingPostIdSet, showNSFW, showPost, unselectedPostIdSet } from '@/shared'
 import { AspectRatio } from '@roku-ui/vue'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  post: PostBase
+  post: PostPublic
 }>()
 const post = computed(() => props.post)
 function onPointerUp(e: PointerEvent) {

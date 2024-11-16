@@ -1,20 +1,15 @@
 <script setup lang="ts">
-import type { PostWithTag } from '@/api'
+import type { PostWithTagPublic } from '@/api'
 import { v1CmdRotateImage, v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
-import { baseURL, openTagSelectorWindow, showNSFW, showPost, useTagGroup } from '@/shared'
+import { baseURL, openTagSelectorWindow, showNSFW, showPost } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
 import { filesize } from 'filesize'
 import { useMutation, useQueryClient } from 'vue-query'
 
 const props = defineProps<{
-  post: PostWithTag
+  post: PostWithTagPublic
 }>()
 const queryClient = useQueryClient()
-
-const tagGroup = useTagGroup()
-function getGroupColor(group_id: number | null) {
-  return tagGroup.value.find(g => g.id === group_id)?.color
-}
 
 function timestampToTime(timestamp: number) {
   return new Date(timestamp * 1000).toLocaleString()
@@ -248,7 +243,7 @@ const routateImageMutation = useMutation(
           :key="tag.tag_info.name"
           class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
-          :color="getGroupColor(tag.tag_info.group_id)"
+          :color="tag.tag_info.group.color"
           @pointerup="openTagSelectorWindow()"
         >
           {{ tag.tag_info.name }}
@@ -299,7 +294,7 @@ const routateImageMutation = useMutation(
       </div>
       <div>
         <TextField
-          :model-value="post.source ?? ''"
+          :model-value="post.source"
           size="sm"
           @update:model-value="updateSource"
         />

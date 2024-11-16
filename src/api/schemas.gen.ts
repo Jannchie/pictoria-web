@@ -117,20 +117,30 @@ export const HTTPValidationErrorSchema = {
 export const PostSchema = {
   properties: {
     id: {
-      type: 'integer',
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
       title: 'Id',
     },
     file_path: {
       type: 'string',
       title: 'File Path',
+      default: '',
     },
     file_name: {
       type: 'string',
       title: 'File Name',
+      default: '',
     },
     extension: {
       type: 'string',
       title: 'Extension',
+      default: '',
     },
     width: {
       anyOf: [
@@ -142,6 +152,7 @@ export const PostSchema = {
         },
       ],
       title: 'Width',
+      default: 0,
     },
     height: {
       anyOf: [
@@ -153,10 +164,15 @@ export const PostSchema = {
         },
       ],
       title: 'Height',
+      default: 0,
     },
-    aspect_ratio: {
-      type: 'number',
-      title: 'Aspect Ratio',
+    updated_at: {
+      type: 'integer',
+      title: 'Updated At',
+    },
+    created_at: {
+      type: 'integer',
+      title: 'Created At',
     },
     score: {
       type: 'integer',
@@ -169,203 +185,45 @@ export const PostSchema = {
       default: 0,
     },
     description: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Description',
-    },
-    updated_at: {
-      type: 'integer',
-      title: 'Updated At',
-    },
-    created_at: {
-      type: 'integer',
-      title: 'Created At',
+      default: '',
     },
     meta: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Meta',
+      default: '',
     },
     md5: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Md5',
+      default: '',
     },
     size: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'integer',
       title: 'Size',
+      default: 0,
     },
     source: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Source',
+      default: '',
     },
     caption: {
       type: 'string',
       title: 'Caption',
+      default: '',
+    },
+    tags: {
+      items: {
+        $ref: '#/components/schemas/PostHasTag',
+      },
+      type: 'array',
+      title: 'Tags',
     },
   },
   type: 'object',
-  required: ['id', 'file_path', 'file_name', 'extension', 'aspect_ratio', 'meta', 'md5', 'size', 'source', 'caption'],
   title: 'Post',
-} as const
-
-export const PostBaseSchema = {
-  properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
-    file_path: {
-      type: 'string',
-      title: 'File Path',
-    },
-    file_name: {
-      type: 'string',
-      title: 'File Name',
-    },
-    extension: {
-      type: 'string',
-      title: 'Extension',
-    },
-    width: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Width',
-    },
-    height: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Height',
-    },
-    aspect_ratio: {
-      type: 'number',
-      title: 'Aspect Ratio',
-    },
-    score: {
-      type: 'integer',
-      title: 'Score',
-      default: 0,
-    },
-    rating: {
-      type: 'integer',
-      title: 'Rating',
-      default: 0,
-    },
-    description: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Description',
-    },
-    updated_at: {
-      type: 'integer',
-      title: 'Updated At',
-    },
-    created_at: {
-      type: 'integer',
-      title: 'Created At',
-    },
-    meta: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Meta',
-    },
-    md5: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Md5',
-    },
-    size: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Size',
-    },
-    source: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Source',
-    },
-    caption: {
-      type: 'string',
-      title: 'Caption',
-    },
-  },
-  type: 'object',
-  required: ['id', 'file_path', 'file_name', 'extension', 'aspect_ratio', 'meta', 'md5', 'size', 'source', 'caption'],
-  title: 'PostBase',
 } as const
 
 export const PostCountResponseSchema = {
@@ -458,6 +316,33 @@ export const PostFilterSchema = {
   title: 'PostFilter',
 } as const
 
+export const PostHasTagSchema = {
+  properties: {
+    post_id: {
+      type: 'integer',
+      title: 'Post Id',
+    },
+    tag_name: {
+      type: 'string',
+      title: 'Tag Name',
+    },
+    post: {
+      $ref: '#/components/schemas/Post',
+    },
+    tag_info: {
+      $ref: '#/components/schemas/Tag',
+    },
+    is_auto: {
+      type: 'boolean',
+      title: 'Is Auto',
+      default: false,
+    },
+  },
+  type: 'object',
+  required: ['post_id', 'tag_name'],
+  title: 'PostHasTag',
+} as const
+
 export const PostHasTagPublicSchema = {
   properties: {
     is_auto: {
@@ -465,7 +350,7 @@ export const PostHasTagPublicSchema = {
       title: 'Is Auto',
     },
     tag_info: {
-      $ref: '#/components/schemas/TagPublic',
+      $ref: '#/components/schemas/TagWithGroupPublic',
     },
   },
   type: 'object',
@@ -473,7 +358,7 @@ export const PostHasTagPublicSchema = {
   title: 'PostHasTagPublic',
 } as const
 
-export const PostWithTagSchema = {
+export const PostPublicSchema = {
   properties: {
     id: {
       type: 'integer',
@@ -490,6 +375,10 @@ export const PostWithTagSchema = {
     extension: {
       type: 'string',
       title: 'Extension',
+    },
+    full_path: {
+      type: 'string',
+      title: 'Full Path',
     },
     width: {
       anyOf: [
@@ -514,29 +403,15 @@ export const PostWithTagSchema = {
       title: 'Height',
     },
     aspect_ratio: {
-      type: 'number',
-      title: 'Aspect Ratio',
-    },
-    score: {
-      type: 'integer',
-      title: 'Score',
-      default: 0,
-    },
-    rating: {
-      type: 'integer',
-      title: 'Rating',
-      default: 0,
-    },
-    description: {
       anyOf: [
         {
-          type: 'string',
+          type: 'number',
         },
         {
           type: 'null',
         },
       ],
-      title: 'Description',
+      title: 'Aspect Ratio',
     },
     updated_at: {
       type: 'integer',
@@ -546,29 +421,67 @@ export const PostWithTagSchema = {
       type: 'integer',
       title: 'Created At',
     },
+    score: {
+      type: 'integer',
+      title: 'Score',
+    },
+    rating: {
+      type: 'integer',
+      title: 'Rating',
+    },
+    description: {
+      type: 'string',
+      title: 'Description',
+    },
     meta: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Meta',
     },
     md5: {
-      anyOf: [
-        {
-          type: 'string',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'string',
       title: 'Md5',
     },
     size: {
+      type: 'integer',
+      title: 'Size',
+    },
+    source: {
+      type: 'string',
+      title: 'Source',
+    },
+    caption: {
+      type: 'string',
+      title: 'Caption',
+    },
+  },
+  type: 'object',
+  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption'],
+  title: 'PostPublic',
+} as const
+
+export const PostWithTagPublicSchema = {
+  properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    file_path: {
+      type: 'string',
+      title: 'File Path',
+    },
+    file_name: {
+      type: 'string',
+      title: 'File Name',
+    },
+    extension: {
+      type: 'string',
+      title: 'Extension',
+    },
+    full_path: {
+      type: 'string',
+      title: 'Full Path',
+    },
+    width: {
       anyOf: [
         {
           type: 'integer',
@@ -577,17 +490,64 @@ export const PostWithTagSchema = {
           type: 'null',
         },
       ],
-      title: 'Size',
+      title: 'Width',
     },
-    source: {
+    height: {
       anyOf: [
         {
-          type: 'string',
+          type: 'integer',
         },
         {
           type: 'null',
         },
       ],
+      title: 'Height',
+    },
+    aspect_ratio: {
+      anyOf: [
+        {
+          type: 'number',
+        },
+        {
+          type: 'null',
+        },
+      ],
+      title: 'Aspect Ratio',
+    },
+    updated_at: {
+      type: 'integer',
+      title: 'Updated At',
+    },
+    created_at: {
+      type: 'integer',
+      title: 'Created At',
+    },
+    score: {
+      type: 'integer',
+      title: 'Score',
+    },
+    rating: {
+      type: 'integer',
+      title: 'Rating',
+    },
+    description: {
+      type: 'string',
+      title: 'Description',
+    },
+    meta: {
+      type: 'string',
+      title: 'Meta',
+    },
+    md5: {
+      type: 'string',
+      title: 'Md5',
+    },
+    size: {
+      type: 'integer',
+      title: 'Size',
+    },
+    source: {
+      type: 'string',
       title: 'Source',
     },
     caption: {
@@ -600,12 +560,11 @@ export const PostWithTagSchema = {
       },
       type: 'array',
       title: 'Tags',
-      default: [],
     },
   },
   type: 'object',
-  required: ['id', 'file_path', 'file_name', 'extension', 'aspect_ratio', 'meta', 'md5', 'size', 'source', 'caption'],
-  title: 'PostWithTag',
+  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption', 'tags'],
+  title: 'PostWithTagPublic',
 } as const
 
 export const RatingCountResponseSchema = {
@@ -670,25 +629,28 @@ export const ScoreUpdateSchema = {
 
 export const TagSchema = {
   properties: {
-    count: {
-      type: 'integer',
-      title: 'Count',
-      default: 0,
-    },
     name: {
       type: 'string',
       title: 'Name',
     },
     group_id: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
+      type: 'integer',
       title: 'Group Id',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+      default: 0,
+    },
+    group: {
+      $ref: '#/components/schemas/TagGroup',
+    },
+    posts: {
+      items: {
+        $ref: '#/components/schemas/PostHasTag',
+      },
+      type: 'array',
+      title: 'Posts',
     },
   },
   type: 'object',
@@ -696,7 +658,51 @@ export const TagSchema = {
   title: 'Tag',
 } as const
 
+export const TagAndGroupIdPublicSchema = {
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+    },
+    group_id: {
+      type: 'integer',
+      title: 'Group Id',
+    },
+  },
+  type: 'object',
+  required: ['name', 'group_id'],
+  title: 'TagAndGroupIdPublic',
+} as const
+
 export const TagGroupSchema = {
+  properties: {
+    id: {
+      type: 'integer',
+      title: 'Id',
+    },
+    name: {
+      type: 'string',
+      title: 'Name',
+      default: '',
+    },
+    color: {
+      type: 'string',
+      title: 'Color',
+      default: '',
+    },
+    tags: {
+      items: {
+        $ref: '#/components/schemas/Tag',
+      },
+      type: 'array',
+      title: 'Tags',
+    },
+  },
+  type: 'object',
+  title: 'TagGroup',
+} as const
+
+export const TagGroupPublicSchema = {
   properties: {
     id: {
       type: 'integer',
@@ -709,39 +715,53 @@ export const TagGroupSchema = {
     color: {
       type: 'string',
       title: 'Color',
-      default: '#000000',
     },
   },
   type: 'object',
-  required: ['name'],
-  title: 'TagGroup',
+  required: ['id', 'name', 'color'],
+  title: 'TagGroupPublic',
 } as const
 
-export const TagPublicSchema = {
+export const TagGroupWithTagsPublicSchema = {
   properties: {
-    count: {
+    id: {
       type: 'integer',
-      title: 'Count',
-      default: 0,
+      title: 'Id',
     },
     name: {
       type: 'string',
       title: 'Name',
     },
-    group_id: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Group Id',
+    color: {
+      type: 'string',
+      title: 'Color',
+    },
+    tags: {
+      items: {
+        $ref: '#/components/schemas/TagPublic',
+      },
+      type: 'array',
+      title: 'Tags',
     },
   },
   type: 'object',
-  required: ['name', 'group_id'],
+  required: ['id', 'name', 'color', 'tags'],
+  title: 'TagGroupWithTagsPublic',
+} as const
+
+export const TagPublicSchema = {
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+  },
+  type: 'object',
+  required: ['name', 'count'],
   title: 'TagPublic',
 } as const
 
@@ -752,12 +772,31 @@ export const TagResponseSchema = {
       title: 'Count',
     },
     tag_info: {
-      $ref: '#/components/schemas/TagPublic',
+      $ref: '#/components/schemas/TagAndGroupIdPublic',
     },
   },
   type: 'object',
   required: ['count', 'tag_info'],
   title: 'TagResponse',
+} as const
+
+export const TagWithGroupPublicSchema = {
+  properties: {
+    name: {
+      type: 'string',
+      title: 'Name',
+    },
+    count: {
+      type: 'integer',
+      title: 'Count',
+    },
+    group: {
+      $ref: '#/components/schemas/TagGroupPublic',
+    },
+  },
+  type: 'object',
+  required: ['name', 'count', 'group'],
+  title: 'TagWithGroupPublic',
 } as const
 
 export const ValidationErrorSchema = {

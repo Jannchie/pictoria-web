@@ -1,5 +1,5 @@
-import type { PostBase } from '@/api'
-import { v1GetPosts, v1GetTagGroups } from '@/api'
+import type { PostPublic, PostWithTagPublic } from '@/api'
+import { v1GetTagGroups, v1ListPosts } from '@/api'
 import { useStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useQuery } from 'vue-query'
@@ -20,7 +20,7 @@ interface PostFilter {
   extension: string[]
   folder?: string
 }
-export type RightPanelDatum = PostBase | ImageDatum | InputDatum
+export type RightPanelDatum = PostPublic | ImageDatum | InputDatum
 export const postFilter = ref<PostFilter>({
   rating: [],
   score: [],
@@ -41,7 +41,7 @@ export function usePostsQuery() {
   return useQuery(
     ['posts', postFilter],
     async () => {
-      const resp = await v1GetPosts({
+      const resp = await v1ListPosts({
         body: postFilter.value,
       })
       return resp.data?.sort((a, b) => {
@@ -71,7 +71,7 @@ export function usePostsQuery() {
 }
 export function usePosts() {
   const postsQuery = usePostsQuery()
-  return computed<Array<PostBase>>(() => {
+  return computed<Array<PostPublic>>(() => {
     return postsQuery.data.value ?? []
   })
 }
@@ -91,7 +91,7 @@ export function openTagSelectorWindow() {
   tagSelectorWindowRef.value?.toggle()
 }
 
-export const showPost = ref<PostBase | null>(null)
+export const showPost = ref<PostWithTagPublic | null>(null)
 
 export const menuData = ref<any | null>(null)
 export const showMenu = computed({ get: () => !!menuData.value, set: (val) => {

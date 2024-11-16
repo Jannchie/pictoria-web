@@ -28,43 +28,23 @@ export interface HTTPValidationError {
 }
 
 export interface Post {
-  id: number
-  file_path: string
-  file_name: string
-  extension: string
+  id?: (number | null)
+  file_path?: string
+  file_name?: string
+  extension?: string
   width?: (number | null)
   height?: (number | null)
-  aspect_ratio: number
-  score?: number
-  rating?: number
-  description?: (string | null)
   updated_at?: number
   created_at?: number
-  meta: (string | null)
-  md5: (string | null)
-  size: (number | null)
-  source: (string | null)
-  caption: string
-}
-
-export interface PostBase {
-  id: number
-  file_path: string
-  file_name: string
-  extension: string
-  width?: (number | null)
-  height?: (number | null)
-  aspect_ratio: number
   score?: number
   rating?: number
-  description?: (string | null)
-  updated_at?: number
-  created_at?: number
-  meta: (string | null)
-  md5: (string | null)
-  size: (number | null)
-  source: (string | null)
-  caption: string
+  description?: string
+  meta?: string
+  md5?: string
+  size?: number
+  source?: string
+  caption?: string
+  tags?: Array<PostHasTag>
 }
 
 export interface PostCountResponse {
@@ -79,30 +59,60 @@ export interface PostFilter {
   folder?: (string | null)
 }
 
-export interface PostHasTagPublic {
-  is_auto: boolean
-  tag_info: TagPublic
+export interface PostHasTag {
+  post_id: number
+  tag_name: string
+  post?: Post
+  tag_info?: Tag
+  is_auto?: boolean
 }
 
-export interface PostWithTag {
+export interface PostHasTagPublic {
+  is_auto: boolean
+  tag_info: TagWithGroupPublic
+}
+
+export interface PostPublic {
   id: number
   file_path: string
   file_name: string
   extension: string
-  width?: (number | null)
-  height?: (number | null)
-  aspect_ratio: number
-  score?: number
-  rating?: number
-  description?: (string | null)
-  updated_at?: number
-  created_at?: number
-  meta: (string | null)
-  md5: (string | null)
-  size: (number | null)
-  source: (string | null)
+  full_path: string
+  width: (number | null)
+  height: (number | null)
+  aspect_ratio: (number | null)
+  updated_at: number
+  created_at: number
+  score: number
+  rating: number
+  description: string
+  meta: string
+  md5: string
+  size: number
+  source: string
   caption: string
-  tags?: Array<PostHasTagPublic>
+}
+
+export interface PostWithTagPublic {
+  id: number
+  file_path: string
+  file_name: string
+  extension: string
+  full_path: string
+  width: (number | null)
+  height: (number | null)
+  aspect_ratio: (number | null)
+  updated_at: number
+  created_at: number
+  score: number
+  rating: number
+  description: string
+  meta: string
+  md5: string
+  size: number
+  source: string
+  caption: string
+  tags: Array<PostHasTagPublic>
 }
 
 export interface RatingCountResponse {
@@ -124,26 +134,52 @@ export interface ScoreUpdate {
 }
 
 export interface Tag {
-  count?: number
   name: string
-  group_id?: (number | null)
+  group_id?: number
+  count?: number
+  group?: TagGroup
+  posts?: Array<PostHasTag>
+}
+
+export interface TagAndGroupIdPublic {
+  name: string
+  group_id: number
 }
 
 export interface TagGroup {
   id?: number
-  name: string
+  name?: string
   color?: string
+  tags?: Array<Tag>
+}
+
+export interface TagGroupPublic {
+  id: number
+  name: string
+  color: string
+}
+
+export interface TagGroupWithTagsPublic {
+  id: number
+  name: string
+  color: string
+  tags: Array<TagPublic>
 }
 
 export interface TagPublic {
-  count?: number
   name: string
-  group_id: (number | null)
+  count: number
 }
 
 export interface TagResponse {
   count: number
-  tag_info: TagPublic
+  tag_info: TagAndGroupIdPublic
+}
+
+export interface TagWithGroupPublic {
+  name: string
+  count: number
+  group: TagGroupPublic
 }
 
 export interface ValidationError {
@@ -152,7 +188,7 @@ export interface ValidationError {
   type: string
 }
 
-export interface V1GetPostsData {
+export interface V1ListPostsData {
   body?: PostFilter
   query?: {
     limit?: (number | null)
@@ -160,9 +196,9 @@ export interface V1GetPostsData {
   }
 }
 
-export type V1GetPostsResponse = (Array<PostBase>)
+export type V1ListPostsResponse = (Array<PostPublic>)
 
-export type V1GetPostsError = (HTTPValidationError)
+export type V1ListPostsError = (HTTPValidationError)
 
 export interface V1DeletePostData {
   path: {
@@ -180,7 +216,7 @@ export interface V1GetPostData {
   }
 }
 
-export type V1GetPostResponse = (PostWithTag)
+export type V1GetPostResponse = (PostWithTagPublic)
 
 export type V1GetPostError = (HTTPValidationError)
 
@@ -190,6 +226,9 @@ export type V1GetPostsCountError = unknown
 
 export interface V1CountGroupByRatingData {
   body: PostFilter
+  query?: {
+    engine?: unknown
+  }
 }
 
 export type V1CountGroupByRatingResponse = (Array<RatingCountResponse>)
@@ -198,6 +237,9 @@ export type V1CountGroupByRatingError = (HTTPValidationError)
 
 export interface V1CountGroupByScoreData {
   body: PostFilter
+  query?: {
+    engine?: unknown
+  }
 }
 
 export type V1CountGroupByScoreResponse = (Array<ScoreCountResponse>)
@@ -206,6 +248,9 @@ export type V1CountGroupByScoreError = (HTTPValidationError)
 
 export interface V1CountGroupByExtensionData {
   body: PostFilter
+  query?: {
+    engine?: unknown
+  }
 }
 
 export type V1CountGroupByExtensionResponse = (Array<ExtensionCountResponse>)
@@ -219,7 +264,7 @@ export interface V1UpdatePostScoreData {
   }
 }
 
-export type V1UpdatePostScoreResponse = (Post)
+export type V1UpdatePostScoreResponse = (PostWithTagPublic)
 
 export type V1UpdatePostScoreError = (HTTPValidationError)
 
@@ -228,9 +273,12 @@ export interface V1UpdatePostRatingData {
   path: {
     post_id: number
   }
+  query?: {
+    engine?: unknown
+  }
 }
 
-export type V1UpdatePostRatingResponse = (Post)
+export type V1UpdatePostRatingResponse = (PostPublic)
 
 export type V1UpdatePostRatingError = (HTTPValidationError)
 
@@ -239,11 +287,12 @@ export interface V1UpdatePostSourceData {
     post_id: number
   }
   query: {
+    engine?: unknown
     source: string
   }
 }
 
-export type V1UpdatePostSourceResponse = (Post)
+export type V1UpdatePostSourceResponse = (PostPublic)
 
 export type V1UpdatePostSourceError = (HTTPValidationError)
 
@@ -256,7 +305,7 @@ export interface V1UpdatePostCaptionData {
   }
 }
 
-export type V1UpdatePostCaptionResponse = (Post)
+export type V1UpdatePostCaptionResponse = (PostPublic)
 
 export type V1UpdatePostCaptionError = (HTTPValidationError)
 
@@ -290,7 +339,7 @@ export interface V1CmdRotateImageData {
   }
 }
 
-export type V1CmdRotateImageResponse = (Post)
+export type V1CmdRotateImageResponse = (PostWithTagPublic)
 
 export type V1CmdRotateImageError = (HTTPValidationError)
 
@@ -348,7 +397,7 @@ export interface V1AddTagToPostData {
   }
 }
 
-export type V1AddTagToPostResponse = (PostWithTag)
+export type V1AddTagToPostResponse = (PostWithTagPublic)
 
 export type V1AddTagToPostError = (HTTPValidationError)
 
@@ -359,11 +408,11 @@ export interface V1RemoveTagFromPostData {
   }
 }
 
-export type V1RemoveTagFromPostResponse = (PostWithTag)
+export type V1RemoveTagFromPostResponse = (PostWithTagPublic)
 
 export type V1RemoveTagFromPostError = (HTTPValidationError)
 
-export type V1GetTagGroupsResponse = (Array<TagGroup>)
+export type V1GetTagGroupsResponse = (Array<TagGroupWithTagsPublic>)
 
 export type V1GetTagGroupsError = unknown
 

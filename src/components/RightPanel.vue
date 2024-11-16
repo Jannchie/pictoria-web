@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { PostBase } from '@/api'
+import type { PostPublic } from '@/api'
 
 import { selectedPostIdSet, showPost } from '@/shared'
 import { computed } from 'vue'
 
-function isPost(datum: any): datum is PostBase {
+function isPost(datum: any): datum is PostPublic {
   return 'file_path' in datum
 }
 const id = computed<number | undefined>(() => {
