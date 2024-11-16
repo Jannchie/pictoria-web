@@ -28,7 +28,6 @@ export interface HTTPValidationError {
 }
 
 export interface Post {
-  id?: (number | null)
   file_path?: string
   file_name?: string
   extension?: string
@@ -62,8 +61,6 @@ export interface PostFilter {
 export interface PostHasTag {
   post_id: number
   tag_name: string
-  post?: Post
-  tag_info?: Tag
   is_auto?: boolean
 }
 
@@ -135,19 +132,18 @@ export interface ScoreUpdate {
 
 export interface Tag {
   name: string
-  group_id?: number
+  group_id?: (number | null)
   count?: number
-  group?: TagGroup
+  group?: (TagGroup | null)
   posts?: Array<PostHasTag>
 }
 
 export interface TagAndGroupIdPublic {
   name: string
-  group_id: number
+  group_id: (number | null)
 }
 
 export interface TagGroup {
-  id?: number
   name?: string
   color?: string
   tags?: Array<Tag>
@@ -179,7 +175,7 @@ export interface TagResponse {
 export interface TagWithGroupPublic {
   name: string
   count: number
-  group: TagGroupPublic
+  group: (TagGroupPublic | null)
 }
 
 export interface ValidationError {
@@ -412,9 +408,15 @@ export type V1RemoveTagFromPostResponse = (PostWithTagPublic)
 
 export type V1RemoveTagFromPostError = (HTTPValidationError)
 
+export interface V1GetTagGroupsData {
+  query?: {
+    engine?: unknown
+  }
+}
+
 export type V1GetTagGroupsResponse = (Array<TagGroupWithTagsPublic>)
 
-export type V1GetTagGroupsError = unknown
+export type V1GetTagGroupsError = (HTTPValidationError)
 
 export type V1CmdProcessPostsResponse = (unknown)
 
@@ -426,7 +428,7 @@ export interface V1CmdAutoTagsData {
   }
 }
 
-export type V1CmdAutoTagsResponse = (Post)
+export type V1CmdAutoTagsResponse = (PostWithTagPublic)
 
 export type V1CmdAutoTagsError = (HTTPValidationError)
 

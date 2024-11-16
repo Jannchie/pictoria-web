@@ -39,7 +39,7 @@ const currentTags = computed(() => {
   if (currentGroupId.value === undefined) {
     return tags
   }
-  return tags.filter(tag => tag.tag_info.group.id === currentGroupId.value)
+  return tags.filter(tag => tag.tag_info.group?.id === currentGroupId.value)
 })
 
 const initCurrentTags = controlledComputed(() => [currentGroupId.value, postId.value, search.value, postQuery.isFetched.value], () => {

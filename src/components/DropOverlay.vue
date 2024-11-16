@@ -46,12 +46,12 @@ useEventListener(window, 'drop', async (event) => {
       }
     }
   }
-  const files = event.dataTransfer?.files
-  if (files) {
-    for (const file of files) {
-      await onUploadFile(file, null)
-    }
-  }
+  // const files = event.dataTransfer?.files
+  // if (files) {
+  //   for (const file of files) {
+  //     await onUploadFile(file, null)
+  //   }
+  // }
 }, {
   passive: false,
   capture: true,

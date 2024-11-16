@@ -116,17 +116,6 @@ export const HTTPValidationErrorSchema = {
 
 export const PostSchema = {
   properties: {
-    id: {
-      anyOf: [
-        {
-          type: 'integer',
-        },
-        {
-          type: 'null',
-        },
-      ],
-      title: 'Id',
-    },
     file_path: {
       type: 'string',
       title: 'File Path',
@@ -325,12 +314,6 @@ export const PostHasTagSchema = {
     tag_name: {
       type: 'string',
       title: 'Tag Name',
-    },
-    post: {
-      $ref: '#/components/schemas/Post',
-    },
-    tag_info: {
-      $ref: '#/components/schemas/Tag',
     },
     is_auto: {
       type: 'boolean',
@@ -634,7 +617,14 @@ export const TagSchema = {
       title: 'Name',
     },
     group_id: {
-      type: 'integer',
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
       title: 'Group Id',
     },
     count: {
@@ -643,7 +633,14 @@ export const TagSchema = {
       default: 0,
     },
     group: {
-      $ref: '#/components/schemas/TagGroup',
+      anyOf: [
+        {
+          $ref: '#/components/schemas/TagGroup',
+        },
+        {
+          type: 'null',
+        },
+      ],
     },
     posts: {
       items: {
@@ -665,7 +662,14 @@ export const TagAndGroupIdPublicSchema = {
       title: 'Name',
     },
     group_id: {
-      type: 'integer',
+      anyOf: [
+        {
+          type: 'integer',
+        },
+        {
+          type: 'null',
+        },
+      ],
       title: 'Group Id',
     },
   },
@@ -676,10 +680,6 @@ export const TagAndGroupIdPublicSchema = {
 
 export const TagGroupSchema = {
   properties: {
-    id: {
-      type: 'integer',
-      title: 'Id',
-    },
     name: {
       type: 'string',
       title: 'Name',
@@ -791,7 +791,14 @@ export const TagWithGroupPublicSchema = {
       title: 'Count',
     },
     group: {
-      $ref: '#/components/schemas/TagGroupPublic',
+      anyOf: [
+        {
+          $ref: '#/components/schemas/TagGroupPublic',
+        },
+        {
+          type: 'null',
+        },
+      ],
     },
   },
   type: 'object',

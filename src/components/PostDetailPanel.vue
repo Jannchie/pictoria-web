@@ -114,7 +114,7 @@ const routateImageMutation = useMutation(
 
 <template>
   <div
-    class="flex flex-col border-zinc-8 text-xs"
+    class="h-full flex flex-col overflow-x-hidden overflow-y-auto text-xs"
   >
     <div
       v-if="isImage(post.extension)"
@@ -243,7 +243,7 @@ const routateImageMutation = useMutation(
           :key="tag.tag_info.name"
           class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
-          :color="tag.tag_info.group.color"
+          :color="tag.tag_info.group?.color"
           @pointerup="openTagSelectorWindow()"
         >
           {{ tag.tag_info.name }}
