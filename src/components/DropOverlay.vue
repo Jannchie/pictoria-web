@@ -7,22 +7,6 @@ const isDraggingFiles = ref(false)
 const dragEnterCount = ref(0)
 const queryClient = useQueryClient()
 
-async function traverseFileTree(item: any, path: string = '') {
-  if (item.isFile) {
-    item.file(async (file: File) => {
-      await onUploadFile(file, path + file.name)
-    })
-  }
-  else if (item.isDirectory) {
-    const dirReader = item.createReader()
-    dirReader.readEntries(async (entries: any[]) => {
-      for (const entry of entries) {
-        await traverseFileTree(entry, `${path + item.name}/`)
-      }
-    })
-  }
-}
-
 async function onUploadFile(file: File, path: string | null) {
   await v1UploadFile({
     body: {
@@ -37,21 +21,13 @@ useEventListener(window, 'drop', async (event) => {
   event.preventDefault()
   dragEnterCount.value = 0
   isDraggingFiles.value = false
-  const items = event.dataTransfer?.items
-  if (items) {
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i].webkitGetAsEntry()
-      if (item) {
-        await traverseFileTree(item)
-      }
+
+  const files = event.dataTransfer?.files
+  if (files) {
+    for (const file of files) {
+      await onUploadFile(file, null)
     }
   }
-  // const files = event.dataTransfer?.files
-  // if (files) {
-  //   for (const file of files) {
-  //     await onUploadFile(file, null)
-  //   }
-  // }
 }, {
   passive: false,
   capture: true,
