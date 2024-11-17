@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { v1UploadFile } from '@/api'
 import { useQueryClient } from 'vue-query'
+import { useRoute } from 'vue-router'
 
 const dropZoneRef = ref<HTMLElement | null>(null)
 const isDraggingFiles = ref(false)
@@ -23,18 +24,43 @@ async function onUploadFile(file: File, path: string | null, source?: string) {
   }
 }
 
+const route = useRoute()
+const baseFolder = computed(() => {
+  if (route.name === 'dir') {
+    if (Array.isArray(route.params.folder)) {
+      if (route.params.folder.includes('@')) {
+        return ''
+      }
+      return route.params.folder.join('/')
+    }
+    return route.params.folder
+  }
+  return null
+})
+
 async function readDirectory(directoryEntry: FileSystemDirectoryEntry, path: string | null, source?: string) {
   const reader = directoryEntry.createReader()
-  const entries = await new Promise<FileSystemEntry[]>((resolve, reject) => {
-    reader.readEntries((results) => {
-      if (results.length) {
-        resolve(results)
-      }
-      else {
-        resolve([])
-      }
-    }, reject)
-  })
+  let entries: FileSystemEntry[] = []
+
+  const readEntries = (): Promise<FileSystemEntry[]> => {
+    return new Promise((resolve, reject) => {
+      reader.readEntries((results) => {
+        if (results.length) {
+          resolve(results)
+        }
+        else {
+          resolve([])
+        }
+      }, reject)
+    })
+  }
+
+  let batch: FileSystemEntry[] = []
+
+  do {
+    batch = await readEntries()
+    entries = entries.concat(batch)
+  } while (batch.length > 0)
 
   for (const entry of entries) {
     if (entry.isFile) {
@@ -50,7 +76,6 @@ async function readDirectory(directoryEntry: FileSystemDirectoryEntry, path: str
     }
   }
 }
-
 useEventListener(window, 'drop', async (event) => {
   event.preventDefault()
   dragEnterCount.value = 0
@@ -70,14 +95,15 @@ useEventListener(window, 'drop', async (event) => {
         }
         else if (entry.isDirectory) {
           const folderName = entry.name
-          await readDirectory(entry as FileSystemDirectoryEntry, folderName, source)
+          const folder = baseFolder.value ? `${baseFolder.value}/${folderName}` : folderName
+          await readDirectory(entry as FileSystemDirectoryEntry, folder, source)
         }
       }
     }
   }
   if (event.dataTransfer?.files) {
     for (const file of event.dataTransfer.files) {
-      await onUploadFile(file, null, source)
+      await onUploadFile(file, baseFolder.value, source)
     }
   }
 }, {
