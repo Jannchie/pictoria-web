@@ -29,7 +29,7 @@ const baseFolder = computed(() => {
   if (route.name === 'dir') {
     if (Array.isArray(route.params.folder)) {
       if (route.params.folder.includes('@')) {
-        return ''
+        return null
       }
       return route.params.folder.join('/')
     }
