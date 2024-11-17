@@ -8,25 +8,75 @@ const dragEnterCount = ref(0)
 const queryClient = useQueryClient()
 
 async function onUploadFile(file: File, path: string | null, source?: string) {
-  await v1UploadFile({
-    body: {
-      file,
-      path,
-      source,
-    },
+  try {
+    await v1UploadFile({
+      body: {
+        file,
+        path,
+        source,
+      },
+    })
+    queryClient.invalidateQueries(['posts'])
+  }
+  catch (e) {
+    console.error(e)
+  }
+}
+
+async function readDirectory(directoryEntry: FileSystemDirectoryEntry, path: string | null, source?: string) {
+  const reader = directoryEntry.createReader()
+  const entries = await new Promise<FileSystemEntry[]>((resolve, reject) => {
+    reader.readEntries((results) => {
+      if (results.length) {
+        resolve(results)
+      }
+      else {
+        resolve([])
+      }
+    }, reject)
   })
-  queryClient.invalidateQueries(['posts'])
+
+  for (const entry of entries) {
+    if (entry.isFile) {
+      // 处理文件
+      const file = await new Promise<File>((resolve) => {
+        (entry as FileSystemFileEntry).file(resolve)
+      })
+      await onUploadFile(file, path, source)
+    }
+    else if (entry.isDirectory) {
+      // 递归处理子文件夹
+      await readDirectory(entry as FileSystemDirectoryEntry, path, source)
+    }
+  }
 }
 
 useEventListener(window, 'drop', async (event) => {
   event.preventDefault()
   dragEnterCount.value = 0
   isDraggingFiles.value = false
-
-  const files = event.dataTransfer?.files
   const source = event.dataTransfer?.getData('text/uri-list')
-  if (files) {
-    for (const file of files) {
+  const items = event.dataTransfer?.items
+  if (items) {
+    for (const item of items) {
+      const entry = item.webkitGetAsEntry()
+      if (entry) {
+        if (entry.isFile) {
+          // 文件
+          const file = await new Promise<File>((resolve) => {
+            (entry as FileSystemFileEntry).file(resolve)
+          })
+          await onUploadFile(file, null, source)
+        }
+        else if (entry.isDirectory) {
+          const folderName = entry.name
+          await readDirectory(entry as FileSystemDirectoryEntry, folderName, source)
+        }
+      }
+    }
+  }
+  if (event.dataTransfer?.files) {
+    for (const file of event.dataTransfer.files) {
       await onUploadFile(file, null, source)
     }
   }
