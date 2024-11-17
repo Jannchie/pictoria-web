@@ -7,11 +7,12 @@ const isDraggingFiles = ref(false)
 const dragEnterCount = ref(0)
 const queryClient = useQueryClient()
 
-async function onUploadFile(file: File, path: string | null) {
+async function onUploadFile(file: File, path: string | null, source?: string) {
   await v1UploadFile({
     body: {
       file,
       path,
+      source,
     },
   })
   queryClient.invalidateQueries(['posts'])
@@ -23,9 +24,10 @@ useEventListener(window, 'drop', async (event) => {
   isDraggingFiles.value = false
 
   const files = event.dataTransfer?.files
+  const source = event.dataTransfer?.getData('text/uri-list')
   if (files) {
     for (const file of files) {
-      await onUploadFile(file, null)
+      await onUploadFile(file, null, source)
     }
   }
 }, {
