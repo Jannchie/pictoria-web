@@ -78,7 +78,8 @@ function onSelectEnd() {
   unselectingPostId.value = new Set()
 }
 
-function selectPointerDown(e: PointerEvent) {
+function emptyPointerDown(e: PointerEvent) {
+  // 如果是右键，且没有按 ctrl 或者 shift
   if (!e.ctrlKey && !e.shiftKey) {
     selectedPostIdSet.value = new Set()
     router.push({ query: { post_id: undefined } })
@@ -169,7 +170,7 @@ watchEffect(() => {
       :padding-x="8"
       :padding-y="8"
       :y-gap="36"
-      @pointerdown="selectPointerDown"
+      @pointerdown="emptyPointerDown"
     >
       <PostItem
         v-for="post in posts"

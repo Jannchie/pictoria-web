@@ -18,7 +18,8 @@ function onPointerUp(e: PointerEvent) {
     selectedPostIdSet.value = new Set([post.value.id])
   }
 }
-function onPointerDown(e: PointerEvent) {
+
+function onPointerDown(e: any) {
   if (e.button !== 0) {
     return
   }
@@ -98,6 +99,11 @@ function onImageLoad(e: Event) {
   <div
     class="post-item flex flex-col items-center gap-1"
     :class="{ selected }"
+    draggable="true"
+    @dragstart.stop
+    @pointerdown.capture.stop="onPointerDown"
+    @pointerup="onPointerUp"
+    @dblclick="showPost = post"
   >
     <AspectRatio
       v-if="post.width && post.height"
@@ -116,9 +122,6 @@ function onImageLoad(e: Event) {
             class="w-inherit rounded-lg"
             draggable="true"
             :class="{ blur: ((post.rating ?? 0) >= 3) && !showNSFW }"
-            @pointerdown.stop="onPointerDown"
-            @pointerup="onPointerUp"
-            @dblclick="showPost = post"
             @load="onImageLoad"
           >
         </Transition>

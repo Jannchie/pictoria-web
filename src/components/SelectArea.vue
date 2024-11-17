@@ -42,7 +42,7 @@ useEventListener(target, 'pointerdown', (e) => {
   }
   dragging.value = true
   emit('selectStart', { target: e.target, shift: shift.value, ctrl: ctrl.value })
-}, { capture: true })
+})
 // 捕获任意元素的 mouseup 事件
 useEventListener(window, 'pointerup', (e) => {
   dragging.value = false

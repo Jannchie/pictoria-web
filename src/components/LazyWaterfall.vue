@@ -57,10 +57,17 @@ const itemWidth = computed(() => {
 const boundings = computed(() => {
   const itemsVal = unref(props.items)
   return itemsVal.map((d) => {
+    if (d.width === 0 || itemWidth.value === 0) {
+      return {
+        width: itemWidth.value,
+        height: itemWidth.value,
+      }
+    }
     const scale = itemWidth.value / d.width
+    const height = d.height * scale + yGap.value
     return {
       width: itemWidth.value,
-      height: d.height * scale + yGap.value,
+      height,
     }
   })
 })
@@ -79,7 +86,6 @@ function calculateWaterfallLayout(itemsRef: ComputedRef<{ width: number, height:
     height: number
   }[] = [] // 存储每个项目的坐标
   const offset = Math.max(0, contentWidth.value - unref(paddingX) * 2 - itemWidth.value * items.length - unref(gap) * (items.length)) / 2
-
   for (let i = 0; i < items.length; i++) {
     const item = items[i]
     const columnIndex = columnHeights.indexOf(Math.min(...columnHeights)) // 找到最短的列
@@ -191,7 +197,6 @@ const wrapperIs = computed(() => props.is ?? 'div')
       ref="contentDom"
       :style="{
         height: `${contentHeight}px`,
-        width: `${clientWidth}px`,
         minHeight: '100%',
         position: 'relative',
       }"
