@@ -198,7 +198,7 @@ const wrapperIs = computed(() => props.is ?? 'div')
     >
       <div
         v-for="[it, i] in childrenList"
-        :key="it"
+        :key="i"
         :style="getItemStyle(i as number)"
         style="position: absolute;"
       >
