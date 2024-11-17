@@ -7,7 +7,8 @@ import { logicAnd } from '@vueuse/math'
 import { useRoute, useRouter } from 'vue-router'
 
 const posstQuery = usePostsQuery()
-
+const route = useRoute()
+const router = useRouter()
 const posts = usePosts()
 const items = computed(() => posts.value.map(post => ({
   width: post.width ?? 1,
@@ -80,6 +81,7 @@ function onSelectEnd() {
 function selectPointerDown(e: PointerEvent) {
   if (!e.ctrlKey && !e.shiftKey) {
     selectedPostIdSet.value = new Set()
+    router.push({ query: { post_id: undefined } })
   }
 }
 
@@ -92,12 +94,14 @@ const notUsingInput = computed(() =>
 whenever(logicAnd(Ctrl_A, notUsingInput), () => {
   selectedPostIdSet.value = new Set(posts.value.map(post => post.id))
 })
-const route = useRoute()
-const router = useRouter()
+
 watchEffect(async () => {
   if (route.query.post_id) {
     // 如果有 post_id 参数，则选中这个 post，并且滚动到这个 post
     const postId = Number(route.query.post_id)
+    if (posts.value.length === 0) {
+      return
+    }
     const postIndex = posts.value.findIndex(post => post.id === postId)
     if (postIndex === -1) {
       await router.push({ query: { post_id: undefined } })
@@ -112,8 +116,8 @@ watchEffect(async () => {
             top: postLayout.y,
             behavior: 'smooth',
           })
-          selectedPostIdSet.value = new Set([postId])
         }
+        selectedPostIdSet.value = new Set([postId])
       }
     }
   }
