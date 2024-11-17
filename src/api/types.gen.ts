@@ -134,19 +134,12 @@ export interface Tag {
   name: string
   group_id?: (number | null)
   count?: number
-  group?: (TagGroup | null)
   posts?: Array<PostHasTag>
 }
 
 export interface TagAndGroupIdPublic {
   name: string
   group_id: (number | null)
-}
-
-export interface TagGroup {
-  name?: string
-  color?: string
-  tags?: Array<Tag>
 }
 
 export interface TagGroupPublic {
@@ -417,6 +410,18 @@ export interface V1GetTagGroupsData {
 export type V1GetTagGroupsResponse = (Array<TagGroupWithTagsPublic>)
 
 export type V1GetTagGroupsError = (HTTPValidationError)
+
+export interface V1MovePostsData {
+  body: Array<(number)>
+  query: {
+    engine?: unknown
+    new_path: string
+  }
+}
+
+export type V1MovePostsResponse = (PostWithTagPublic)
+
+export type V1MovePostsError = (HTTPValidationError)
 
 export type V1CmdProcessPostsResponse = (unknown)
 

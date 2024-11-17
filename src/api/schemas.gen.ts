@@ -630,17 +630,6 @@ export const TagSchema = {
     count: {
       type: 'integer',
       title: 'Count',
-      default: 0,
-    },
-    group: {
-      anyOf: [
-        {
-          $ref: '#/components/schemas/TagGroup',
-        },
-        {
-          type: 'null',
-        },
-      ],
     },
     posts: {
       items: {
@@ -676,30 +665,6 @@ export const TagAndGroupIdPublicSchema = {
   type: 'object',
   required: ['name', 'group_id'],
   title: 'TagAndGroupIdPublic',
-} as const
-
-export const TagGroupSchema = {
-  properties: {
-    name: {
-      type: 'string',
-      title: 'Name',
-      default: '',
-    },
-    color: {
-      type: 'string',
-      title: 'Color',
-      default: '',
-    },
-    tags: {
-      items: {
-        $ref: '#/components/schemas/Tag',
-      },
-      type: 'array',
-      title: 'Tags',
-    },
-  },
-  type: 'object',
-  title: 'TagGroup',
 } as const
 
 export const TagGroupPublicSchema = {
