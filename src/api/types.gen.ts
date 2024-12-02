@@ -27,25 +27,6 @@ export interface HTTPValidationError {
   detail?: Array<ValidationError>
 }
 
-export interface Post {
-  file_path?: string
-  file_name?: string
-  extension?: string
-  width?: (number | null)
-  height?: (number | null)
-  updated_at?: number
-  created_at?: number
-  score?: number
-  rating?: number
-  description?: string
-  meta?: string
-  md5?: string
-  size?: number
-  source?: string
-  caption?: string
-  tags?: Array<PostHasTag>
-}
-
 export interface PostCountResponse {
   count: number
 }
@@ -180,6 +161,7 @@ export interface ValidationError {
 export interface V1ListPostsData {
   body?: PostFilter
   query?: {
+    ascending?: boolean
     limit?: (number | null)
     offset?: number
   }
@@ -215,9 +197,6 @@ export type V1GetPostsCountError = unknown
 
 export interface V1CountGroupByRatingData {
   body: PostFilter
-  query?: {
-    engine?: unknown
-  }
 }
 
 export type V1CountGroupByRatingResponse = (Array<RatingCountResponse>)
@@ -226,9 +205,6 @@ export type V1CountGroupByRatingError = (HTTPValidationError)
 
 export interface V1CountGroupByScoreData {
   body: PostFilter
-  query?: {
-    engine?: unknown
-  }
 }
 
 export type V1CountGroupByScoreResponse = (Array<ScoreCountResponse>)
@@ -237,9 +213,6 @@ export type V1CountGroupByScoreError = (HTTPValidationError)
 
 export interface V1CountGroupByExtensionData {
   body: PostFilter
-  query?: {
-    engine?: unknown
-  }
 }
 
 export type V1CountGroupByExtensionResponse = (Array<ExtensionCountResponse>)
@@ -253,7 +226,7 @@ export interface V1UpdatePostScoreData {
   }
 }
 
-export type V1UpdatePostScoreResponse = (PostWithTagPublic)
+export type V1UpdatePostScoreResponse = (PostPublic)
 
 export type V1UpdatePostScoreError = (HTTPValidationError)
 
@@ -261,9 +234,6 @@ export interface V1UpdatePostRatingData {
   body: RatingUpdate
   path: {
     post_id: number
-  }
-  query?: {
-    engine?: unknown
   }
 }
 
@@ -276,7 +246,6 @@ export interface V1UpdatePostSourceData {
     post_id: number
   }
   query: {
-    engine?: unknown
     source: string
   }
 }
@@ -324,11 +293,10 @@ export interface V1CmdRotateImageData {
   }
   query?: {
     clockwise?: boolean
-    engine?: unknown
   }
 }
 
-export type V1CmdRotateImageResponse = (PostWithTagPublic)
+export type V1CmdRotateImageResponse = (PostPublic)
 
 export type V1CmdRotateImageError = (HTTPValidationError)
 
@@ -401,20 +369,13 @@ export type V1RemoveTagFromPostResponse = (PostWithTagPublic)
 
 export type V1RemoveTagFromPostError = (HTTPValidationError)
 
-export interface V1GetTagGroupsData {
-  query?: {
-    engine?: unknown
-  }
-}
-
 export type V1GetTagGroupsResponse = (Array<TagGroupWithTagsPublic>)
 
-export type V1GetTagGroupsError = (HTTPValidationError)
+export type V1GetTagGroupsError = unknown
 
 export interface V1MovePostsData {
   body: Array<(number)>
   query: {
-    engine?: unknown
     new_path: string
   }
 }
@@ -447,7 +408,7 @@ export interface V1CmdAutoCaptionData {
   }
 }
 
-export type V1CmdAutoCaptionResponse = (Post)
+export type V1CmdAutoCaptionResponse = (PostPublic)
 
 export type V1CmdAutoCaptionError = (HTTPValidationError)
 
