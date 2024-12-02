@@ -61,7 +61,6 @@ async function readDirectory(directoryEntry: FileSystemDirectoryEntry, path: str
     batch = await readEntries()
     entries = entries.concat(batch)
   } while (batch.length > 0)
-
   for (const entry of entries) {
     if (entry.isFile) {
       // 处理文件
@@ -81,23 +80,27 @@ useEventListener(window, 'drop', async (event) => {
   dragEnterCount.value = 0
   isDraggingFiles.value = false
   const source = event.dataTransfer?.getData('text/uri-list')
-  const items = event.dataTransfer?.items
-  if (items) {
-    for (const item of items) {
-      const entry = item.webkitGetAsEntry()
-      if (entry) {
-        if (entry.isFile) {
-          // 文件
-          const file = await new Promise<File>((resolve) => {
-            (entry as FileSystemFileEntry).file(resolve)
-          })
-          await onUploadFile(file, null, source)
+  const entries = Array.from(event.dataTransfer?.items ?? []).map(item => item.webkitGetAsEntry())
+  if (entries) {
+    for (const entry of entries) {
+      try {
+        if (entry) {
+          if (entry.isFile) {
+            // 文件
+            const file = await new Promise<File>((resolve) => {
+              (entry as FileSystemFileEntry).file(resolve)
+            })
+            await onUploadFile(file, null, source)
+          }
+          else if (entry.isDirectory) {
+            const folderName = entry.name
+            const folder = baseFolder.value ? `${baseFolder.value}/${folderName}` : folderName
+            await readDirectory(entry as FileSystemDirectoryEntry, folder, source)
+          }
         }
-        else if (entry.isDirectory) {
-          const folderName = entry.name
-          const folder = baseFolder.value ? `${baseFolder.value}/${folderName}` : folderName
-          await readDirectory(entry as FileSystemDirectoryEntry, folder, source)
-        }
+      }
+      catch (e) {
+        console.error(e)
       }
     }
   }
@@ -149,7 +152,7 @@ useEventListener(window, 'dragleave', (event) => {
   <div
     ref="dropZoneRef"
     :class="{
-      hidden: dragEnterCount === 0 || !isDraggingFiles,
+      'op-0': dragEnterCount === 0 || !isDraggingFiles,
     }"
     class="pointer-events-none fixed z-10 h-100vh w-100vw flex items-center justify-center bg-primary-5/25 text-lg"
   >
