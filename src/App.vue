@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { primaryColor, RokuProvider } from '@roku-ui/vue'
+import { v1GetFolders } from '@/api'
 
+import { primaryColor, RokuProvider } from '@roku-ui/vue'
 import { Pane, Splitpanes } from 'splitpanes'
 import { useQuery } from 'vue-query'
-import { v1GetFolders } from './api'
 import { useWatchRoute } from './composables'
 import { showMenu } from './shared'
 

@@ -12,7 +12,9 @@ const id = computed(() => props.postId)
 
 const queryClient = useQueryClient()
 const mutation = useMutation(
-  () => v1CmdAutoTags({ path: { post_id: id.value } }),
+  () => {
+    return v1CmdAutoTags({ path: { post_id: id.value } })
+  },
   {
     onSuccess: () => {
       queryClient.invalidateQueries(['post', id])

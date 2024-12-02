@@ -1,5 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
-import { client } from '@/api/services.gen'
+import { client } from '@/api'
 import App from '@/App.vue'
 import { baseURL } from '@/shared'
 import { highlightDirective } from '@/utils'
