@@ -34,12 +34,12 @@ export const unselectedPostIdSet = ref<Set<number | undefined>>(new Set())
 export const currentPath = ref<string | symbol>('')
 export const showNSFW = ref(false)
 
-export const postSort = ref<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('id')
-export const postSortOrder = ref<'asc' | 'desc'>('asc')
+export const postSort = useLocalStorage<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('pictoria.posts.sort', 'id')
+export const postSortOrder = useLocalStorage<'asc' | 'desc'>('pictoria.posts.sortOrder', 'desc')
 
 export function usePostsQuery() {
   return useQuery(
-    ['posts', postFilter],
+    ['posts', postFilter, postSort, postSortOrder],
     async () => {
       const resp = await v1ListPosts({
         body: postFilter.value,
