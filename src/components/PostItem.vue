@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PostPublic } from '@/api'
 import { baseURL, selectedPostIdSet, selectingPostIdSet, showNSFW, showPost, unselectedPostIdSet } from '@/shared'
+import { colorNumToHex } from '@/utils/color'
 import { AspectRatio } from '@roku-ui/vue'
 import { computed } from 'vue'
 
@@ -93,6 +94,16 @@ function onImageLoad(e: Event) {
     imageLoaded.value = true
   }
 }
+
+const primaryColor = computed(() => {
+  if (post.value.colors.length > 0) {
+    // TODO: Don't sort here
+    return colorNumToHex([...post.value.colors].sort((a, b) => {
+      return a.order - b.order
+    })[0].color)
+  }
+  return 'primary'
+})
 </script>
 
 <template>
@@ -109,6 +120,7 @@ function onImageLoad(e: Event) {
       v-if="post.width && post.height"
       :ratio="post.width / post.height"
       class="bg-surface-high w-full rounded-lg bg-primary"
+      :style="{ backgroundColor: primaryColor !== 'primary' ? primaryColor : '' }"
     >
       <div class="post-content overflow-clip rounded-lg">
         <Transition

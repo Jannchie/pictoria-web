@@ -339,7 +339,7 @@ onKeyStroke('Escape', () => {
           >
           <!-- 显示视口框 -->
           <div
-            class="absolute border-2 border-primary-5"
+            class="border-primary absolute border-2"
             :style="{
               width: `${miniMapViewBox.width}px`,
               height: `${miniMapViewBox.height}px`,

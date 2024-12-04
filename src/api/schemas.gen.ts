@@ -204,6 +204,22 @@ export const PostFilterSchema = {
   title: 'PostFilter',
 } as const
 
+export const PostHasColorPublicSchema = {
+  properties: {
+    order: {
+      type: 'integer',
+      title: 'Order',
+    },
+    color: {
+      type: 'integer',
+      title: 'Color',
+    },
+  },
+  type: 'object',
+  required: ['order', 'color'],
+  title: 'PostHasColorPublic',
+} as const
+
 export const PostHasTagSchema = {
   properties: {
     post_id: {
@@ -335,9 +351,16 @@ export const PostPublicSchema = {
       type: 'string',
       title: 'Caption',
     },
+    colors: {
+      items: {
+        $ref: '#/components/schemas/PostHasColorPublic',
+      },
+      type: 'array',
+      title: 'Colors',
+    },
   },
   type: 'object',
-  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption'],
+  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption', 'colors'],
   title: 'PostPublic',
 } as const
 
@@ -436,6 +459,13 @@ export const PostWithTagPublicSchema = {
       type: 'string',
       title: 'Caption',
     },
+    colors: {
+      items: {
+        $ref: '#/components/schemas/PostHasColorPublic',
+      },
+      type: 'array',
+      title: 'Colors',
+    },
     tags: {
       items: {
         $ref: '#/components/schemas/PostHasTagPublic',
@@ -445,7 +475,7 @@ export const PostWithTagPublicSchema = {
     },
   },
   type: 'object',
-  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption', 'tags'],
+  required: ['id', 'file_path', 'file_name', 'extension', 'full_path', 'width', 'height', 'aspect_ratio', 'updated_at', 'created_at', 'score', 'rating', 'description', 'meta', 'md5', 'size', 'source', 'caption', 'colors', 'tags'],
   title: 'PostWithTagPublic',
 } as const
 

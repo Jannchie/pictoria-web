@@ -2,7 +2,8 @@
 import type { PostWithTagPublic } from '@/api'
 import { v1CmdRotateImage, v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
 import { baseURL, openTagSelectorWindow, showNSFW, showPost } from '@/shared'
-import { Btn, TextField } from '@roku-ui/vue'
+import { colorNumToHex } from '@/utils/color'
+import { Btn, ColorSwatch, TextField } from '@roku-ui/vue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { filesize } from 'filesize'
 
@@ -113,7 +114,7 @@ const routateImageMutation = useMutation({
 
 <template>
   <div
-    class="h-full flex flex-col overflow-x-hidden overflow-y-auto text-xs"
+    class="h-full flex flex-col gap-2 overflow-x-hidden overflow-y-auto text-xs"
   >
     <div
       v-if="isImage(post.extension)"
@@ -128,6 +129,13 @@ const routateImageMutation = useMutation({
           }"
         >
       </div>
+    </div>
+    <div class="flex items-center justify-center gap-1">
+      <ColorSwatch
+        v-for="color in post.colors"
+        :key="color.color"
+        :color="colorNumToHex(color.color)"
+      />
     </div>
     <div>
       <div class="py-2 text-zinc-4 font-black">

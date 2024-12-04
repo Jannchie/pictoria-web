@@ -39,6 +39,11 @@ export interface PostFilter {
   folder?: (string | null)
 }
 
+export interface PostHasColorPublic {
+  order: number
+  color: number
+}
+
 export interface PostHasTag {
   post_id: number
   tag_name: string
@@ -69,6 +74,7 @@ export interface PostPublic {
   size: number
   source: string
   caption: string
+  colors: Array<PostHasColorPublic>
 }
 
 export interface PostWithTagPublic {
@@ -90,6 +96,7 @@ export interface PostWithTagPublic {
   size: number
   source: string
   caption: string
+  colors: Array<PostHasColorPublic>
   tags: Array<PostHasTagPublic>
 }
 
