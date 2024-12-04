@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { v1GetPostsCount } from '@/api'
-import { } from '@/shared'
-import { useQuery } from 'vue-query'
+import { useQuery } from '@tanstack/vue-query'
 
-const { data: allCount } = useQuery(
-  ['post-count'],
-  async () => {
+const { data: allCount } = useQuery({
+  queryKey: ['post-count'],
+  queryFn: async () => {
     const resp = await v1GetPostsCount({ })
     return (resp.data as any).count
   },
-)
+})
 </script>
 
 <template>

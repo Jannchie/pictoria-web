@@ -3,8 +3,8 @@ import type { PostWithTagPublic } from '@/api'
 import { v1CmdRotateImage, v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
 import { baseURL, openTagSelectorWindow, showNSFW, showPost } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { filesize } from 'filesize'
-import { useMutation, useQueryClient } from 'vue-query'
 
 const props = defineProps<{
   post: PostWithTagPublic
@@ -23,8 +23,8 @@ async function onSelectScore(post_id: number, score: number = 0) {
       score,
     },
   })
-  queryClient.invalidateQueries(['count', 'score'])
-  queryClient.invalidateQueries(['post', post_id])
+  queryClient.invalidateQueries({ queryKey: ['count', 'score'] })
+  queryClient.invalidateQueries({ queryKey: ['post', post_id] })
 }
 const post = computed(() => props.post)
 const { 1: one, 2: two, 3: three, 4: four, 5: five } = useMagicKeys()
@@ -78,7 +78,7 @@ const updateCaption = useDebounceFn(async (caption: any) => {
       caption,
     },
   })
-  queryClient.invalidateQueries(['post', post.value.id])
+  queryClient.invalidateQueries({ queryKey: ['post', post.value.id] })
 }, 500)
 
 const updateSource = useDebounceFn(async (source: any) => {
@@ -91,11 +91,11 @@ const updateSource = useDebounceFn(async (source: any) => {
       source,
     },
   })
-  queryClient.invalidateQueries(['post', post.value.id])
+  queryClient.invalidateQueries({ queryKey: ['post', post.value.id] })
 }, 500)
 
-const routateImageMutation = useMutation(
-  () => v1CmdRotateImage({
+const routateImageMutation = useMutation({
+  mutationFn: () => v1CmdRotateImage({
     path: {
       post_id: post.value.id,
     },
@@ -103,12 +103,11 @@ const routateImageMutation = useMutation(
       clockwise: true,
     },
   }),
-  {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['post', post.value.id])
-      queryClient.invalidateQueries(['posts'])
-    },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['post', post.value.id] })
+    queryClient.invalidateQueries({ queryKey: ['posts'] })
   },
+},
 )
 </script>
 

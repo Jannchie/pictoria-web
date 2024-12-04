@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { v1AddTagToPost, v1GetTagGroups, v1GetTags, v1RemoveTagFromPost } from '@/api'
-import { } from '@/shared'
 import { Btn, TextField } from '@roku-ui/vue'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed, ref } from 'vue'
-import { useQuery, useQueryClient } from 'vue-query'
 import { usePostQuery } from '../composables/usePostQuery'
 
 const props = defineProps<{
@@ -13,22 +12,28 @@ const props = defineProps<{
 const postId = computed(() => props.postId)
 const search = ref('')
 const postQuery = usePostQuery(postId)
-const tagGroupsQuery = useQuery(['tagGroups', postId], async () => {
-  const resp = await v1GetTagGroups({})
-  return resp.data
+
+const tagGroupsQuery = useQuery({
+  queryKey: ['tagGroups', postId],
+  queryFn: async () => {
+    const resp = await v1GetTagGroups({})
+    return resp.data
+  },
 })
+
 const tagGroups = computed(() => {
   return tagGroupsQuery.data.value
 })
 
-const tagsQuery = useQuery(['tags'], async () => {
-  const resp = await v1GetTags({
-
-  })
-  return resp.data
-}, {
+const tagsQuery = useQuery({
+  queryKey: ['tags'],
+  queryFn: async () => {
+    const resp = await v1GetTags({})
+    return resp.data
+  },
   staleTime: Infinity,
 })
+
 const tags = computed(() => {
   return tagsQuery.data.value
 })
@@ -92,7 +97,9 @@ async function onPointerUp(tagName: string) {
       },
     })
   }
-  queryClient.invalidateQueries(['post', postId])
+  queryClient.invalidateQueries({
+    queryKey: ['post', postId],
+  })
 }
 const pinned = inject('pinned', ref(false))
 const addTagText = computed(() => {
@@ -140,8 +147,12 @@ async function addTag(tagName: string) {
       tag_name: tagName,
     },
   })
-  queryClient.invalidateQueries(['post', postId])
-  queryClient.invalidateQueries(['tags'])
+  queryClient.invalidateQueries({
+    queryKey: ['post', postId],
+  })
+  queryClient.invalidateQueries({
+    queryKey: ['tags'],
+  })
 }
 
 const showAddTag = computed(() => {

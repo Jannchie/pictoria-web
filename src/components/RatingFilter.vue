@@ -2,8 +2,8 @@
 import { v1CountGroupByRating } from '@/api'
 import { postFilter } from '@/shared'
 import { Btn } from '@roku-ui/vue'
+import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
-import { useQuery } from 'vue-query'
 
 const ratingFilterData = computed({
   get() {
@@ -30,15 +30,19 @@ const filterWithoutRating = computed(() => {
     rating: [],
   }
 })
-const scoreCountMutation = useQuery(['count', 'rating', filterWithoutRating], async () => {
-  const resp = await v1CountGroupByRating({
 
-    body: {
-      ...postFilter.value,
-    },
-  })
-  return resp.data
+const scoreCountMutation = useQuery({
+  queryKey: ['count', 'rating', filterWithoutRating],
+  queryFn: async () => {
+    const resp = await v1CountGroupByRating({
+      body: {
+        ...postFilter.value,
+      },
+    })
+    return resp.data
+  },
 })
+
 const scoreCountList = computed(() => {
   const resp = [0, 0, 0, 0, 0]
   const data = scoreCountMutation.data
@@ -93,7 +97,7 @@ function getRatingName(rating: number) {
           <div
             v-for="rating in [1, 2, 3, 4, 0]"
             :key="rating"
-            class="hover:bg-surface-high w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs"
+            class="w-full flex cursor-pointer items-center gap-2 rounded hover:bg-surface-variant-1 px-2 py-1 text-xs"
             @pointerdown="onPointerDown(rating)"
           >
             <Checkbox
@@ -102,7 +106,7 @@ function getRatingName(rating: number) {
             />
             <div class="h-16px flex flex-grow gap-1">
               <template v-if="rating === 0">
-                Not Scored Yet
+                Not Rated Yet
               </template>
               <template v-else>
                 {{ getRatingName(rating) }}

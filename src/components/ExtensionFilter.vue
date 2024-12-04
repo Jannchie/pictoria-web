@@ -2,8 +2,8 @@
 import { v1CountGroupByExtension } from '@/api'
 import { postFilter } from '@/shared'
 import { Btn } from '@roku-ui/vue'
+import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
-import { useQuery } from 'vue-query'
 
 const ratingFilterData = computed({
   get() {
@@ -30,15 +30,19 @@ const filterWithoutExtension = computed(() => {
     extension: [],
   }
 })
-const extensionCountMutation = useQuery(['count', 'extension', filterWithoutExtension], async () => {
-  const resp = await v1CountGroupByExtension({
 
-    body: {
-      ...postFilter.value,
-    },
-  })
-  return resp.data
+const extensionCountMutation = useQuery({
+  queryKey: ['count', 'extension', filterWithoutExtension],
+  queryFn: async () => {
+    const resp = await v1CountGroupByExtension({
+      body: {
+        ...postFilter.value,
+      },
+    })
+    return resp.data
+  },
 })
+
 const scoreCountList = computed(() => {
   const resp: Record<string, number> = {}
   const data = extensionCountMutation.data
@@ -84,7 +88,7 @@ function getExtensionName(ext: string) {
           <div
             v-for="ext in extensions"
             :key="ext"
-            class="hover:bg-surface-high w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs"
+            class="w-full flex cursor-pointer items-center gap-2 rounded hover:bg-surface-variant-1 px-2 py-1 text-xs"
             @pointerdown="onPointerDown(ext)"
           >
             <Checkbox

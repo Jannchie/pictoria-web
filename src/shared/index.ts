@@ -1,8 +1,8 @@
 import type { PostPublic, PostWithTagPublic } from '@/api'
 import { v1GetTagGroups, v1ListPosts } from '@/api'
+import { useQuery } from '@tanstack/vue-query'
 import { useStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { useQuery } from 'vue-query'
 
 export const baseURL = 'http://localhost:4777'
 
@@ -37,10 +37,43 @@ export const showNSFW = ref(false)
 export const postSort = useLocalStorage<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('pictoria.posts.sort', 'id')
 export const postSortOrder = useLocalStorage<'asc' | 'desc'>('pictoria.posts.sortOrder', 'desc')
 
+// export function usePostsQuery() {
+//   return useQuery(
+//     ['posts', postFilter, postSort, postSortOrder],
+//     async () => {
+//       const resp = await v1ListPosts({
+//         body: postFilter.value,
+//       })
+//       return resp.data?.sort((a, b) => {
+//         if (postSortOrder.value === 'asc') {
+//           const tmp = a
+//           a = b
+//           b = tmp
+//         }
+//         switch (postSort.value) {
+//           case 'score':
+//             return (b?.score ?? 0) - (a?.score ?? 0)
+//           case 'rating':
+//             return (b?.rating ?? 0) - (a?.rating ?? 0)
+//           case 'created_at':
+//             return (b?.created_at ?? 0) - (a?.created_at ?? 0)
+//           case 'file_name':
+//             return (b.file_name ?? '').localeCompare(a.file_name)
+//           default:
+//             return b.id - a.id
+//         }
+//       })
+//     },
+//     {
+//       refetchOnWindowFocus: false,
+//     },
+//   )
+// }
+
 export function usePostsQuery() {
-  return useQuery(
-    ['posts', postFilter, postSort, postSortOrder],
-    async () => {
+  return useQuery({
+    queryKey: ['posts', postFilter, postSort, postSortOrder],
+    queryFn: async () => {
       const resp = await v1ListPosts({
         body: postFilter.value,
       })
@@ -64,11 +97,10 @@ export function usePostsQuery() {
         }
       })
     },
-    {
-      refetchOnWindowFocus: false,
-    },
-  )
+    refetchOnWindowFocus: false,
+  })
 }
+
 export function usePosts() {
   const postsQuery = usePostsQuery()
   return computed<Array<PostPublic>>(() => {
@@ -77,10 +109,12 @@ export function usePosts() {
 }
 
 export function useTagGroup() {
-  const tagGroupResp = useQuery(['tag-groups'], async () => {
-    const resp = await v1GetTagGroups({ })
-    return resp.data
-  }, {
+  const tagGroupResp = useQuery({
+    queryKey: ['tag-groups'],
+    queryFn: async () => {
+      const resp = await v1GetTagGroups({ })
+      return resp.data
+    },
     staleTime: Infinity,
   })
   return computed(() => tagGroupResp.data.value ?? [])

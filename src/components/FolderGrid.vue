@@ -3,20 +3,22 @@ import type { DirectorySummary } from '@/api'
 import { v1GetFolders } from '@/api'
 import { } from '@/shared'
 import { Btn } from '@roku-ui/vue'
+import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
-import { useQuery } from 'vue-query'
 import { useRoute } from 'vue-router'
 
-const folders = useQuery(
-  ['folders'],
-  async () => {
+const folders = useQuery({
+  queryKey: ['folders'],
+  queryFn: async () => {
     const resp = await v1GetFolders({ })
+    if (resp.error) {
+      throw resp.error
+    }
     return resp.data
   },
-  {
-    staleTime: 1000 * 60 * 60,
-  },
-)
+  staleTime: 1000 * 60 * 60,
+})
+
 const route = useRoute()
 const currentPath = computed(() => {
   if (typeof route.params.folder === 'string') {

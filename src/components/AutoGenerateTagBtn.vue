@@ -2,8 +2,8 @@
 import { v1CmdAutoTags } from '@/api'
 import { } from '@/shared'
 import { Btn } from '@roku-ui/vue'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { computed } from 'vue'
-import { useMutation, useQueryClient } from 'vue-query'
 
 const props = defineProps<{
   postId: number
@@ -11,16 +11,18 @@ const props = defineProps<{
 const id = computed(() => props.postId)
 
 const queryClient = useQueryClient()
-const mutation = useMutation(
-  () => {
+
+const mutation = useMutation({
+  mutationFn: () => {
     return v1CmdAutoTags({ path: { post_id: id.value } })
   },
-  {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['post', id])
-    },
+  onSuccess: () => {
+    queryClient.invalidateQueries({
+      queryKey: ['post', id],
+    })
   },
-)
+})
+
 async function onAutoTag() {
   mutation.mutate()
 }
@@ -33,7 +35,7 @@ async function onAutoTag() {
     @pointerdown="onAutoTag"
   >
     <i
-      v-if="mutation.isLoading.value"
+      v-if="mutation.status.value === 'pending'"
       class="i-svg-spinners-90-ring-with-bg"
     />
     <i

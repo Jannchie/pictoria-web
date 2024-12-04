@@ -2,8 +2,8 @@
 import { v1CountGroupByScore } from '@/api'
 import { postFilter } from '@/shared'
 import { Btn } from '@roku-ui/vue'
+import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
-import { useQuery } from 'vue-query'
 
 const scoreFilterData = computed({
   get() {
@@ -30,14 +30,16 @@ const filterWidthoutScore = computed(() => {
     score: [],
   }
 })
-const scoreCountMutation = useQuery(['count', 'score', filterWidthoutScore], async () => {
-  const resp = await v1CountGroupByScore({
-
-    body: {
-      ...postFilter.value,
-    },
-  })
-  return resp.data
+const scoreCountMutation = useQuery({
+  queryKey: ['count', 'score', filterWidthoutScore],
+  queryFn: async () => {
+    const resp = await v1CountGroupByScore({
+      body: {
+        ...postFilter.value,
+      },
+    })
+    return resp.data
+  },
 })
 const scoreCountList = computed(() => {
   const resp = [0, 0, 0, 0, 0, 0]
@@ -77,7 +79,7 @@ const btnText = computed(() => {
           <div
             v-for="score in [5, 4, 3, 2, 1, 0]"
             :key="score"
-            class="hover:bg-surface-high w-full flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-xs"
+            class="w-full flex cursor-pointer items-center gap-2 rounded hover:bg-surface-variant-1 px-2 py-1 text-xs"
             @pointerdown="onPointerDown(score)"
           >
             <Checkbox

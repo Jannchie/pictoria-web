@@ -2,27 +2,26 @@
 import { v1GetFolders } from '@/api'
 
 import { primaryColor, RokuProvider } from '@roku-ui/vue'
+import { useQuery } from '@tanstack/vue-query'
 import { Pane, Splitpanes } from 'splitpanes'
-import { useQuery } from 'vue-query'
 import { useWatchRoute } from './composables'
 import { showMenu } from './shared'
 
 import 'splitpanes/dist/splitpanes.css'
 
 useWatchRoute()
-const folders = useQuery(
-  ['folders'],
-  async () => {
+
+const folders = useQuery({
+  queryKey: ['folders'],
+  queryFn: async () => {
     const resp = await v1GetFolders({ })
     if (resp.error) {
       throw resp.error
     }
     return resp.data
   },
-  {
-    staleTime: 1000 * 60 * 60,
-  },
-)
+  staleTime: 1000 * 60 * 60,
+})
 
 primaryColor.value = '#bca4d2'
 </script>
@@ -51,7 +50,7 @@ primaryColor.value = '#bca4d2'
           :min-size="8"
           :size="12"
           :max-size="36"
-          class="flex flex-col border-r border-surface p-2"
+          class="min-w-64 flex flex-col border-r border-surface p-2"
         >
           <div class="h-36px flex items-center justify-center text-xl font-black">
             Pictoria
@@ -73,10 +72,10 @@ primaryColor.value = '#bca4d2'
           <RouterView />
         </Pane>
         <Pane
-          :min-size="8"
+          :min-size="12"
           :size="12"
           :max-size="36"
-          class="border-l border-surface p-1"
+          class="min-w-64 border-l border-surface p-1"
         >
           <RightPanel />
         </Pane>

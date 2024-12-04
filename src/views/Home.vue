@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { v1DeletePost } from '@/api'
 import { selectedPostIdSet, showPost, waterfallItemWidth } from '@/shared'
-import { useQueryClient } from 'vue-query'
+import { useQueryClient } from '@tanstack/vue-query'
 import PostDetail from '../components/PostDetail.vue'
 import 'splitpanes/dist/splitpanes.css'
 
@@ -18,10 +18,10 @@ onKeyStroke('Delete', async () => {
       },
     })
   }
-  queryClient.invalidateQueries(['posts'])
-  queryClient.invalidateQueries(['count', 'score'])
-  queryClient.invalidateQueries(['count', 'rating'])
-  queryClient.invalidateQueries(['count', 'extension'])
+  queryClient.invalidateQueries({ queryKey: ['posts'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'score'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'rating'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'extension'] })
 })
 
 useEventListener('wheel', (event) => {

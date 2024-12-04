@@ -3,17 +3,20 @@ import type { TagResponse } from '@/api'
 import { v1GetTags } from '@/api'
 import { useTagGroup } from '@/shared'
 import { TextField } from '@roku-ui/vue'
-import { useQuery } from 'vue-query'
+import { useQuery } from '@tanstack/vue-query'
 import ScrollArea from '../components/ScrollArea.vue'
 
-const tagQuery = useQuery(['tags'], async () => {
-  const resp = await v1GetTags({
-  })
-  if (resp.data) {
+const tagQuery = useQuery({
+  queryKey: ['tags'],
+  queryFn: async () => {
+    const resp = await v1GetTags({ })
+    if (resp.error) {
+      throw resp.error
+    }
     return resp.data
-  }
-  return []
+  },
 })
+
 const search = ref('')
 const tagData = computed(() => {
   return tagQuery.data.value?.map(d => ({ ...d })) ?? []

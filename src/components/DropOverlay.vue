@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { v1UploadFile } from '@/api'
-import { useQueryClient } from 'vue-query'
+import { useQueryClient } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
 
 const dropZoneRef = ref<HTMLElement | null>(null)
@@ -17,7 +17,7 @@ async function onUploadFile(file: File, path: string | null, source?: string) {
         source,
       },
     })
-    queryClient.invalidateQueries(['posts'])
+    queryClient.invalidateQueries({ queryKey: ['posts'] })
   }
   catch (e) {
     console.error(e)
