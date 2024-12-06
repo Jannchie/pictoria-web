@@ -6,7 +6,7 @@ import { showPost } from '@/shared'
 import { primaryColor, RokuProvider, TreeList } from '@roku-ui/vue'
 import { useQuery } from '@tanstack/vue-query'
 import { Pane, Splitpanes } from 'splitpanes'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { useWatchRoute } from './composables'
 
 import { showMenu } from './shared'
@@ -103,9 +103,6 @@ const folderTree = computed(() => {
       },
     }, ...convertPathToTree(folders.data.value)],
   }]
-})
-watchEffect(() => {
-  console.log(currentPath.value)
 })
 </script>
 
