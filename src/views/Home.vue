@@ -7,7 +7,7 @@ import 'splitpanes/dist/splitpanes.css'
 
 const queryClient = useQueryClient()
 
-onKeyStroke('Delete', async () => {
+async function deleteSelectingPosts() {
   for (const post_id of selectedPostIdSet.value) {
     if (post_id === undefined) {
       continue
@@ -22,7 +22,8 @@ onKeyStroke('Delete', async () => {
   queryClient.invalidateQueries({ queryKey: ['count', 'score'] })
   queryClient.invalidateQueries({ queryKey: ['count', 'rating'] })
   queryClient.invalidateQueries({ queryKey: ['count', 'extension'] })
-})
+}
+onKeyStroke('Delete', deleteSelectingPosts)
 
 useEventListener('wheel', (event) => {
   if (event.ctrlKey) {

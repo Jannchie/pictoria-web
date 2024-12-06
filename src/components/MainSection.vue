@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import type LazyWaterfall from './LazyWaterfall.vue'
 import type { Area } from './SelectArea.vue'
+import { v1DeletePost } from '@/api'
 import ScrollArea from '@/components/ScrollArea.vue'
+import { useRotateImageMutation } from '@/composables/mutations/useRotateImageMutation'
 import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, usePostsQuery, waterfallItemWidth } from '@/shared'
+import { Menu } from '@roku-ui/vue'
+import { useQueryClient } from '@tanstack/vue-query'
 import { logicAnd } from '@vueuse/math'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -132,6 +136,79 @@ watchEffect(() => {
     }
   }
 })
+
+const menuData = computed(() => {
+  if (selectedPostIdSet.value.size > 0) {
+    return [
+      {
+        role: 'label',
+        title: 'Post Actions',
+      },
+      {
+        value: 'rotate-clockwise',
+        title: 'Rotate Clockwise',
+        icon: 'i-fluent-arrow-rotate-clockwise-24-regular',
+      },
+      {
+        value: 'rotate-counterclockwise',
+        title: 'Rotate Counterclockwise',
+        icon: 'i-fluent-arrow-rotate-counterclockwise-24-regular',
+      },
+      { role: 'divider' },
+      {
+        value: 'delete',
+        title: 'Delete',
+        icon: 'i-tabler-trash',
+      },
+    ]
+  }
+  return [
+    {
+      role: 'label',
+      title: 'No Post Selected',
+    },
+  ]
+})
+
+const queryClient = useQueryClient()
+
+async function deleteSelectingPosts() {
+  for (const post_id of selectedPostIdSet.value) {
+    if (post_id === undefined) {
+      continue
+    }
+    await v1DeletePost({
+      path: {
+        post_id,
+      },
+    })
+  }
+  queryClient.invalidateQueries({ queryKey: ['posts'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'score'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'rating'] })
+  queryClient.invalidateQueries({ queryKey: ['count', 'extension'] })
+}
+
+const rotateImageMutation = useRotateImageMutation()
+function onMenuSelect(value: string | number | symbol) {
+  const selectedPostIds = [...selectedPostIdSet.value]
+  for (const postId of selectedPostIds) {
+    if (!postId) {
+      continue
+    }
+    switch (value) {
+      case 'rotate-clockwise':
+        rotateImageMutation.mutate({ postId, clockwise: true })
+        break
+      case 'rotate-counterclockwise':
+        rotateImageMutation.mutate({ postId, clockwise: false })
+        break
+      case 'delete':
+        deleteSelectingPosts()
+        break
+    }
+  }
+}
 </script>
 
 <template>
@@ -159,25 +236,32 @@ watchEffect(() => {
       @select-change="onSelectChange"
       @select-end="onSelectEnd"
     />
-    <LazyWaterfall
-      :is="ScrollArea"
-      ref="waterfallRef"
-      class="waterfall-wrapper select-none"
-      :items="items"
-      :item-width="waterfallItemWidth"
-      :cols="cols"
-      :gap="24"
-      :padding-x="8"
-      :padding-y="8"
-      :y-gap="36"
-      @pointerdown="emptyPointerDown"
+    <Menu
+      :data="menuData"
+      trigger="contextmenu"
+      class="h-full w-full"
+      @select="onMenuSelect"
     >
-      <PostItem
-        v-for="post in posts"
-        :id="`post-item-${post.id}`"
-        :key="post.id"
-        :post="post"
-      />
-    </LazyWaterfall>
+      <LazyWaterfall
+        :is="ScrollArea"
+        ref="waterfallRef"
+        class="waterfall-wrapper select-none"
+        :items="items"
+        :item-width="waterfallItemWidth"
+        :cols="cols"
+        :gap="24"
+        :padding-x="8"
+        :padding-y="8"
+        :y-gap="36"
+        @pointerdown="emptyPointerDown"
+      >
+        <PostItem
+          v-for="post in posts"
+          :id="`post-item-${post.id}`"
+          :key="post.id"
+          :post="post"
+        />
+      </LazyWaterfall>
+    </Menu>
   </section>
 </template>

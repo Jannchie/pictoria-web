@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PostWithTagPublic } from '@/api'
-import { v1CmdRotateImage, v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
+import { v1UpdatePostCaption, v1UpdatePostRating, v1UpdatePostScore, v1UpdatePostSource } from '@/api'
 import { baseURL, openTagSelectorWindow, showNSFW, showPost } from '@/shared'
 import { colorNumToHex } from '@/utils/color'
 import { Btn, ColorSwatch, TextField } from '@roku-ui/vue'
-import { useMutation, useQueryClient } from '@tanstack/vue-query'
+import { useQueryClient } from '@tanstack/vue-query'
 import { filesize } from 'filesize'
 
 const props = defineProps<{
@@ -94,22 +94,6 @@ const updateSource = useDebounceFn(async (source: any) => {
   })
   queryClient.invalidateQueries({ queryKey: ['post', post.value.id] })
 }, 500)
-
-const routateImageMutation = useMutation({
-  mutationFn: () => v1CmdRotateImage({
-    path: {
-      post_id: post.value.id,
-    },
-    query: {
-      clockwise: true,
-    },
-  }),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['post', post.value.id] })
-    queryClient.invalidateQueries({ queryKey: ['posts'] })
-  },
-},
-)
 </script>
 
 <template>
@@ -314,12 +298,6 @@ const routateImageMutation = useMutation({
       <div class="flex flex-col gap-2">
         <AutoGenerateTagBtn :post-id="post.id" />
         <AutoGenerateCaptionBtn :post-id="post.id" />
-        <Btn
-          size="sm"
-          @click="routateImageMutation.mutate()"
-        >
-          Rotate
-        </Btn>
       </div>
     </div>
   </div>

@@ -10,6 +10,9 @@ const props = defineProps<{
 }>()
 const post = computed(() => props.post)
 function onPointerUp(e: PointerEvent) {
+  if (e.button !== 0) {
+    return
+  }
   // 如果是右键，且没有按 ctrl 或者 shift，点击的是已经选中的文件，则只选中这个文件
   if (e.button === 0 && !e.ctrlKey && !e.shiftKey && selectedPostIdSet.value.has(post.value.id)) {
     // 如果当前节点在 selectingPostIdSet 中，则不操作
@@ -20,23 +23,40 @@ function onPointerUp(e: PointerEvent) {
   }
 }
 
-function onPointerDown(e: any) {
+function onPointerDown(e: PointerEvent) {
   if (e.button !== 0) {
     return
   }
-  if (!selectedPostIdSet.value.has(post.value.id)) {
-    if (!e.ctrlKey) {
-      selectedPostIdSet.value = new Set([post.value.id])
+  if (e.shiftKey) {
+    if (!selectingPostIdSet.value.has(post.value.id) && !selectedPostIdSet.value.has(post.value.id)) {
+      selectingPostIdSet.value = new Set([...selectingPostIdSet.value, post.value.id])
     }
     else {
-      if (selectedPostIdSet.value.has(post.value.id)) {
-        selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
-      }
-      else {
-        selectedPostIdSet.value = new Set([...selectedPostIdSet.value, post.value.id])
-      }
+      unselectedPostIdSet.value = new Set([...unselectedPostIdSet.value, post.value.id])
     }
   }
+  else if (e.ctrlKey) {
+    if (selectedPostIdSet.value.has(post.value.id)) {
+      selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
+    }
+    else {
+      selectedPostIdSet.value = new Set([...selectedPostIdSet.value, post.value.id])
+    }
+  }
+  else
+    if (!selectedPostIdSet.value.has(post.value.id)) {
+      if (!e.ctrlKey) {
+        selectedPostIdSet.value = new Set([post.value.id])
+      }
+      else {
+        if (selectedPostIdSet.value.has(post.value.id)) {
+          selectedPostIdSet.value = new Set([...selectedPostIdSet.value].filter(p => p !== post.value.id))
+        }
+        else {
+          selectedPostIdSet.value = new Set([...selectedPostIdSet.value, post.value.id])
+        }
+      }
+    }
 }
 const selected = computed(() => {
   return (selectedPostIdSet.value.has(post.value.id) || selectingPostIdSet.value.has(post.value.id)) && !unselectedPostIdSet.value.has(post.value.id)
@@ -104,6 +124,17 @@ const primaryColor = computed(() => {
   }
   return 'primary'
 })
+
+function onContextmenu(e: MouseEvent) {
+  e.preventDefault()
+  // if shift key is pressed, select or unselect this post
+  if (e.shiftKey || e.ctrlKey) {
+    selectedPostIdSet.value = new Set([...selectedPostIdSet.value, post.value.id])
+  }
+  else {
+    selectedPostIdSet.value = new Set([post.value.id])
+  }
+}
 </script>
 
 <template>
@@ -112,9 +143,10 @@ const primaryColor = computed(() => {
     :class="{ selected }"
     draggable="true"
     @dragstart.stop
-    @pointerdown.capture.stop="onPointerDown"
+    @pointerdown.stop="onPointerDown"
     @pointerup="onPointerUp"
     @dblclick="showPost = post"
+    @contextmenu.capture="onContextmenu"
   >
     <AspectRatio
       v-if="post.width && post.height"
@@ -122,7 +154,7 @@ const primaryColor = computed(() => {
       class="bg-surface-high w-full rounded-lg bg-primary"
       :style="{ backgroundColor: primaryColor !== 'primary' ? primaryColor : '' }"
     >
-      <div class="post-content overflow-clip rounded-lg">
+      <div class="post-content rounded-lg">
         <Transition
           enter-active-class="transition-opacity duration-300"
           enter-from-class="opacity-0"
