@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import type { DirectorySummary } from '@/api'
 import { v1GetFolders } from '@/api'
 
-import { primaryColor, RokuProvider } from '@roku-ui/vue'
+import { showPost } from '@/shared'
+import { primaryColor, RokuProvider, TreeList } from '@roku-ui/vue'
 import { useQuery } from '@tanstack/vue-query'
 import { Pane, Splitpanes } from 'splitpanes'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useWatchRoute } from './composables'
-import { showMenu } from './shared'
 
+import { showMenu } from './shared'
 import 'splitpanes/dist/splitpanes.css'
 
 useWatchRoute()
@@ -23,7 +26,87 @@ const folders = useQuery({
   staleTime: 1000 * 60 * 60,
 })
 
+export interface TreeListLinkData {
+  title: string
+  value: string
+  attrs?: Record<string, any>
+  is?: string | VNode
+}
+
+export interface TreeListHeaderData {
+  title: string
+}
+
+export interface TreeListTitleData {
+  title: string
+  children: TreeListItemData[]
+  open?: boolean
+}
+
+export type TreeListItemData = TreeListLinkData | TreeListHeaderData | TreeListTitleData
+const route = useRoute()
+const currentPath = computed(() => {
+  if (!route.params.folder) {
+    return '@'
+  }
+  if (typeof route.params.folder === 'string') {
+    return route.params.folder
+  }
+  return route.params.folder.join('/')
+})
+
 primaryColor.value = '#bca4d2'
+function convertPathToTree(path: DirectorySummary): TreeListItemData[] {
+  if (!path) {
+    return []
+  }
+  const children = path.children ?? []
+  return children.map((child) => {
+    if ((child.children?.length ?? 0) > 0) {
+      return {
+        title: child.name,
+        children: convertPathToTree(child),
+        open: true,
+      }
+    }
+    return {
+      title: child.name,
+      value: child.path,
+      is: RouterLink,
+      attrs: {
+        to: `/dir/${child.path === '.' ? '@' : child.path}`,
+        class: 'truncate',
+        onClick: () => {
+          showPost.value = null
+        },
+      },
+    }
+  })
+}
+const folderTree = computed(() => {
+  if (!folders.data.value) {
+    return []
+  }
+  return [{
+    title: 'Files',
+    open: true,
+    children: [{
+      title: 'Root',
+      value: '@',
+      is: RouterLink,
+      attrs: {
+        to: '/dir/@',
+        class: 'truncate',
+        onClick: () => {
+          showPost.value = null
+        },
+      },
+    }, ...convertPathToTree(folders.data.value)],
+  }]
+})
+watchEffect(() => {
+  console.log(currentPath.value)
+})
 </script>
 
 <template>
@@ -55,17 +138,13 @@ primaryColor.value = '#bca4d2'
           <div class="h-36px flex items-center justify-center text-xl font-black">
             Pictoria
           </div>
+          <SpecialPathList />
           <ScrollArea class="pr-2">
-            <SpecialPathList />
-            <div
-              v-if="folders.data.value"
-              class="mt-1 overflow-y-auto text-sm"
-            >
-              <FolderItem
-                :folder="folders.data.value"
-                :depth="0"
-              />
-            </div>
+            <TreeList
+              :model-value="currentPath"
+              class="truncate"
+              :items="folderTree"
+            />
           </ScrollArea>
         </Pane>
         <Pane class="relative">
