@@ -274,6 +274,20 @@ export type V1UpdatePostCaptionResponse = (PostPublic)
 
 export type V1UpdatePostCaptionError = (HTTPValidationError)
 
+export interface V1GetSimilarPostsData {
+  path: {
+    post_id: number
+  }
+}
+
+export type V1GetSimilarPostsResponse = (Array<PostPublic>)
+
+export type V1GetSimilarPostsError = (HTTPValidationError)
+
+export type V1CmdCalculateFeaturesResponse = (unknown)
+
+export type V1CmdCalculateFeaturesError = unknown
+
 export interface V1GetPostByPathData {
   path: {
     post_path: string

@@ -36,6 +36,8 @@ declare module 'vue' {
     ScoreFilter: typeof import('./components/ScoreFilter.vue')['default']
     ScrollArea: typeof import('./components/ScrollArea.vue')['default']
     SelectArea: typeof import('./components/SelectArea.vue')['default']
+    SimiarPosts: typeof import('./components/SimilarPosts.vue')['default']
+    SimilarPosts: typeof import('./components/SimilarPosts.vue')['default']
     Slider: typeof import('./components/Slider.vue')['default']
     SpecialPathList: typeof import('./components/SpecialPathList.vue')['default']
     Spotlight: typeof import('./components/Spotlight.vue')['default']

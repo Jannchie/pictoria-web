@@ -6,6 +6,7 @@ import { colorNumToHex } from '@/utils/color'
 import { Btn, ColorSwatch, TextField } from '@roku-ui/vue'
 import { useQueryClient } from '@tanstack/vue-query'
 import { filesize } from 'filesize'
+import SimilarPosts from './SimilarPosts.vue'
 
 const props = defineProps<{
   post: PostWithTagPublic
@@ -299,6 +300,7 @@ const updateSource = useDebounceFn(async (source: any) => {
         <AutoGenerateTagBtn :post-id="post.id" />
         <AutoGenerateCaptionBtn :post-id="post.id" />
       </div>
+      <SimilarPosts :post-id="post.id" />
     </div>
   </div>
 </template>
