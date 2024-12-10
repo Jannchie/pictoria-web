@@ -55,6 +55,12 @@ export interface PostHasTagPublic {
   tag_info: TagWithGroupPublic
 }
 
+export interface PostHasTagWithCountPublic {
+  is_auto: boolean
+  tag_info: TagWithGroupPublic
+  count: number
+}
+
 export interface PostPublic {
   id: number
   file_path: string
@@ -121,13 +127,7 @@ export interface ScoreUpdate {
 export interface Tag {
   name: string
   group_id?: (number | null)
-  count?: number
   posts?: Array<PostHasTag>
-}
-
-export interface TagAndGroupIdPublic {
-  name: string
-  group_id: (number | null)
 }
 
 export interface TagGroupPublic {
@@ -145,17 +145,10 @@ export interface TagGroupWithTagsPublic {
 
 export interface TagPublic {
   name: string
-  count: number
-}
-
-export interface TagResponse {
-  count: number
-  tag_info: TagAndGroupIdPublic
 }
 
 export interface TagWithGroupPublic {
   name: string
-  count: number
   group: (TagGroupPublic | null)
 }
 
@@ -321,7 +314,7 @@ export type V1CmdRotateImageResponse = (PostPublic)
 
 export type V1CmdRotateImageError = (HTTPValidationError)
 
-export type V1GetTagsResponse = (Array<TagResponse>)
+export type V1GetTagsResponse = (Array<PostHasTagWithCountPublic>)
 
 export type V1GetTagsError = unknown
 
@@ -458,6 +451,10 @@ export interface V1UpdateOpenaiKeyData {
 export type V1UpdateOpenaiKeyResponse = (unknown)
 
 export type V1UpdateOpenaiKeyError = (HTTPValidationError)
+
+export type V1CmdApplyDanbooruTagsResponse = (unknown)
+
+export type V1CmdApplyDanbooruTagsError = unknown
 
 export type RootResponse = (unknown)
 

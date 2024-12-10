@@ -55,7 +55,7 @@ const currentPath = computed(() => {
   return route.params.folder.join('/')
 })
 
-primaryColor.value = '#bca4d2'
+primaryColor.value = '#7b53b8'
 function convertPathToTree(path: DirectorySummary): TreeListItemData[] {
   if (!path) {
     return []

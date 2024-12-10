@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import type { TagResponse } from '@/api'
 import { v1GetTags } from '@/api'
-import { useTagGroup } from '@/shared'
 import { TextField } from '@roku-ui/vue'
 import { useQuery } from '@tanstack/vue-query'
-import ScrollArea from '../components/ScrollArea.vue'
 
 const tagQuery = useQuery({
   queryKey: ['tags'],
@@ -38,10 +36,6 @@ const tagGroupByFirstChar = computed(() => {
   })
   return resp
 })
-const tagGroup = useTagGroup()
-function getGroupColor(group_id: number | null) {
-  return tagGroup.value.find(g => g.id === group_id)?.color
-}
 </script>
 
 <template>
@@ -53,7 +47,6 @@ function getGroupColor(group_id: number | null) {
       />
     </div>
     <VirtualScroll
-      :is="ScrollArea"
       :items="tagGroupByFirstChar"
     >
       <template #default="{ item }">
@@ -75,13 +68,13 @@ function getGroupColor(group_id: number | null) {
                 :key="tag.tag_info.name"
                 class="flex items-end gap-1"
               >
-                <Tag
+                <PostTag
                   class="cursor-pointer"
                   rounded="lg"
-                  :color="getGroupColor(tag.tag_info.group_id)"
+                  :data="tag"
                 >
                   {{ tag.tag_info.name }}
-                </Tag>
+                </PostTag>
                 <span class="op-75">
                   ({{ tag.count }})
                 </span>

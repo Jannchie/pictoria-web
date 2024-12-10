@@ -230,16 +230,17 @@ const updateSource = useDebounceFn(async (source: any) => {
         v-if="post.tags && post.tags.length"
         class="flex flex-wrap gap-2"
       >
-        <Tag
+        <PostTag
           v-for="tag of post.tags"
           :key="tag.tag_info.name"
           class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
+          :data="tag"
           :color="tag.tag_info.group?.color"
           @pointerup="openTagSelectorWindow()"
         >
           {{ tag.tag_info.name }}
-        </Tag>
+        </PostTag>
         <Tag
           class="bg-surface-high cursor-pointer rounded px-1 py-0.5"
           rounded="lg"
