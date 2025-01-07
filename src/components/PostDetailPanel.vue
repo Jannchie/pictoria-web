@@ -13,8 +13,8 @@ const props = defineProps<{
 }>()
 const queryClient = useQueryClient()
 
-function timestampToTime(timestamp: number) {
-  return new Date(timestamp * 1000).toLocaleString()
+function formatTimestr(timestamp: number) {
+  return new Date(timestamp).toLocaleString()
 }
 async function onSelectScore(post_id: number, score: number = 0) {
   await v1UpdatePostScore({
@@ -190,7 +190,7 @@ const updateSource = useDebounceFn(async (source: any) => {
           Created At
         </div>
         <div v-if="post.created_at">
-          {{ timestampToTime(post.created_at) }}
+          {{ formatTimestr(post.created_at) }}
         </div>
       </div>
     </div>

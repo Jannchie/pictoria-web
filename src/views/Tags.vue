@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TagResponse } from '@/api'
+import type { PostHasTagWithCountPublic } from '@/api'
 import { v1GetTags } from '@/api'
 import { TextField } from '@roku-ui/vue'
 import { useQuery } from '@tanstack/vue-query'
@@ -23,8 +23,11 @@ const tagDataSearched = computed(() => {
   return tagData.value.filter(d => d.tag_info.name.toLowerCase().includes(search.value.toLowerCase()))
 })
 const tagGroupByFirstChar = computed(() => {
-  const resp: [string, TagResponse[]][] = []
+  const resp: [string, PostHasTagWithCountPublic[]][] = []
   tagDataSearched.value.forEach((d) => {
+    if (d.tag_info.name.length === 0) {
+      return
+    }
     const firstChar = d.tag_info.name[0].toUpperCase()
     const index = resp.findIndex(r => r[0] === firstChar)
     if (index === -1) {
