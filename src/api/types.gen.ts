@@ -27,6 +27,26 @@ export interface HTTPValidationError {
   detail?: Array<ValidationError>
 }
 
+export interface Post {
+  file_path?: string
+  file_name?: string
+  extension?: string
+  width?: (number | null)
+  height?: (number | null)
+  updated_at?: string
+  created_at?: string
+  score?: number
+  rating?: number
+  description?: string
+  meta?: string
+  md5?: string
+  size?: number
+  source?: string
+  caption?: string
+  tags?: Array<PostHasTag>
+  colors?: Array<PostHasColor>
+}
+
 export interface PostCountResponse {
   count: number
 }
@@ -39,26 +59,26 @@ export interface PostFilter {
   folder?: (string | null)
 }
 
+export interface PostHasColor {
+  post_id: number
+  order: number
+  color: number
+}
+
 export interface PostHasColorPublic {
   order: number
   color: number
 }
 
 export interface PostHasTag {
-  post_id: number
-  tag_name: string
+  post: Post
+  tag_info: Tag
   is_auto?: boolean
 }
 
 export interface PostHasTagPublic {
   is_auto: boolean
   tag_info: TagWithGroupPublic
-}
-
-export interface PostHasTagWithCountPublic {
-  is_auto: boolean
-  tag_info: TagWithGroupPublic
-  count: number
 }
 
 export interface PostPublic {
@@ -70,8 +90,8 @@ export interface PostPublic {
   width: (number | null)
   height: (number | null)
   aspect_ratio: (number | null)
-  updated_at: number
-  created_at: number
+  updated_at: string
+  created_at: string
   score: number
   rating: number
   description: string
@@ -92,8 +112,8 @@ export interface PostWithTagPublic {
   width: (number | null)
   height: (number | null)
   aspect_ratio: (number | null)
-  updated_at: number
-  created_at: number
+  updated_at: string
+  created_at: string
   score: number
   rating: number
   description: string
@@ -145,6 +165,11 @@ export interface TagGroupWithTagsPublic {
 
 export interface TagPublic {
   name: string
+}
+
+export interface TagWithCountPublic {
+  count: number
+  tag_info: TagWithGroupPublic
 }
 
 export interface TagWithGroupPublic {
@@ -314,9 +339,15 @@ export type V1CmdRotateImageResponse = (PostPublic)
 
 export type V1CmdRotateImageError = (HTTPValidationError)
 
-export type V1GetTagsResponse = (Array<PostHasTagWithCountPublic>)
+export interface V1GetTagsData {
+  query?: {
+    language?: string
+  }
+}
 
-export type V1GetTagsError = unknown
+export type V1GetTagsResponse = (Array<TagWithCountPublic>)
+
+export type V1GetTagsError = (HTTPValidationError)
 
 export interface V1CreateTagData {
   path: {
@@ -455,6 +486,16 @@ export type V1UpdateOpenaiKeyError = (HTTPValidationError)
 export type V1CmdApplyDanbooruTagsResponse = (unknown)
 
 export type V1CmdApplyDanbooruTagsError = unknown
+
+export interface V1CmdDownloadFromDanbooruData {
+  query: {
+    tags: string
+  }
+}
+
+export type V1CmdDownloadFromDanbooruResponse = (unknown)
+
+export type V1CmdDownloadFromDanbooruError = (HTTPValidationError)
 
 export type RootResponse = (unknown)
 
