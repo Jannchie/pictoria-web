@@ -122,7 +122,7 @@ const numberFormater = new Intl.NumberFormat('en-US')
             Pictoria
           </div>
           <SpecialPathList />
-          <ScrollArea class="pr-2">
+          <ScrollArea>
             <TreeList
               :model-value="currentPath"
               :items="folderTree"
