@@ -2,7 +2,6 @@
 import type { DirectorySummary } from '@/api'
 import type { TreeListItemData } from './roku/TreeList.vue'
 import { v1GetFolders } from '@/api'
-import { showPost } from '@/shared'
 import { Btn, primaryColor, RokuProvider } from '@roku-ui/vue'
 import { useQuery } from '@tanstack/vue-query'
 import { Pane, Splitpanes } from 'splitpanes'
