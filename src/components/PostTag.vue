@@ -1,9 +1,9 @@
 <script setup lang="tsx">
-import type { TagWithCountPublic } from '@/api'
+import type { PostHasTagPublic, TagWithCountPublic } from '@/api'
 import { useTagGroup } from '@/shared'
 
 const props = defineProps<{
-  data: TagWithCountPublic
+  data: TagWithCountPublic | PostHasTagPublic
 }>()
 
 const data = computed(() => props.data)

@@ -13,8 +13,8 @@ const props = defineProps<{
 }>()
 const queryClient = useQueryClient()
 
-function formatTimestr(timeStr: string) {
-  return new Date(timeStr).toLocaleString()
+function formatTimestr(t: number | string) {
+  return new Date(t).toLocaleString()
 }
 async function onSelectScore(post_id: number, score: number = 0) {
   await v1UpdatePostScore({

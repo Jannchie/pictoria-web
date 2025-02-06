@@ -39,8 +39,8 @@ defineExpose({
     ref="folderItemRef"
     class="w-full flex items-center gap-1 rounded px-2 py-1"
     :class="{
-      'bg-surface-variant': active && type === 'normal',
-      'bg-surface-high': hover || dragover,
+      'bg-surface-variant-1': active && type === 'normal',
+      'bg-surface-variant-2': hover || dragover,
     }"
     @dragover="onDragOver"
     @dragleave="onDragleave"

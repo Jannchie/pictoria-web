@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ComputedRef, MaybeRef } from 'vue'
 import { useScroll } from '@vueuse/core'
-import { computed, ref, unref, useSlots } from 'vue'
+import { computed, ref, unref } from 'vue'
 import { useClientHeight, useClientWidth } from '../composables/useClientHeight'
 
 const props = defineProps<{
@@ -16,8 +16,10 @@ const props = defineProps<{
   yGap?: MaybeRef<number>
   rangeExpand?: MaybeRef<number>
 }>()
+const slots = defineSlots<{
+  default: (props?: any) => any
+}>()
 const rangeExpand = computed(() => unref(props.rangeExpand) ?? 0)
-const slots = useSlots()
 const gap = computed(() => unref(props.gap) ?? 16)
 const paddingX = computed(() => unref(props.paddingX) ?? 0)
 const paddingY = computed(() => unref(props.paddingY) ?? 0)
@@ -151,9 +153,9 @@ const inRange = computed(() => {
 
 const childrenList = computed(() => {
   const children: any = []
-  allSlots.value.forEach((slot, i) => {
+  allSlots.value.forEach((slot: any, i: number) => {
     if (isArray(slot.children)) {
-      slot.children.forEach((child, i) => {
+      slot.children.forEach((child: any, i: number) => {
         if (!inRange.value[i]) {
           return
         }

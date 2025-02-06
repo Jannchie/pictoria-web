@@ -89,7 +89,7 @@ export function usePostsQuery() {
           case 'rating':
             return (b?.rating ?? 0) - (a?.rating ?? 0)
           case 'created_at':
-            return (b?.created_at ?? 0) - (a?.created_at ?? 0)
+            return new Date(b?.created_at ?? 0).getTime() - new Date(a?.created_at ?? 0).getTime()
           case 'file_name':
             return (b.file_name ?? '').localeCompare(a.file_name)
           default:
