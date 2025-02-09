@@ -10,7 +10,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 import { logicAnd } from '@vueuse/math'
 import { useRoute, useRouter } from 'vue-router'
 
-const posstQuery = usePostsQuery()
+const postQuery = usePostsQuery()
 const route = useRoute()
 const router = useRouter()
 const posts = usePosts()
@@ -215,7 +215,7 @@ function onMenuSelect(value: string | number | symbol) {
   <section
     class="relative h-[calc(100vh-60px-24px)]"
   >
-    <div v-if="posstQuery.isLoading.value">
+    <div v-if="postQuery.isLoading.value && posts.length === 0">
       <div class="flex flex-col items-center p-16 op-50">
         <i class="i-tabler-loader animate-spin text-2xl" />
         <div class="text-sm">

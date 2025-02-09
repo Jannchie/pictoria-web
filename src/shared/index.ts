@@ -1,6 +1,6 @@
 import type { PostPublic, PostWithTagPublic } from '@/api'
 import { v1GetTagGroups, v1ListPosts } from '@/api'
-import { useQuery } from '@tanstack/vue-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { useStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
@@ -37,39 +37,6 @@ export const showNSFW = ref(false)
 export const postSort = useLocalStorage<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('pictoria.posts.sort', 'id')
 export const postSortOrder = useLocalStorage<'asc' | 'desc'>('pictoria.posts.sortOrder', 'desc')
 
-// export function usePostsQuery() {
-//   return useQuery(
-//     ['posts', postFilter, postSort, postSortOrder],
-//     async () => {
-//       const resp = await v1ListPosts({
-//         body: postFilter.value,
-//       })
-//       return resp.data?.sort((a, b) => {
-//         if (postSortOrder.value === 'asc') {
-//           const tmp = a
-//           a = b
-//           b = tmp
-//         }
-//         switch (postSort.value) {
-//           case 'score':
-//             return (b?.score ?? 0) - (a?.score ?? 0)
-//           case 'rating':
-//             return (b?.rating ?? 0) - (a?.rating ?? 0)
-//           case 'created_at':
-//             return (b?.created_at ?? 0) - (a?.created_at ?? 0)
-//           case 'file_name':
-//             return (b.file_name ?? '').localeCompare(a.file_name)
-//           default:
-//             return b.id - a.id
-//         }
-//       })
-//     },
-//     {
-//       refetchOnWindowFocus: false,
-//     },
-//   )
-// }
-
 export function usePostsQuery() {
   return useQuery({
     queryKey: ['posts', postFilter, postSort, postSortOrder],
@@ -101,10 +68,40 @@ export function usePostsQuery() {
   })
 }
 
+export function useInfinityPostsQuery() {
+  const limit = 200
+  return useInfiniteQuery({
+    queryKey: ['posts', postFilter],
+    queryFn: async ({ pageParam = 0 }) => {
+      const resp = await v1ListPosts({
+        body: postFilter.value,
+        query: {
+          offset: pageParam,
+          limit,
+        },
+      })
+      return resp.data
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage && lastPage.length < limit) {
+        return undefined
+      }
+      const allPosts = allPages.flatMap(page => page)
+      return allPosts.length
+    },
+  })
+}
+
 export function usePosts() {
-  const postsQuery = usePostsQuery()
+  const postsQuery = useInfinityPostsQuery()
+  watchEffect(() => {
+    if (postsQuery.hasNextPage.value && !postsQuery.isFetchingNextPage.value) {
+      postsQuery.fetchNextPage()
+    }
+  })
   return computed<Array<PostPublic>>(() => {
-    return postsQuery.data.value ?? []
+    return postsQuery.data.value?.pages.flatMap(page => page).filter(post => post !== undefined) ?? []
   })
 }
 
