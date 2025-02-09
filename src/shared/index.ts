@@ -1,8 +1,10 @@
-import type { PostPublic, PostWithTagPublic } from '@/api'
-import { v1GetTagGroups, v1ListPosts } from '@/api'
+import type { DirectorySummary, PostPublic, PostWithTagPublic } from '@/api'
+import type { TreeListItemData } from '@/roku/TreeList.vue'
+import { v1GetFolders, v1GetTagGroups, v1ListPosts } from '@/api'
 import { useInfiniteQuery, useQuery } from '@tanstack/vue-query'
 import { useStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 export const baseURL = 'http://localhost:4777'
 
@@ -38,7 +40,7 @@ export const postSort = useLocalStorage<'id' | 'score' | 'rating' | 'created_at'
 export const postSortOrder = useLocalStorage<'asc' | 'desc'>('pictoria.posts.sortOrder', 'desc')
 
 export function useInfinityPostsQuery() {
-  const limit = 200
+  const limit = 1000
   return useInfiniteQuery({
     queryKey: ['posts', postFilter, postSort, postSortOrder],
     queryFn: async ({ pageParam = 0 }) => {
@@ -99,3 +101,32 @@ export const showMenu = computed({ get: () => !!menuData.value, set: (val) => {
     menuData.value = null
   }
 } })
+
+export function useCurrentFolder() {
+  const route = useRoute()
+  return computed(() => {
+    if (!route.params.folder) {
+      return '@'
+    }
+    if (typeof route.params.folder === 'string') {
+      return route.params.folder
+    }
+    return route.params.folder.join('/')
+  })
+}
+
+export function useFoldersQuery() {
+  return useQuery({
+    queryKey: ['folders'],
+    queryFn: async () => {
+      const resp = await v1GetFolders({ })
+      if (resp.error) {
+        throw resp.error
+      }
+      return resp.data
+    },
+    staleTime: 1000 * 60 * 60,
+  })
+}
+
+

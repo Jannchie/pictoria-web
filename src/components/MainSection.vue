@@ -216,8 +216,9 @@ function onMenuSelect(value: string | number | symbol) {
 
 <template>
   <section
-    class="relative h-[calc(100vh-60px-24px)]"
+    class="relative flex flex-grow flex-col"
   >
+    <FolderSection />
     <div v-if="infinityPostsQuery.isLoading.value && posts.length === 0">
       <div class="flex flex-col items-center p-16 op-50">
         <i class="i-tabler-loader animate-spin text-2xl" />
@@ -242,7 +243,7 @@ function onMenuSelect(value: string | number | symbol) {
     <Menu
       :data="menuData"
       trigger="contextmenu"
-      class="h-full w-full"
+      class="h-full w-full shrink-0 grow-1 basis-0"
       @select="onMenuSelect"
     >
       <LazyWaterfall

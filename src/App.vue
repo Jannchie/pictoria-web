@@ -1,45 +1,53 @@
 <script setup lang="ts">
 import type { DirectorySummary } from '@/api'
 import type { TreeListItemData } from './roku/TreeList.vue'
-import { v1GetFolders } from '@/api'
 import { Btn, primaryColor, RokuProvider } from '@roku-ui/vue'
-import { useQuery } from '@tanstack/vue-query'
 import { Pane, Splitpanes } from 'splitpanes'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import { useWatchRoute } from './composables'
 import TreeList from './roku/TreeList.vue'
-import { showMenu } from './shared'
+import { showMenu, useCurrentFolder, useFoldersQuery } from './shared'
 import 'splitpanes/dist/splitpanes.css'
 
 useWatchRoute()
 
-const folders = useQuery({
-  queryKey: ['folders'],
-  queryFn: async () => {
-    const resp = await v1GetFolders({ })
-    if (resp.error) {
-      throw resp.error
-    }
-    return resp.data
-  },
-  staleTime: 1000 * 60 * 60,
-})
-
-const route = useRoute()
-const currentPath = computed(() => {
-  if (!route.params.folder) {
-    return '@'
-  }
-  if (typeof route.params.folder === 'string') {
-    return route.params.folder
-  }
-  return route.params.folder.join('/')
-})
+const currentFolder = useCurrentFolder()
 
 primaryColor.value = '#A7A'
 
+const foldersQuery = useFoldersQuery()
+function convertPathToTree(path: DirectorySummary): TreeListItemData[] {
+  if (!path) {
+    return []
+  }
+  const children = path.children ?? []
+  return children.map((child) => {
+    if ((child.children?.length ?? 0) > 0) {
+      return {
+        title: child.name,
+        children: convertPathToTree(child),
+        value: child.path,
+        open: currentFolder.value.startsWith(child.path),
+      }
+    }
+    return {
+      title: child.name,
+      value: child.path,
+    }
+  })
+}
+const folderTree = computed(() => {
+  if (!foldersQuery.data.value) {
+    return []
+  }
+  return [{
+    title: 'Root',
+    value: '@',
+  }, ...convertPathToTree(foldersQuery.data.value)]
+})
+
 const folderPath2Count = computed(() => {
-  const f = folders.data.value
+  const f = foldersQuery.data.value
   if (!f) {
     return {}
   }
@@ -56,35 +64,6 @@ const folderPath2Count = computed(() => {
   return result
 })
 
-function convertPathToTree(path: DirectorySummary): TreeListItemData[] {
-  if (!path) {
-    return []
-  }
-  const children = path.children ?? []
-  return children.map((child) => {
-    if ((child.children?.length ?? 0) > 0) {
-      return {
-        title: child.name,
-        children: convertPathToTree(child),
-        value: child.path,
-        open: currentPath.value.startsWith(child.path),
-      }
-    }
-    return {
-      title: child.name,
-      value: child.path,
-    }
-  })
-}
-const folderTree = computed(() => {
-  if (!folders.data.value) {
-    return []
-  }
-  return [{
-    title: 'Root',
-    value: '@',
-  }, ...convertPathToTree(folders.data.value)]
-})
 const indicatorClass = computed(() => {
   return ['before:absolute before:left-4 before:h-full before:border-r before:content-[""]']
 })
@@ -123,7 +102,7 @@ const numberFormater = new Intl.NumberFormat('en-US')
           <SpecialPathList />
           <ScrollArea>
             <TreeList
-              :model-value="currentPath"
+              :model-value="currentFolder"
               :items="folderTree"
             >
               <template #link="{ data, level }">
@@ -131,8 +110,8 @@ const numberFormater = new Intl.NumberFormat('en-US')
                   class="hover-source relative h-8 w-full flex flex cursor-pointer items-center gap-2 rounded-full focus-visible:bg-surface-variant-1 py-1 pr-1 focus-visible:outline-none"
                   :class="[
                     {
-                      'hover:bg-surface-variant-1 hover:text-surface text-surface-dimmed': currentPath !== data.value,
-                      'text-primary bg-surface-variant-2': currentPath === data.value,
+                      'hover:bg-surface-variant-1 hover:text-surface text-surface-dimmed': currentFolder !== data.value,
+                      'text-primary bg-surface-variant-2': currentFolder === data.value,
                     },
                     indicatorClass,
                   ]"

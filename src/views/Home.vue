@@ -43,20 +43,22 @@ useEventListener('wheel', (event) => {
     v-if="showPost"
     :post="showPost"
   />
-  <header
-    class="h-60px flex flex-col items-center justify-center"
-  >
-    <div class="w-32 flex flex-grow items-center justify-center">
-      <Slider
-        v-model="waterfallItemWidth"
-        size="sm"
-        :min="50"
-        :max="800"
-        :min-width="0"
-        :tick-num="0"
-      />
-    </div>
-    <FilterRow />
-  </header>
-  <MainSection />
+  <div class="h-full flex flex-col">
+    <header
+      class="h-60px flex shrink-0 flex-col items-center justify-center"
+    >
+      <div class="w-32 flex flex-grow items-center justify-center">
+        <Slider
+          v-model="waterfallItemWidth"
+          size="sm"
+          :min="50"
+          :max="800"
+          :min-width="0"
+          :tick-num="0"
+        />
+      </div>
+      <FilterRow />
+    </header>
+    <MainSection />
+  </div>
 </template>

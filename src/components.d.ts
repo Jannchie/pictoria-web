@@ -20,6 +20,7 @@ declare module 'vue' {
     FloatWindow: typeof import('./components/FloatWindow.vue')['default']
     FolderGrid: typeof import('./components/FolderGrid.vue')['default']
     FolderItem: typeof import('./components/FolderItem.vue')['default']
+    FolderSection: typeof import('./components/FolderSection.vue')['default']
     LazyWaterfall: typeof import('./components/LazyWaterfall.vue')['default']
     ListItem: typeof import('./components/ListItem.vue')['default']
     MainSection: typeof import('./components/MainSection.vue')['default']
