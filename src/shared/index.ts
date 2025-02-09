@@ -37,44 +37,13 @@ export const showNSFW = ref(false)
 export const postSort = useLocalStorage<'id' | 'score' | 'rating' | 'created_at' | 'file_name'>('pictoria.posts.sort', 'id')
 export const postSortOrder = useLocalStorage<'asc' | 'desc'>('pictoria.posts.sortOrder', 'desc')
 
-export function usePostsQuery() {
-  return useQuery({
-    queryKey: ['posts', postFilter, postSort, postSortOrder],
-    queryFn: async () => {
-      const resp = await v1ListPosts({
-        body: postFilter.value,
-      })
-      return resp.data?.sort((a, b) => {
-        if (postSortOrder.value === 'asc') {
-          const tmp = a
-          a = b
-          b = tmp
-        }
-        switch (postSort.value) {
-          case 'score':
-            return (b?.score ?? 0) - (a?.score ?? 0)
-          case 'rating':
-            return (b?.rating ?? 0) - (a?.rating ?? 0)
-          case 'created_at':
-            return new Date(b?.created_at ?? 0).getTime() - new Date(a?.created_at ?? 0).getTime()
-          case 'file_name':
-            return (b.file_name ?? '').localeCompare(a.file_name)
-          default:
-            return b.id - a.id
-        }
-      })
-    },
-    refetchOnWindowFocus: false,
-  })
-}
-
 export function useInfinityPostsQuery() {
   const limit = 200
   return useInfiniteQuery({
-    queryKey: ['posts', postFilter],
+    queryKey: ['posts', postFilter, postSort, postSortOrder],
     queryFn: async ({ pageParam = 0 }) => {
       const resp = await v1ListPosts({
-        body: postFilter.value,
+        body: { ...postFilter.value, order_by: postSort.value, order: postSortOrder.value },
         query: {
           offset: pageParam,
           limit,

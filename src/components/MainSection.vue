@@ -4,13 +4,12 @@ import type { Area } from './SelectArea.vue'
 import { v1DeletePost } from '@/api'
 import ScrollArea from '@/components/ScrollArea.vue'
 import { useRotateImageMutation } from '@/composables/mutations/useRotateImageMutation'
-import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, usePosts, usePostsQuery, waterfallItemWidth } from '@/shared'
+import { selectedPostIdSet, selectingPostIdSet, unselectedPostIdSet as unselectingPostId, useInfinityPostsQuery, usePosts, waterfallItemWidth } from '@/shared'
 import { Menu } from '@roku-ui/vue'
 import { useQueryClient } from '@tanstack/vue-query'
 import { logicAnd } from '@vueuse/math'
 import { useRoute, useRouter } from 'vue-router'
 
-const postQuery = usePostsQuery()
 const route = useRoute()
 const router = useRouter()
 const posts = usePosts()
@@ -23,6 +22,7 @@ const waterfallRef = ref<InstanceType<typeof LazyWaterfall> | null>(null)
 const waterfallContentDom = computed(() => waterfallRef.value?.contentDom)
 const waterfallWrapperDom = computed(() => waterfallRef.value?.wrapperDom)
 const waterfallWrapperBounds = useElementBounding(waterfallWrapperDom)
+const infinityPostsQuery = useInfinityPostsQuery()
 const cols = computed(() => Math.floor((waterfallWrapperBounds.width.value + 20 - 8 * 2) / (waterfallItemWidth.value + 20)))
 const layoutData = computed(() => {
   return waterfallRef.value?.layoutData
@@ -100,6 +100,7 @@ whenever(logicAnd(Ctrl_A, notUsingInput), () => {
   selectedPostIdSet.value = new Set(posts.value.map(post => post.id))
 })
 
+const shouldScroll = ref(true)
 watchEffect(async () => {
   if (route.query.post_id) {
     // 如果有 post_id 参数，则选中这个 post，并且滚动到这个 post
@@ -108,7 +109,7 @@ watchEffect(async () => {
       return
     }
     const postIndex = posts.value.findIndex(post => post.id === postId)
-    if (postIndex === -1) {
+    if (postIndex === -1 && !infinityPostsQuery.hasNextPage.value) {
       await router.push({ query: { post_id: undefined } })
       return
     }
@@ -116,17 +117,19 @@ watchEffect(async () => {
       const postLayout = waterfallRef.value?.layoutData?.[postIndex]
       if (postLayout) {
         const res = document.querySelector(`#post-item-${postId}`)
-        if (!res) {
+        if (!res && shouldScroll.value) {
           waterfallWrapperDom.value?.scrollTo({
             top: postLayout.y,
             behavior: 'smooth',
           })
         }
+        shouldScroll.value = false
         selectedPostIdSet.value = new Set([postId])
       }
     }
   }
 })
+
 // 如果 selectedPostIdSet 只有一个元素，则变更路由，但是不要滚动
 watchEffect(() => {
   if (selectedPostIdSet.value.size === 1) {
@@ -215,7 +218,7 @@ function onMenuSelect(value: string | number | symbol) {
   <section
     class="relative h-[calc(100vh-60px-24px)]"
   >
-    <div v-if="postQuery.isLoading.value && posts.length === 0">
+    <div v-if="infinityPostsQuery.isLoading.value && posts.length === 0">
       <div class="flex flex-col items-center p-16 op-50">
         <i class="i-tabler-loader animate-spin text-2xl" />
         <div class="text-sm">
